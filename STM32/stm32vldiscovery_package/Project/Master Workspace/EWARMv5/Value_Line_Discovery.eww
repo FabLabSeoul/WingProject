@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<workspace>
+  <project>
+    <path>$WS_DIR$\..\..\Demo\EWARMv5\DISCOVER.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\DMA\EWARMv5\DMA.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\EXTI\EWARMv5\EXTI.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\Flash Program\EWARMv5\Flash Program.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\GPIOToggle\EWARMv5\GPIOToggle.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\IWDG\EWARMv5\IWDG.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\JTAG Remap\EWARMv5\JTAG Remap.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\RCC\EWARMv5\RCC.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\Sleep Mode\EWARMv5\Sleep Mode.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\STANDBY Mode\EWARMv5\STANDBY Mode.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\STOP Mode\EWARMv5\Stop Mode.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\SysTick\EWARMv5\Systick.ewp</path>
+  </project>
+  <project>
+    <path>$WS_DIR$\..\..\Examples\WWDG\EWARMv5\WWDG.ewp</path>
+  </project>
+  <batchBuild/>
+</workspace>
+
+

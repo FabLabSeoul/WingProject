@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<ProjectWorkspace xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_mpw.xsd">
+
+  <SchemaVersion>1.0</SchemaVersion>
+
+  <Header>### uVision Project, (C) Keil Software</Header>
+
+  <WorkspaceName>WorkSpace</WorkspaceName>
+
+  <project>
+    <PathAndName>..\..\Demo\MDK-ARM\DISCOVER.uvproj</PathAndName>
+    <NodeIsActive>1</NodeIsActive>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\DMA\MDK-ARM\DMA.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\EXTI\MDK-ARM\EXTI.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\Flash Program\MDK-ARM\Flash Program.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\GPIOToggle\MDK-ARM\GPIOToggle.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\IWDG\MDK-ARM\IWDG.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\JTAG Remap\MDK-ARM\JTAG Remap.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\RCC\MDK-ARM\RCC.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\Sleep Mode\MDK-ARM\Sleep Mode.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\STANDBY Mode\MDK-ARM\STANDBY Mode.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\STOP Mode\MDK-ARM\STOP Mode.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\SysTick\MDK-ARM\SysTick.uvproj</PathAndName>
+  </project>
+
+  <project>
+    <PathAndName>..\..\Examples\WWDG\MDK-ARM\WWDG.uvproj</PathAndName>
+  </project>
+
+</ProjectWorkspace>

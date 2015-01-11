@@ -1,0 +1,601 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html xmlns="http://www.w3.org/TR/REC-html40"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<link rel="File-List" href="Release_Notes_files/filelist.xml">
+<link rel="Edit-Time-Data" href="Release_Notes_files/editdata.mso"><!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+
+
+
+<title>Release Notes for AN2931 "Implementing the ADPCM algorithm in high-density STM32F103xx microcontrollers" firmware</title><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]--><style>
+<!--p.MSONORMAL
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;}
+li.MSONORMAL
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;}
+div.MSONORMAL
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;}
+h1
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-fareast-theme-font:minor-fareast;}
+h2
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-fareast-theme-font:minor-fareast;}
+h3
+	{mso-style-unhide:no;
+	mso-style-qformat:yes;
+	mso-fareast-theme-font:minor-fareast;}
+a:link
+	{mso-style-unhide:no;}
+span.MSOHYPERLINK
+	{mso-style-unhide:no;}
+a:visited
+	{mso-style-unhide:no;}
+span.MSOHYPERLINKFOLLOWED
+	{mso-style-unhide:no;}
+p
+	{mso-style-unhide:no;}
+p.MSOACETATE
+	{mso-style-unhide:no;}
+li.MSOACETATE
+	{mso-style-unhide:no;}
+div.MSOACETATE
+	{mso-style-unhide:no;}
+span.HEADING1CHAR
+	{mso-style-unhide:no;
+	mso-ascii-theme-font:major-latin;
+	mso-fareast-theme-font:major-fareast;
+	mso-hansi-theme-font:major-latin;
+	mso-bidi-theme-font:major-bidi;
+	mso-themecolor:accent1;
+	mso-themeshade:191;}
+span.HEADING2CHAR
+	{mso-style-unhide:no;
+	mso-ascii-theme-font:major-latin;
+	mso-fareast-theme-font:major-fareast;
+	mso-hansi-theme-font:major-latin;
+	mso-bidi-theme-font:major-bidi;
+	mso-themecolor:accent1;}
+span.HEADING3CHAR
+	{mso-style-unhide:no;
+	mso-ascii-theme-font:major-latin;
+	mso-fareast-theme-font:major-fareast;
+	mso-hansi-theme-font:major-latin;
+	mso-bidi-theme-font:major-bidi;
+	mso-themecolor:accent1;}
+span.BALLOONTEXTCHAR
+	{mso-style-unhide:no;}
+.MSOCHPDEFAULT
+	{mso-default-props:yes;}
+table.MSONORMALTABLE
+	{mso-style-priority:99;
+	mso-style-qformat:yes;}
+
+ /* Font Definitions */
+ @font-face
+	{font-family:Helvetica;
+	panose-1:2 11 6 4 2 2 2 2 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:536902279 -2147483648 8 0 511 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:2;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:0 268435456 0 0 -2147483648 0;}
+@font-face
+	{font-family:"MS Mincho";
+	panose-1:2 2 6 9 4 2 5 8 3 4;
+	mso-font-alt:"\FF2D\FF33 \660E\671D";
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+@font-face
+	{font-family:"\@MS Mincho";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:roman;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:1 134676480 16 0 131072 0;}
+@font-face
+	{font-family:ZapfDingbats;
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-alt:"Arial Unicode MS";
+	mso-font-charset:128;
+	mso-generic-font-family:auto;
+	mso-font-format:other;
+	mso-font-pitch:auto;
+	mso-font-signature:0 134676480 16 0 131072 0;}
+@font-face
+	{font-family:"\@ZapfDingbats";
+	panose-1:0 0 0 0 0 0 0 0 0 0;
+	mso-font-charset:128;
+	mso-generic-font-family:auto;
+	mso-font-format:other;
+	mso-font-pitch:auto;
+	mso-font-signature:0 134676480 16 0 131072 0;}
+@font-face
+	{font-family:Cambria;
+	panose-1:2 4 5 3 5 4 6 3 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:roman;
+	mso-font-pitch:variable;
+	mso-font-signature:-1610611985 1073741899 0 0 159 0;}
+@font-face
+	{font-family:Verdana;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:536871559 0 0 0 415 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-style-link:"Heading 1 Char";
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+h2
+	{mso-style-link:"Heading 2 Char";
+	mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;
+	font-style:italic;}
+h3
+	{mso-style-link:"Heading 3 Char";
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Balloon Text Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:8.0pt;
+	font-family:Tahoma;
+	mso-fareast-font-family:"Times New Roman";}
+span.Heading1Char
+	{mso-style-name:"Heading 1 Char";
+	mso-style-locked:yes;
+	mso-style-link:"Heading 1";
+	mso-ansi-font-size:14.0pt;
+	mso-bidi-font-size:14.0pt;
+	font-family:Cambria;
+	mso-ascii-font-family:Cambria;
+	mso-fareast-font-family:"Times New Roman";
+	mso-hansi-font-family:Cambria;
+	mso-bidi-font-family:"Times New Roman";
+	color:#365F91;
+	font-weight:bold;}
+span.Heading2Char
+	{mso-style-name:"Heading 2 Char";
+	mso-style-locked:yes;
+	mso-style-link:"Heading 2";
+	mso-ansi-font-size:13.0pt;
+	mso-bidi-font-size:13.0pt;
+	font-family:Cambria;
+	mso-ascii-font-family:Cambria;
+	mso-fareast-font-family:"Times New Roman";
+	mso-hansi-font-family:Cambria;
+	mso-bidi-font-family:"Times New Roman";
+	color:#4F81BD;
+	font-weight:bold;}
+span.Heading3Char
+	{mso-style-name:"Heading 3 Char";
+	mso-style-locked:yes;
+	mso-style-link:"Heading 3";
+	mso-ansi-font-size:12.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:Cambria;
+	mso-ascii-font-family:Cambria;
+	mso-fareast-font-family:"Times New Roman";
+	mso-hansi-font-family:Cambria;
+	mso-bidi-font-family:"Times New Roman";
+	color:#4F81BD;
+	font-weight:bold;}
+span.BalloonTextChar
+	{mso-style-name:"Balloon Text Char";
+	mso-style-locked:yes;
+	mso-style-link:"Balloon Text";
+	mso-ansi-font-size:8.0pt;
+	mso-bidi-font-size:8.0pt;
+	font-family:Tahoma;
+	mso-ascii-font-family:Tahoma;
+	mso-hansi-font-family:Tahoma;
+	mso-bidi-font-family:Tahoma;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:593633348;
+	mso-list-template-ids:340824966;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+@list l0:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1
+	{mso-list-id:947079579;
+	mso-list-template-ids:1560156180;}
+@list l2
+	{mso-list-id:1043754879;
+	mso-list-template-ids:1560156180;}
+@list l2:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l2:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l3
+	{mso-list-id:2013293289;
+	mso-list-template-ids:1863341752;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0A7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Wingdings;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style><!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <u1:DocumentProperties>
+  <u1:Author>STMicroelectronics</u1:Author>
+  <u1:Template>Normal</u1:Template>
+  <u1:LastAuthor>najoua hamdi</u1:LastAuthor>
+  <u1:Revision>59</u1:Revision>
+  <u1:TotalTime>189</u1:TotalTime>
+  <u1:Created>2009-02-27T19:26:00Z</u1:Created>
+  <u1:LastSaved>2010-09-13T10:25:00Z</u1:LastSaved>
+  <u1:Pages>1</u1:Pages>
+  <u1:Words>331</u1:Words>
+  <u1:Characters>1893</u1:Characters>
+  <u1:Company>STMicroelectronics</u1:Company>
+  <u1:Lines>15</u1:Lines>
+  <u1:Paragraphs>4</u1:Paragraphs>
+  <u1:CharactersWithSpaces>2220</u1:CharactersWithSpaces>
+  <u1:Version>11.9999</u1:Version>
+ </u1:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <u1:OfficeDocumentSettings>
+  <u1:AllowPNG/>
+ </u1:OfficeDocumentSettings>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <u2:WordDocument>
+  <u2:Zoom>110</u2:Zoom>
+  <u2:ValidateAgainstSchemas/>
+  <u2:SaveIfXMLInvalid>false</u2:SaveIfXMLInvalid>
+  <u2:IgnoreMixedContent>false</u2:IgnoreMixedContent>
+  <u2:AlwaysShowPlaceholderText>false</u2:AlwaysShowPlaceholderText>
+  <u2:Compatibility>
+   <u2:BreakWrappedTables/>
+   <u2:SnapToGridInCell/>
+   <u2:WrapTextWithPunct/>
+   <u2:UseAsianBreakRules/>
+   <u2:DontGrowAutofit/>
+   <u2:UseFELayout/>
+   <u2:SplitPgBreakAndParaMark/>
+   <u2:DontVertAlignCellWithSp/>
+   <u2:DontBreakConstrainedForcedTables/>
+   <u2:DontVertAlignInTxbx/>
+   <u2:Word11KerningPairs/>
+   <u2:CachedColBalance/>
+  </u2:Compatibility>
+  <u2:BrowserLevel>MicrosoftInternetExplorer4</u2:BrowserLevel>
+  <u2:TrackMoves>false</u2:TrackMoves>
+  <u2:TrackFormatting/>
+  <u2:DoNotPromoteQF/>
+  <u2:LidThemeOther>EN-US</u2:LidThemeOther>
+  <u2:LidThemeAsian>X-NONE</u2:LidThemeAsian>
+  <u2:LidThemeComplexScript>X-NONE</u2:LidThemeComplexScript>
+  <m:mathPr>
+   <m:mathFont m:val="Cambria Math"/>
+   <m:brkBin m:val="before"/>
+   <m:brkBinSub m:val="--"/>
+   <m:smallFrac m:val="off"/>
+   <m:dispDef/>
+   <m:lMargin m:val="0"/>
+   <m:rMargin m:val="0"/>
+   <m:defJc m:val="centerGroup"/>
+   <m:wrapIndent m:val="1440"/>
+   <m:intLim m:val="subSup"/>
+   <m:naryLim m:val="undOvr"/>
+  </m:mathPr>
+ </u2:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <u3:LatentStyles DefLockedState="false" LatentStyleCount="156">  </u3:LatentStyles>
+</xml><![endif]-->
+
+<link rel="themeData" href="Release_Notes_files/themedata.thmx">
+<link rel="colorSchemeMapping" href="Release_Notes_files/colorschememapping.xml"><!--[if gte mso 9]><xml>
+ <u4:shapedefaults v:ext="edit" spidmax="9218"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <u5:shapelayout v:ext="edit">
+  <u5:idmap v:ext="edit" data="1"/>
+ </u5:shapelayout>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]--></head><body style="" lang="EN-US" link="blue" vlink="blue">
+
+<div class="Section1">
+
+<p class="MsoNormal"><span style="font-family: Arial;">&nbsp;</span></p>
+
+<div align="center">
+
+<table class="MsoNormalTable" style="width: 675pt;" border="0" cellpadding="0" cellspacing="0" width="900">
+ <tbody><tr style="">
+  <td style="padding: 0in;" valign="top">
+  <u6:p></u6:p>
+  <table class="MsoNormalTable" style="width: 675pt;" border="0" cellpadding="0" cellspacing="0" width="900">
+   <tbody><tr style="">
+    <td style="padding: 1.5pt;">
+    <h1 style="margin-bottom: 0.25in; text-align: center;" align="center"><span style="font-size: 20pt; font-family: Verdana; color: rgb(51, 102, 255);">Release Notes
+    for&nbsp;AN3268 "STM32VLDISCOVERY firmware package" </span></h1>
+    <u6:p></u6:p>
+    <p class="MsoNormal" style="text-align: center;" align="center"><span style="font-size: 10pt; font-family: Arial; color: black;">Copyright © 2010
+    STMicroelectronics</span></p>
+    <u1:p></u1:p><u6:p></u6:p>
+    <p class="MsoNormal" style="text-align: center;" align="center"><span style="font-size: 10pt; font-family: Arial; color: black;"><img id="_x0000_i1025" src="_htmresc/logo.bmp" height="65" width="86"></span></p>
+    </td>
+   </tr>
+   </tbody></table>
+  <p class="MsoNormal"><span style="font-family: Arial; display: none;"><u6:p>&nbsp;</u6:p></span><o:p></o:p></p>
+  <u6:p></u6:p>
+  <table class="MsoNormalTable" style="width: 675pt;" border="0" cellpadding="0" width="900">
+   <tbody><tr style="">
+    <td style="padding: 0in;" valign="top">
+    <h2 style="background: rgb(51, 102, 255) none repeat scroll 0%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial;"><span style="font-size: 12pt; color: white;">Contents<u6:p></u6:p></span></h2>
+    <p class="MsoNormal" style="margin: 4.5pt 0in;"><span style="color: black;"><span style="">&nbsp;</span></span></p>
+    <u6:p></u6:p>
+    <ol style="margin-top: 0in;" start="1" type="1">
+     <li class="MsoNormal" style="color: black; margin-top: 4.5pt; margin-bottom: 4.5pt;"><span style="font-size: 10pt; font-family: Verdana;"><a href="../../VSS_Working%20folder/CHM-youssef/AN%20CHM/STM32F10x_AN2557_FW/Release_Notes.html#StdPeriph_Lib">What
+         is&nbsp;</a></span><a href="#StdPeriph_Lib"><span style="font-size: 10pt; font-family: Arial;">AN3268 "STM32VLDISCOVERY firmware
+         package"</span></a><span style="font-size: 10pt; font-family: Verdana;"><a href="../../VSS_Working%20folder/CHM-youssef/AN%20CHM/STM32F10x_AN2557_FW/Release_Notes.html#StdPeriph_Lib">"?</a></span>
+         <o:p></o:p></li>
+     <u6:p></u6:p>
+     <li class="MsoNormal" style="color: black; margin-top: 4.5pt; margin-bottom: 4.5pt;"><a href="#History"><span style="font-size: 10pt; font-family: Arial;">AN3268 "STM32VLDISCOVERY
+         firmware package"</span></a><span style="font-size: 10pt; font-family: Verdana;"><a href="#History">&nbsp;update History</a></span>
+         <o:p></o:p></li>
+     <u6:p></u6:p>
+     <li class="MsoNormal" style="color: black; margin-top: 4.5pt; margin-bottom: 4.5pt;"><span style="font-size: 10pt; font-family: Verdana;"><a href="#License">License</a></span>
+         <o:p></o:p></li>
+    </ol>
+    <u6:p></u6:p>
+    <h2 style="background: rgb(51, 102, 255) none repeat scroll 0%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial;"><a name="WhatsNew"></a><a name="StdPeriph_Lib"></a><span style="font-size: 12pt; color: white;">What is&nbsp;AN3268
+    "STM32VLDISCOVERY firmware package" ?</span></h2>
+    <u6:p></u6:p>
+    <p class="MsoNormal" style=""><b><span style="font-size: 10pt; font-family: Arial;">AN3268”STM32VLDISCOVERY firmware
+    package” </span></b><span style="font-size: 10pt; font-family: Helvetica;">describes
+    the STM32VLDISCOVERY package structure and provide short descriptions of:<u6:p></u6:p></span></p>
+    <p class="MsoNormal" style=""><span style="font-size: 8pt; font-family: ZapfDingbats;" lang="JA">&#9632; </span><span style="font-size: 10pt; font-family: Helvetica;">STM32VLDISCOVERY firmware
+    demonstration.<u6:p></u6:p></span></p>
+    <p class="MsoNormal" style=""><span style="font-size: 8pt; font-family: ZapfDingbats;" lang="JA">&#9632; </span><span style="font-size: 10pt; font-family: Helvetica;">Examples covering some of
+    the STM32 value line features.<u6:p></u6:p></span></p>
+    <p class="MsoNormal"><span style="font-size: 8pt; font-family: ZapfDingbats;" lang="JA">&#9632; </span><span style="font-size: 10pt; font-family: Helvetica;">Standard firmware library.</span><span style="font-size: 10pt; font-family: Arial;">I2C write/read operations
+    examples for both master and slave modes.</span></p>
+    <u6:p></u6:p>
+    <p class="MsoNormal" style="margin: 4.5pt 0in;"><span style="font-size: 10pt; font-family: Arial;">The&nbsp;AN3268
+    "STM32VLDISCOVERY firmware package” is full CMSIS compliant.</span></p>
+    <p style="text-align: center;" align="center"><a href="http://www.onarm.com/" target="_blank"><span style="font-family: Arial; text-decoration: none;"><img id="_x0000_i1026" src="_htmresc/CMSIS_Logo_Final.jpg" border="0" height="235" width="591"></span></a><o:p></o:p></p>
+    <u6:p></u6:p>
+    <h2 style="background: rgb(51, 102, 255) none repeat scroll 0%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial;"><a name="History"></a><span style="font-size: 12pt; color: white;">AN3268 "STM32VLDISCOVERY firmware package "
+    V1.0.0 update History<u6:p></u6:p></span></h2>
+    <h3 style="background: rgb(51, 102, 255) none repeat scroll 0%; margin-right: 558.05pt; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial;"><span style="font-size: 10pt; font-family: Arial; color: white;">V1.0.0 - 09/13/2010</span></h3>
+    <ul style="margin-top: 0in;" type="square">
+     <li class="MsoNormal" style="color: black; margin-top: 4.5pt; margin-bottom: 4.5pt;"><span style="font-size: 10pt; font-family: Verdana;">Created.</span> <u6:p></u6:p><o:p></o:p></li>
+    </ul>
+    <h2 style="background: rgb(51, 102, 255) none repeat scroll 0%; -moz-background-clip: initial; -moz-background-origin: initial; -moz-background-inline-policy: initial;"><a name="License"></a><span style="font-size: 12pt; color: white;">License<u6:p></u6:p></span></h2>
+    <p class="MsoNormal" style="margin: 4.5pt 0in;"><span style="font-size: 10pt; font-family: Verdana; color: black;">The enclosed firmware and all the related documentation are
+    not covered by a License Agreement, if you need such License you can
+    contact your local STMicroelectronics office.<u1:p></u1:p><u6:p></u6:p></span></p>
+    <p class="MsoNormal"><b><span style="font-size: 10pt; font-family: Verdana; color: black;">THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT
+    PROVIDING CUSTOMERS WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN
+    ORDER FOR THEM TO SAVE TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE
+    HELD LIABLE FOR ANY DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT
+    TO ANY CLAIMS ARISING FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE
+    BY CUSTOMERS OF THE CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH
+    THEIR PRODUCTS. <u6:p></u6:p></span></b><o:p></o:p></p>
+    <p class="MsoNormal"><span style="color: black;"><u6:p>&nbsp;</u6:p></span></p>
+    <div class="MsoNormal" style="text-align: center;" align="center"><span style="color: black;">
+    <hr align="center" size="2" width="100%">
+    </span></div>
+    <p class="MsoNormal" style="margin: 4.5pt 0in 4.5pt 0.25in; text-align: center;" align="center"><span style="font-size: 10pt; font-family: Verdana; color: black;">For Complete on </span><span style="font-size: 10pt; font-family: Verdana;">STM32(<span style="color: black;">CORTEX
+    M3) 32-Bit Microcontrollers visit </span><u><span style="color: blue;"><a href="http://www.st.com/stm32" target="_blank">www.st.com/STM32</a></span></u></span></p>
+    </td>
+   </tr>
+   </tbody></table>
+  <span style="font-size: 10pt; font-family: &quot;Times New Roman&quot;;"><u6:p></u6:p></span>
+  <p class="MsoNormal"><span style="font-size: 10pt;"><o:p></o:p></span></p>
+  </td>
+ </tr>
+</tbody></table>
+
+</div>
+
+<p class="MsoNormal"><u6:p>&nbsp;</u6:p></p>
+
+</div>
+
+</body></html>
