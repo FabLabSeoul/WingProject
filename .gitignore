@@ -181,3 +181,17 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+
+# IAR system
+*.crun
+*.dbgdt
+*.bat
+*.dni
+*.wspos
+*.dep
+*.ewt
+*.wsdt
+*.out
+*.sim
+
