@@ -1,0 +1,12 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{134EFE03-4561-FAF2-1B2B-FA845CB9DCC7}",
+	"Category": "",
+	"Description": "",
+	"Plugins": [
+		{
+			"Name": "KinPlugin",
+			"Enabled": false
+		}
+	]
+}
