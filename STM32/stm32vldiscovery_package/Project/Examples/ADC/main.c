@@ -21,6 +21,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "STM32vldiscovery.h"
+//#include "stm32f10x_rcc.h"
+//#include "stm32f10x_gpio.h"
+#include "stm32f10x_adc.h"
 
 
 /** @addtogroup Examples
@@ -33,11 +36,74 @@
 /* Private variables ---------------------------------------------------------*/
 GPIO_InitTypeDef GPIO_InitStructure;
 
+double x = 0;
+GPIO_InitTypeDef myGPIO;
+ADC_InitTypeDef myADC;
+
+
 /* Private function prototypes -----------------------------------------------*/
 void Delay(__IO uint32_t nCount);
 
 /* Private functions ---------------------------------------------------------*/
 
+ 
+void adc_config()
+{ 
+    //ADC1 setup
+    myGPIO.GPIO_Pin = GPIO_Pin_6; //set to pin 6
+    myGPIO.GPIO_Mode = GPIO_Mode_AIN; //set as analog input
+    GPIO_Init(GPIOA, &myGPIO); //set to A6
+ 
+    RCC_ADCCLKConfig(RCC_PCLK2_Div6); //clock for ADC (max 14MHz, 72/6=12MHz)
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //enable ADC clock
+ 
+    //configure ADC parameters
+    myADC.ADC_Mode = ADC_Mode_Independent;
+    myADC.ADC_ScanConvMode = DISABLE;
+    myADC.ADC_ContinuousConvMode = ENABLE;
+    myADC.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
+    myADC.ADC_DataAlign = ADC_DataAlign_Right;
+    myADC.ADC_NbrOfChannel  = 1;
+    ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 1, ADC_SampleTime_55Cycles5); //PA6 as Input
+    ADC_Init(ADC1, &myADC);
+ 
+    //enable
+    ADC_Cmd(ADC1, ENABLE);
+ 
+    //Calibrate ADC *optional?
+    ADC_ResetCalibration(ADC1);
+    while(ADC_GetResetCalibrationStatus(ADC1));
+    ADC_StartCalibration(ADC1);
+    while(ADC_GetCalibrationStatus(ADC1));
+ 
+    //enable ADC to work
+    ADC_Cmd(ADC1, ENABLE);
+}
+ 
+//get Analog Value at pin
+int getPot(void)
+{
+    return ADC_GetConversionValue(ADC1);
+}
+ 
+//Configure other I/O pins
+void GPIO_config(void)
+{
+ 
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+    //LED-pinC9
+    GPIO_StructInit(&myGPIO);
+    myGPIO.GPIO_Pin = GPIO_Pin_9;
+    myGPIO.GPIO_Mode = GPIO_Mode_Out_PP;
+    myGPIO.GPIO_Speed = GPIO_Speed_2MHz;
+    GPIO_Init(GPIOC, &myGPIO);
+}
+ 
+
+// The second example is an analog read example. 
+// Here we have connected a potentiometer to pin PA6 and are reading the voltage. 
+// If it exceeds 2V the LED PC9 turns on, otherwise it¡¯s off.
+// https://sourcelion.wordpress.com/2014/09/14/stm32-discovery-get-started-tutorial/
 /**
   * @brief  Main program.
   * @param  None
@@ -45,37 +111,23 @@ void Delay(__IO uint32_t nCount);
   */
 int main(void)
 {
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+    GPIO_config(); //configure pins
+    adc_config(); //configure ADC
+    while(1)
+    {
+        x = getPot()*3.3/4095; //get analog value and convert to volts, 12bit ADC
  
-  // Setting Pin2 Input Mode
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  // Setting Pin3 Output Mode
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  //GPIOA->CRL = 0x2800;
-  
-  while (1)
-  {
-    int n = GPIOA->IDR & GPIO_Pin_2; // Read PA3 On/Off 
-    if (n)
-    {
-     //GPIOA->ODR = GPIO_Pin_3; // PA4 On
-     GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_SET);
+        if(x > 2)
+        {
+          GPIO_WriteBit(GPIOC, GPIO_Pin_9, Bit_SET);//turn LED on 1
+        }
+        else 
+        {
+          GPIO_WriteBit(GPIOC, GPIO_Pin_9, Bit_RESET);//turn LED off 0
+        }
     }
-    else
-    {
-      //GPIOA->ODR = 0x00; // PA4 Off
-      GPIO_WriteBit(GPIOA, GPIO_Pin_3, Bit_RESET);      
-    }
-  }
-  
 }
+
 
 /**
   * @brief  Inserts a delay time.
