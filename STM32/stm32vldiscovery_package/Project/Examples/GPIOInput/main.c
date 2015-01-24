@@ -57,18 +57,19 @@ int main(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
   GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+  //GPIOA->CRL = 0x2800;
   
-  RCC->APB2ENR = RCC_APB2Periph_GPIOA;
   while (1)
   {
-    int n = GPIOA->IDR & GPIO_Pin_2; 
+    int n = GPIOA->IDR & GPIO_Pin_2; // Read PA3 On/Off 
     if (n)
     {
-     GPIOA->ODR = GPIO_Pin_3;
+     GPIOA->ODR = GPIO_Pin_3; // PA4 On
     }
     else
     {
-      GPIOA->ODR = 0x00;
+      GPIOA->ODR = 0x00; // PA4 Off
     }
   }
   
