@@ -210,3 +210,14 @@ patches/
 startup_stm32f10x_md_gcc.s
 
 
+
+#UE4 editor
+Intermediate
+Content/StarterContent
+Binaries/
+Saved/
+DerivedDataCache/
+
+
+
+
