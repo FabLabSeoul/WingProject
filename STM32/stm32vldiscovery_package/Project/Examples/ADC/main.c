@@ -34,7 +34,7 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-GPIO_InitTypeDef GPIO_InitStructure;
+//GPIO_InitTypeDef GPIO_InitStructure;
 
 double x = 0;
 GPIO_InitTypeDef myGPIO;
@@ -49,35 +49,36 @@ void Delay(__IO uint32_t nCount);
  
 void adc_config()
 { 
-    //ADC1 setup
-    myGPIO.GPIO_Pin = GPIO_Pin_6; //set to pin 6
-    myGPIO.GPIO_Mode = GPIO_Mode_AIN; //set as analog input
-    GPIO_Init(GPIOA, &myGPIO); //set to A6
- 
-    RCC_ADCCLKConfig(RCC_PCLK2_Div6); //clock for ADC (max 14MHz, 72/6=12MHz)
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //enable ADC clock
- 
-    //configure ADC parameters
-    myADC.ADC_Mode = ADC_Mode_Independent;
-    myADC.ADC_ScanConvMode = DISABLE;
-    myADC.ADC_ContinuousConvMode = ENABLE;
-    myADC.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
-    myADC.ADC_DataAlign = ADC_DataAlign_Right;
-    myADC.ADC_NbrOfChannel  = 1;
-    ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 1, ADC_SampleTime_55Cycles5); //PA6 as Input
-    ADC_Init(ADC1, &myADC);
- 
-    //enable
-    ADC_Cmd(ADC1, ENABLE);
- 
-    //Calibrate ADC *optional?
-    ADC_ResetCalibration(ADC1);
-    while(ADC_GetResetCalibrationStatus(ADC1));
-    ADC_StartCalibration(ADC1);
-    while(ADC_GetCalibrationStatus(ADC1));
- 
-    //enable ADC to work
-    ADC_Cmd(ADC1, ENABLE);
+	// ADC1 setup
+  // PA6를 analog input 모드로 설정한다.  
+	myGPIO.GPIO_Pin = GPIO_Pin_6; //set to pin 6
+	myGPIO.GPIO_Mode = GPIO_Mode_AIN; //set as analog input
+	GPIO_Init(GPIOA, &myGPIO); //set to A6
+
+	RCC_ADCCLKConfig(RCC_PCLK2_Div6); //clock for ADC (max 14MHz, 72/6=12MHz)
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE); //enable ADC clock
+
+	//configure ADC parameters
+	myADC.ADC_Mode = ADC_Mode_Independent;
+	myADC.ADC_ScanConvMode = DISABLE;
+	myADC.ADC_ContinuousConvMode = ENABLE;
+	myADC.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
+	myADC.ADC_DataAlign = ADC_DataAlign_Right;
+	myADC.ADC_NbrOfChannel  = 1;
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_6, 1, ADC_SampleTime_55Cycles5); //PA6 as Input
+	ADC_Init(ADC1, &myADC);
+
+	//enable
+	ADC_Cmd(ADC1, ENABLE);
+
+	//Calibrate ADC *optional?
+	ADC_ResetCalibration(ADC1);
+	while(ADC_GetResetCalibrationStatus(ADC1));
+	ADC_StartCalibration(ADC1);
+	while(ADC_GetCalibrationStatus(ADC1));
+
+	//enable ADC to work
+	ADC_Cmd(ADC1, ENABLE);
 }
  
 //get Analog Value at pin
