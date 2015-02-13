@@ -48,7 +48,7 @@ int main(void)
   /* DAC channel1 Configuration */
   DAC_InitStructure.DAC_Trigger = DAC_Trigger_Software;
   DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_Noise;
-  DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_LFSRUnmask_Bits10_0;
+  DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_LFSRUnmask_Bits9_0;
   DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
   DAC_Init(DAC_Channel_1, &DAC_InitStructure);
 
@@ -57,7 +57,7 @@ int main(void)
   DAC_Cmd(DAC_Channel_1, ENABLE);
 
   /* Set DAC Channel1 DHR12L register */
-  DAC_SetChannel1Data(DAC_Align_12b_L, 0x7FF0);
+	DAC_SetChannel1Data(DAC_Align_12b_L, 0x7FF0);
 
   while (1)
   {
