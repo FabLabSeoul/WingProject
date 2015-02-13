@@ -1,0 +1,36 @@
+*** Creating Trace Output File '.\STM32100B-EVAL\STM32100B-EVAL.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_it.o"'
+### List of Objects: adding '".\stm32100b-eval\main.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_rcc.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_gpio.o"'
+### List of Objects: adding '".\stm32100b-eval\misc.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_exti.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_spi.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_fsmc.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_usart.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_sdio.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_dma.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_i2c.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32f10x_dac.o"'
+### List of Objects: adding '".\stm32100b-eval\core_cm3.o"'
+### List of Objects: adding '".\stm32100b-eval\system_stm32f10x.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32_eval.o"'
+### List of Objects: adding '".\stm32100b-eval\stm32100b_eval_lcd.o"'
+### List of Objects: adding '".\stm32100b-eval\startup_stm32f10x_md_vl.o"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 ".\stm32100b-eval\stm32f10x_it.o" ".\stm32100b-eval\main.o" ".\stm32100b-eval\stm32f10x_rcc.o" ".\stm32100b-eval\stm32f10x_gpio.o" ".\stm32100b-eval\misc.o" ".\stm32100b-eval\stm32f10x_exti.o" ".\stm32100b-eval\stm32f10x_spi.o" ".\stm32100b-eval\stm32f10x_fsmc.o" ".\stm32100b-eval\stm32f10x_usart.o" ".\stm32100b-eval\stm32f10x_sdio.o" ".\stm32100b-eval\stm32f10x_dma.o" ".\stm32100b-eval\stm32f10x_i2c.o" ".\stm32100b-eval\stm32f10x_dac.o" ".\stm32100b-eval\core_cm3.o" ".\stm32100b-eval\system_stm32f10x.o" ".\stm32100b-eval\stm32_eval.o" ".\stm32100b-eval\stm32100b_eval_lcd.o" ".\stm32100b-eval\startup_stm32f10x_md_vl.o" --library_type=microlib --strict --scatter ".\STM32100B-EVAL\STM32100B-EVAL.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\STM32100B-EVAL\STM32100B-EVAL.map" -o ".\STM32100B-EVAL\STM32100B-EVAL.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\STM32100B-EVAL\STM32100B-EVAL.axf'
+### ADS-LD Command File: '.\STM32100B-EVAL\STM32100B-EVAL.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\STM32100B-EVAL\STM32100B-EVAL.lnp', Handle=0x0000033C
+### Writing '.lnp' file
+### ADS-LD Command file '.\STM32100B-EVAL\STM32100B-EVAL.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.
