@@ -16,8 +16,6 @@ ADC_InitTypeDef myADC;
 DMA_InitTypeDef DMA_InitStructure;
  __IO uint32_t ADC_DualConvertedValueTab[2];
  
-void Delay(__IO uint32_t nCount);
-
 
 //Configure other I/O pins
 void GPIO_config(void)
@@ -34,11 +32,10 @@ void GPIO_config(void)
  
 void adc_config()
 { 
-	// ADC1 setup
-  // PA1, PA2를 analog input 모드로 설정한다.  
+  // PC1, PC2를 analog input 모드로 설정한다.  
 	myGPIO.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2; //set to pin 1, 2
 	myGPIO.GPIO_Mode = GPIO_Mode_AIN; //set as analog input
-	GPIO_Init(GPIOC, &myGPIO); //set to A1, A2
+	GPIO_Init(GPIOC, &myGPIO); //set to C1, C2
 
 
   RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);
@@ -66,15 +63,15 @@ void adc_config()
 	
 	
 	//configure ADC1 parameters
-	myADC.ADC_Mode = ADC_Mode_RegSimult;
+	myADC.ADC_Mode = ADC_Mode_Independent;
 	myADC.ADC_ScanConvMode = ENABLE;
 	myADC.ADC_ContinuousConvMode = ENABLE;
 	myADC.ADC_ExternalTrigConv = ADC_ExternalTrigConv_None;
 	myADC.ADC_DataAlign = ADC_DataAlign_Right;
 	myADC.ADC_NbrOfChannel  = 2;
 	ADC_Init(ADC1, &myADC);
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_55Cycles5); //PA1 as Input
-	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_55Cycles5); //PA2 as Input
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_11, 1, ADC_SampleTime_55Cycles5); //PC1 as Input
+	ADC_RegularChannelConfig(ADC1, ADC_Channel_12, 2, ADC_SampleTime_55Cycles5); //PC2 as Input
 	ADC_DMACmd(ADC1, ENABLE);
 	
 
@@ -91,11 +88,6 @@ void adc_config()
 }
 
   
-
-// The second example is an analog read example. 
-// Here we have connected a potentiometer to pin PA6 and are reading the voltage. 
-// If it exceeds 2V the LED PC9 turns on, otherwise it’s off.
-// https://sourcelion.wordpress.com/2014/09/14/stm32-discovery-get-started-tutorial/
 /**
   * @brief  Main program.
   * @param  None
@@ -132,16 +124,6 @@ int main(void)
     }
 }
 
-
-/**
-  * @brief  Inserts a delay time.
-  * @param  nCount: specifies the delay time length.
-  * @retval None
-  */
-void Delay(__IO uint32_t nCount)
-{
-  for(; nCount != 0; nCount--);
-}
 
 #ifdef  USE_FULL_ASSERT
 /**
