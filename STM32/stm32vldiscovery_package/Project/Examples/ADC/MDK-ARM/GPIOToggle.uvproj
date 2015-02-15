@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>GPIOToggle</TargetName>
+      <TargetName>ADC</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>

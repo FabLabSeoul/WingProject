@@ -47,22 +47,8 @@ int main(void)
   GPIO_Configuration();
 	
 	
-  /* TIM2 Configuration */
-  TIM_TimeBaseStructInit(&TIM_TimeBaseStructure);
-  TIM_TimeBaseStructure.TIM_Period = 0x1;
-  TIM_TimeBaseStructure.TIM_Prescaler = 0xF;       
-  TIM_TimeBaseStructure.TIM_ClockDivision = 0x0;    
-  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  
-  TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure);
-
-  /* TIM2 TRGO selection */
-  TIM_SelectOutputTrigger(TIM2, TIM_TRGOSource_Update);
-
-
-
   /* DAC channel1 Configuration */
-  //DAC_InitStructure.DAC_Trigger = DAC_Trigger_Software;
-	DAC_InitStructure.DAC_Trigger = DAC_Trigger_T2_TRGO;
+  DAC_InitStructure.DAC_Trigger = DAC_Trigger_Software;
   DAC_InitStructure.DAC_WaveGeneration = DAC_WaveGeneration_Noise;
   DAC_InitStructure.DAC_LFSRUnmask_TriangleAmplitude = DAC_LFSRUnmask_Bits9_0;
   DAC_InitStructure.DAC_OutputBuffer = DAC_OutputBuffer_Enable;
@@ -81,7 +67,7 @@ int main(void)
   while (1)
   {
     /* Start DAC Channel1 conversion by software */
-    //DAC_SoftwareTriggerCmd(DAC_Channel_1, ENABLE);
+    DAC_SoftwareTriggerCmd(DAC_Channel_1, ENABLE);
   }
 }
 
