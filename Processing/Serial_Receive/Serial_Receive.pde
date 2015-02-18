@@ -20,8 +20,9 @@ void draw()
   {
     // If data is available,
     val = myPort.readStringUntil('\n');         // read it and store it in val
+    println(val); //print it out in the console  
   } 
-  println(val); //print it out in the console
+  
   
 }
 
