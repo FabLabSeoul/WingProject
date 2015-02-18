@@ -3,7 +3,6 @@
 // Serial Communication
 //
 
-#include <stdio.h>
 #include "stm32f10x.h"
 
 
@@ -53,10 +52,10 @@ void loop(void)
 //	}
 
 	print_byte( '1' );
-	osa_mdelay(1000);
+	osa_mdelay(100);
 	
 	print_byte( '0' );		
-	osa_mdelay(1000);	
+	osa_mdelay(100);	
 }
 
 int main(void)
