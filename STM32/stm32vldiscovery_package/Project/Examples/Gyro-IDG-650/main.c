@@ -193,7 +193,7 @@ int main(void)
 			}
 */			
 			
-			
+			// Serial communication for debugging
 			print_byte( 'R' );
 			cc = ADC_DualConvertedValueTab[0];
 			print_byte( cc >> 8 );

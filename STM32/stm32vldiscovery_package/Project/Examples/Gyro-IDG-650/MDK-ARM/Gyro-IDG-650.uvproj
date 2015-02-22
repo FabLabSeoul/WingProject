@@ -488,16 +488,6 @@
               <FileType>1</FileType>
               <FilePath>..\stm32f10x_it.c</FilePath>
             </File>
-            <File>
-              <FileName>Serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Serial.c</FilePath>
-            </File>
-            <File>
-              <FileName>Retarget.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Retarget.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
