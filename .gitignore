@@ -198,7 +198,7 @@ FakesAssemblies/
 # KEIL MDK-ARM
 # *.o
 *~
-*.uvopt
+*.map
 *.dep
 *.bak
 *.uvgui.*
