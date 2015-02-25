@@ -7,11 +7,15 @@
 
 
 void __attribute__((weak)) osa_mdelay(unsigned int msec);
-void print_byte(unsigned short  c);
+
+void SerialSetup(void);
+void print_byte(short  c);
+void print_short(short  c);
+void SendSerialAccelGryro( int16_t accelgyro[6] );
 
 
 
- void setup(void)
+ void SerialSetup(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
@@ -33,7 +37,7 @@ void print_byte(unsigned short  c);
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	// UART Port ¼³Á¤
-	USART_InitStructure.USART_BaudRate    = 9600;
+	USART_InitStructure.USART_BaudRate    = 19200;
 	USART_InitStructure.USART_WordLength   = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits    = USART_StopBits_1;
 	USART_InitStructure.USART_Parity    = USART_Parity_No ;
@@ -58,9 +62,10 @@ void loop(void)
 	osa_mdelay(100);	
 }
 
+
 int main(void)
 {
-	setup();
+	SerialSetup();
 
 	while(1)
 	{
@@ -100,11 +105,36 @@ void __attribute__((weak)) delay_us(unsigned int usec)
 	SysTick->VAL =0X00;
 }
 
-void print_byte(unsigned short  c)
+
+
+void USART_SendData2(USART_TypeDef* USARTx, int16_t Data)
+{
+  /* Check the parameters */
+  assert_param(IS_USART_ALL_PERIPH(USARTx));
+  assert_param(IS_USART_DATA(Data)); 
+    
+  /* Transmit Data */
+  USARTx->DR = (Data & (int16_t)0x01FF);	
+}
+
+
+void print_byte(short  c)
 {
 	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE)==RESET);
-	USART_SendData(USART1, c);
+	USART_SendData2(USART1, c);
 }
+
+
+void print_short(short  c)
+{
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE)==RESET);
+	USART_SendData2(USART1, c >> 8);
+	
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE)==RESET);
+	USART_SendData2(USART1, c & 0xFF);	
+}
+
+
 
 int GetKey(char *pkey)
 {

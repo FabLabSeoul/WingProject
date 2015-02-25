@@ -71,13 +71,15 @@ int main(void)
     STM32vldiscovery_LEDToggle(LED3);
 
     /* Insert 50 ms delay */
-    Delay(50);
+    //Delay(50);
+		Delay(1000);
 
     /* Toggle LD4 */
    STM32vldiscovery_LEDToggle(LED4);
 
     /* Insert 100 ms delay */
-    Delay(100);
+    //Delay(100);
+		Delay(1000);
   }
 }
 
