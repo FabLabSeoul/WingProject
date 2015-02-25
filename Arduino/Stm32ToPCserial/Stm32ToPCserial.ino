@@ -3,7 +3,7 @@
  void setup() 
  {
    pinMode(ledPin, OUTPUT); // Set pin as OUTPUT
-   Serial.begin(9600); // Start serial communication at 9600 bps
+   Serial.begin(19200); // Start serial communication at 19200 bps
  }
 
  void loop() 
@@ -15,6 +15,6 @@
      digitalWrite( ledPin, HIGH);
    }
 
-   delay(10); // Wait 10 milliseconds for next reading
+   //delay(10); // Wait 10 milliseconds for next reading
 }
 

@@ -32,9 +32,12 @@ void setup()  {
   String portName = Serial.list()[1];  //포트 번호 지정
   println(Serial.list());                      //포트 리스트 출력
 
+  println( "link portName = " + portName );
   myPort = new Serial(this, portName, 19200);
+  //myPort = new Serial(this, portName, 9600);
+  //myPort = new Serial(this, portName, 115200);
   myPort.clear();
-  myPort.bufferUntil(lf);
+  //myPort.bufferUntil(lf);
 } 
 
 //도형 색깔 및 위치 지정
@@ -104,9 +107,82 @@ void draw()  {
 
 } 
 
-//데이터 받아오기
-void serialEvent(Serial p) {
+int ReadInt(Serial p)
+{
+  int c1 = myPort.readChar();
+  int c2 = myPort.readChar();
+  int v1 = (c1 << 8) + c2;  
+  return v1;
+}
 
+//데이터 받아오기
+boolean startParse = false;
+int sensingCount = 0;
+int count = 0;
+short v1 = 0, v2 = 0;
+
+void serialEvent(Serial p) 
+{
+  if (myPort.available() > 0) 
+  {
+    if (startParse)
+    {
+      ++count;
+      if (count == 1)
+      {
+        dt  = float(myPort.readChar());
+        println( "dt = " + dt );
+      }
+      else
+      {
+        float value = 0;
+        if ((count % 2) == 0)
+        {
+          v1 = (short)myPort.readChar();
+          v1 <<= 8;
+        }
+        else
+        {
+          v2 = (short)myPort.readChar();
+          
+          short v  = (short)(v1 | v2);
+          value = float(v) / 100.f;
+
+          switch (count)
+          {
+            case 3: x_acc = value; break;
+            case 5: y_acc = value; break;
+            case 7: z_acc = value; break;
+
+            case 9:  x_gyr = value; break;
+            case 11: y_gyr = value; break;
+            case 13: z_gyr = value; break;
+
+            case 15: x_fil = value; break;
+            case 17: y_fil = value; break;
+            case 19: z_fil = value; startParse = false; break;
+          }
+        }
+        
+      }
+      
+    }
+    else
+    {
+      char head = myPort.readChar();
+      if ('S' == head)
+      {
+        startParse = true;
+        count = 0;
+        ++sensingCount;
+        println( "detect S " + sensingCount );
+      }      
+    }
+   
+  }
+  
+
+/*  
   inString = (myPort.readString());
   
   try {
@@ -139,4 +215,6 @@ void serialEvent(Serial p) {
   } catch (Exception e) {
       println("Caught Exception");
   }
+/**/
+
 }
