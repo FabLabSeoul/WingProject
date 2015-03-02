@@ -24,9 +24,9 @@ float   z_fil;
  
 void setup()  { 
   //P3D 사용 3D표현
-  size(1400, 800, P3D);
-  //size(800, 600, P3D);
-  stroke(0,0,0);
+  //size(1400, 800, P3D);
+  size(1024, 768, P3D);
+  noStroke();
   colorMode(RGB, 256); 
  
   String portName = Serial.list()[1];  //포트 번호 지정
@@ -42,26 +42,55 @@ void setup()  {
 
 //도형 색깔 및 위치 지정
 void draw_rect(int r, int g, int b) {
-  scale(90);
-  beginShape(QUADS);
-  
-  fill(r, g, b);
-  vertex(-1,  1.5,  0.25);
-  vertex( 1,  1.5,  0.25);
-  vertex( 1, -1.5,  0.25);
-  vertex(-1, -1.5,  0.25);
 
-  endShape();  
-}
+  fill(r, g, b);
+  scale(90);
+  
+  beginShape(QUADS);
+
+  vertex(-1, 1.5, 0.25);
+  vertex( 1, 1.5, 0.25);
+  vertex( 1, -1.5, 0.25);
+  vertex(-1, -1.5, 0.25);
+
+  vertex( 1, 1.5, 0.25);
+  vertex( 1, 1.5, -0.25);
+  vertex( 1, -1.5, -0.25);
+  vertex( 1, -1.5, 0.25);
+
+  vertex( 1, 1.5, -0.25);
+  vertex(-1, 1.5, -0.25);
+  vertex(-1, -1.5, -0.25);
+  vertex( 1, -1.5, -0.25);
+
+  vertex(-1, 1.5, -0.25);
+  vertex(-1, 1.5, 0.25);
+  vertex(-1, -1.5, 0.25);
+  vertex(-1, -1.5, -0.25);
+
+  vertex(-1, 1.5, -0.25);
+  vertex( 1, 1.5, -0.25);
+  vertex( 1, 1.5, 0.25);
+  vertex(-1, 1.5, 0.25);
+
+  vertex(-1, -1.5, -0.25);
+  vertex( 1, -1.5, -0.25);
+  vertex( 1, -1.5, 0.25);
+  vertex(-1, -1.5, 0.25);
+  
+  endShape();
+ 
+ }
 
 void draw()  { 
   
   background(0);
+  lights();
     
   int distance = 50;
   int x_rotation = 90;
   
-  //gyro 값과 사각형
+  //gyro scope
   pushMatrix(); 
   translate(width/6, height/2, -50); 
   rotateX(radians(-x_gyr - x_rotation));
@@ -70,7 +99,7 @@ void draw()  {
   
   popMatrix(); 
 
-  //accel 값과 사각형
+  //accelerometer
   pushMatrix();
   translate(width/2, height/2, -50);
   rotateX(radians(-x_acc - x_rotation));
@@ -78,7 +107,7 @@ void draw()  {
   draw_rect(56, 140, 206);
   popMatrix();
   
-  //둘을 합친 값과 사각형
+  //combination
   pushMatrix();
   translate(5*width/6, height/2, -50);
   rotateX(radians(-x_fil - x_rotation));
