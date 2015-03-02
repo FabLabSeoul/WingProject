@@ -224,12 +224,16 @@ void MPU6050_GetRawAccelGyro(s16* AccelGyro)
     /* Get acceleration */
     for (i = 0; i < 3; i++)
         AccelGyro[i] = ((s16) ((u16) tmpBuffer[2 * i] << 8) + tmpBuffer[2 * i + 1]);
+	// tmpBuffer[6, 7]  온도 값
     /* Get Angular rate */
     for (i = 4; i < 7; i++)
         AccelGyro[i - 1] = ((s16) ((u16) tmpBuffer[2 * i] << 8) + tmpBuffer[2 * i + 1]);
 
 }
 
+
+// jjuiddong.
+// 옵션이 덮어 씌어질 수 있기 때문에, 기존 옵션 정보를 가져온 후, 바꿀 비트값만 업데이트 한다.
 /** Write multiple bits in an 8-bit device register.
  * @param slaveAddr I2C slave device address
  * @param regAddr Register regAddr to write to
