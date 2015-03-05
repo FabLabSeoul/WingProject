@@ -24,8 +24,7 @@ void setup()
 	SerialSetup();
 	
 	HMC5883L_I2C_Init();
-	HMC5883L_Initialize();
-	
+	HMC5883L_Initialize();	
 }
 
 

@@ -4,6 +4,9 @@
 // 이 소스는 STM32F10x_StdPeriph_Lib_V3.3.0\Project\STM32F10x_StdPeriph_Examples\I2C\Interrupt  
 // 프로젝트를 참조했다.
 //
+// I2C 통신시 패킷이 올 때마다 인터럽트를 발생되게 하고, 인터럽트에서 프로그래밍하는 소스다.
+// I2C1 - I2C2 간의 통신한다. PB6,7, PB10,11 SCL, SDA 핀끼리 연결해야 한다.
+//
 
 
 #include "stm32f10x.h"
@@ -111,11 +114,11 @@ void setup()
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
   NVIC_Init(&NVIC_InitStructure);	
 	
-  /* Enable I2C1 event and buffer interrupts */
+  // Enable I2C1 event and buffer interrupts
   I2C_ITConfig(I2C1, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR, ENABLE);
-  /* Enable I2C1 event and buffer interrupts */
+  //Enable I2C1 event and buffer interrupts
   I2C_ITConfig(I2C2, I2C_IT_EVT | I2C_IT_BUF | I2C_IT_ERR, ENABLE);
-	
+		
 }
 
 
@@ -124,7 +127,6 @@ int main()
 {
 	
 	setup();
-	
 	
 	
 	  /*----- Transmission Phase -------------------------------------------------*/

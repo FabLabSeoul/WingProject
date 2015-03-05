@@ -11,7 +11,7 @@ void setup()
   // Open whatever port is the one you're using.
   size(200,200);
   String portName = Serial.list()[1]; //change the 0 to a 1 or 2 etc. to match your port
-  myPort = new Serial(this, portName, 9600); 
+  myPort = new Serial(this, portName, 19200); 
 }
 
 void draw()

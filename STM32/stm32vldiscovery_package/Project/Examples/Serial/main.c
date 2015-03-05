@@ -21,8 +21,7 @@ void SendSerialAccelGryro( int16_t accelgyro[6] );
 	USART_InitTypeDef USART_InitStructure;
 
 	// RCC Configuration
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE );
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1 | RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
 
 	// Port ¼³Á¤
 	// PA9  - Tx
@@ -55,11 +54,25 @@ void loop(void)
 //		char data = (u8)USART_ReceiveData(USART1);
 //	}
 
-	print_byte( '1' );
-	osa_mdelay(100);
+	static int n = 0;
+	if (n > 3)
+		n = 0;
 	
-	print_byte( '0' );		
-	osa_mdelay(100);	
+	switch (n)
+	{
+		case 0: print_byte('A'); break;
+		case 1: print_byte('B'); break;
+		case 2: print_byte('C'); break;
+		case 3: print_byte('D'); break;
+	}
+	
+	//print_byte( '1' );
+	osa_mdelay(500);
+	
+	++n;
+	
+	//print_byte( '0' );		
+	//osa_mdelay(100);	
 }
 
 
