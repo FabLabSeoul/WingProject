@@ -93,7 +93,7 @@ void draw() {
   int distance = 50;
   int x_rotation = 130;
 
-  //gyro scope
+  //magnetometer
   pushMatrix(); 
   translate(width/2, height/2, -50); 
   rotateX(radians(30));
