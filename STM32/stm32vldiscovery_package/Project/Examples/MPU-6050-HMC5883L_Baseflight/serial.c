@@ -4,7 +4,7 @@
 
 
 
- void SerialSetup(void)
+ void SerialSetup(uint16_t baudRate)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
@@ -25,7 +25,7 @@
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	// UART Port ¼³Á¤
-	USART_InitStructure.USART_BaudRate    = 19200;
+	USART_InitStructure.USART_BaudRate    = baudRate;
 	USART_InitStructure.USART_WordLength   = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits    = USART_StopBits_1;
 	USART_InitStructure.USART_Parity    = USART_Parity_No ;

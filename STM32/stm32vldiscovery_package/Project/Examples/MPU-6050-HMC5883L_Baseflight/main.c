@@ -64,7 +64,7 @@ bool setup()
 	systemInit();
 	
 	// PA10,9(Rx,Tx)포트를 시리얼포트로 초기화 한다.
-	SerialSetup();
+	SerialSetup(9600);
 	
 	// printf()함수를 사용할 수 있게 초기화한다.
 	init_printf(NULL, putc);
@@ -105,33 +105,43 @@ bool setup()
 
 int main()
 {
-		if (!setup())
-			return 0;
+	uint32_t curT=0, oldT = 0;
+	
+	if (!setup())
+		return 0;
 
 	calibrate_sensors();
 	set_last_read_angle_data(millis(), 0, 0, 0, 0, 0, 0);
-		
+	
 
 	while(1)
 	{
-		int16_t accelgyro[6];	
-		int16_t Mag[3];
-		
-		// Accel, Gyro
-		acc.read(accelgyro);
-		gyro.read(accelgyro+3);		
-		
-		// 지자기 센서정보를 i2c통신을 통해 읽어온다.
-		mag.read(Mag);
+		curT = millis();
+		if (curT - oldT > 1000)
+		{
+			int16_t accelgyro[6];	
+			int16_t Mag[3];
+			
+			// Accel, Gyro
+			acc.read(accelgyro);
+			gyro.read(accelgyro+3);
+			
+			// 지자기 센서정보를 i2c통신을 통해 읽어온다.
+			mag.read(Mag);
 
+			SendSerialAccelGryro(accelgyro);
+			print_short( Mag[ 0] );
+			print_short( Mag[ 1] );
+			print_short( Mag[ 2] );
+			
+			oldT = curT;
+			
+			LED0_TOGGLE;
+			delay(10);
+			LED0_TOGGLE;
+		}
 		
-		SendSerialAccelGryro(accelgyro);
-		print_short( Mag[ 0] );
-		print_short( Mag[ 1] );
-		print_short( Mag[ 2] );
-
-		
-		delay(10);
+		//delay(1000);
 	}
 }
 

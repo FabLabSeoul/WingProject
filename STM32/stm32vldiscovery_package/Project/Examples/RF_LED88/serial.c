@@ -1,21 +1,10 @@
-// 
-// STM32 Value line discovery
-// Serial Communication
-//
 
-#include "stm32f10x.h"
-
-
-void __attribute__((weak)) osa_mdelay(unsigned int msec);
-
-void SerialSetup(void);
-void print_byte(short  c);
-void print_short(short  c);
-void SendSerialAccelGryro( int16_t accelgyro[6] );
+#include "stm32f10x_usart.h"
+#include "serial.h"
 
 
 
- void SerialSetup(void)
+ void SerialSetup(uint16_t baudRate)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	USART_InitTypeDef USART_InitStructure;
@@ -36,7 +25,7 @@ void SendSerialAccelGryro( int16_t accelgyro[6] );
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
 
 	// UART Port ¼³Á¤
-	USART_InitStructure.USART_BaudRate    = 9600;
+	USART_InitStructure.USART_BaudRate    = baudRate;
 	USART_InitStructure.USART_WordLength   = USART_WordLength_8b;
 	USART_InitStructure.USART_StopBits    = USART_StopBits_1;
 	USART_InitStructure.USART_Parity    = USART_Parity_No ;
@@ -45,45 +34,6 @@ void SendSerialAccelGryro( int16_t accelgyro[6] );
 
 	USART_Init(USART1, &USART_InitStructure);
 	USART_Cmd(USART1, ENABLE);
-}
-
-void loop(void)
-{
-//	if (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
-//	{
-//		char data = (u8)USART_ReceiveData(USART1);
-//	}
-
-	static int n = 0;
-	if (n > 3)
-		n = 0;
-	
-	switch (n)
-	{
-		case 0: print_byte('A'); break;
-		case 1: print_byte('B'); break;
-		case 2: print_byte('C'); break;
-		case 3: print_byte('D'); break;
-	}
-	
-	//print_byte( '1' );
-	osa_mdelay(50);
-	
-	++n;
-	
-	//print_byte( '0' );		
-	//osa_mdelay(100);	
-}
-
-
-int main(void)
-{
-	SerialSetup();
-
-	while(1)
-	{
-		loop();
-	}
 }
 
 
@@ -148,15 +98,35 @@ void print_short(short  c)
 }
 
 
-
-int GetKey(char *pkey)
+uint16_t receiveData(void)
 {
-	int ret = 0;
-
-	if ( USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == SET)
-	{
-		*pkey = (u8)USART_ReceiveData(USART1);
-		ret = 1;
-	}
-	return ret;
+		//while (!(USART1->SR & USART_FLAG_RXNE));
+		while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET)
+		{
+		}
+	
+		return USART_ReceiveData(USART1);	
 }
+
+char receiveData2(void)
+{
+	uint16_t data;
+	
+		//while (!(USART1->SR & USART_FLAG_RXNE));
+		while(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET)
+		{
+		}
+	
+		data = USART_ReceiveData(USART1);
+		USART_ClearFlag(USART1, USART_FLAG_RXNE);
+		return *(char*)&data;
+}
+
+
+void putc ( void* p, char c)
+{
+	//while (!SERIAL_PORT_EMPTY) ;
+	//SERIAL_PORT_TX_REGISTER = c;
+	print_byte(c);
+}
+	
