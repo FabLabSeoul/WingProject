@@ -28,14 +28,12 @@ uint8_t TxBuffer1[] = "USART DMA Interrupt: USARTy -> USARTz using DMA Tx and Rx
 uint8_t RxBuffer1[TxBufferSize1];
 //uint8_t RxBuffer2[TxBufferSize1];
 uint8_t NbrOfDataToRead = TxBufferSize1;
-uint8_t index = 0;
-int nnn = 0;
-volatile TestStatus TransferStatus1 = FAILED, TransferStatus2 = FAILED;
+//uint8_t index = 0;
+//volatile TestStatus TransferStatus1 = FAILED, TransferStatus2 = FAILED;
 
 /* Private function prototypes -----------------------------------------------*/
 void RCC_Configuration(void);
 void GPIO_Configuration(void);
-void NVIC_Configuration(void);
 void DMA_Configuration(void);
 TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 void uartStartTxDMA(DMA_Channel_TypeDef *txDMAChannel);
@@ -46,9 +44,6 @@ int main()
   /* System Clocks Configuration */
   RCC_Configuration();
  
-  /* NVIC configuration */
-  //NVIC_Configuration();
-
   /* Configure the GPIO ports */
   GPIO_Configuration();
 
@@ -100,8 +95,7 @@ int main()
 		}
 
 		
-    DMA_ClearITPendingBit(DMA1_IT_TC4);
-		DMA_ClearITPendingBit(DMA1_IT_TC5);
+    DMA_ClearITPendingBit(DMA1_IT_TC4 | DMA1_IT_TC5);
     DMA_Cmd(DMA1_Channel4, DISABLE);
 		
 		uartStartTxDMA(DMA1_Channel4);
@@ -143,12 +137,12 @@ void GPIO_Configuration(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 	
-  /* Configure USARTy Rx as input floating */
+  /* Configure USART1 Rx as input floating */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
   GPIO_Init(GPIOA, &GPIO_InitStructure);  
   
-  /* Configure USARTy Tx as alternate function push-pull */
+  /* Configure USART1 Tx as alternate function push-pull */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -156,23 +150,6 @@ void GPIO_Configuration(void)
 
 }
 
-
-/**
-  * @brief  Configures the nested vectored interrupt controller.
-  * @param  None
-  * @retval None
-  */
-void NVIC_Configuration(void)
-{
-   NVIC_InitTypeDef NVIC_InitStructure;
-
-  /* Enable the USARTz Interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-}
 
 /**
   * @brief  Configures the DMA.
