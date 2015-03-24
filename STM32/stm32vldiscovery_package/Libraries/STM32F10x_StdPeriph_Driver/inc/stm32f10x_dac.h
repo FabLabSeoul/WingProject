@@ -2,12 +2,12 @@
   ******************************************************************************
   * @file    stm32f10x_dac.h
   * @author  MCD Application Team
-  * @version V3.3.0
-  * @date    04/16/2010
+  * @version V3.5.0
+  * @date    11-March-2011
   * @brief   This file contains all the functions prototypes for the DAC firmware 
   *          library.
   ******************************************************************************
-  * @copy
+  * @attention
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
   * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
@@ -16,8 +16,9 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  ******************************************************************************
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __STM32F10x_DAC_H
@@ -200,7 +201,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup DAC_data_alignement 
+/** @defgroup DAC_data_alignment 
   * @{
   */
 
@@ -234,7 +235,7 @@ typedef struct
 /**
   * @}
   */
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)  
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)  || defined (STM32F10X_HD_VL)
 /** @defgroup DAC_interrupts_definition 
   * @{
   */ 
@@ -278,7 +279,7 @@ void DAC_DeInit(void);
 void DAC_Init(uint32_t DAC_Channel, DAC_InitTypeDef* DAC_InitStruct);
 void DAC_StructInit(DAC_InitTypeDef* DAC_InitStruct);
 void DAC_Cmd(uint32_t DAC_Channel, FunctionalState NewState);
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)  
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
 void DAC_ITConfig(uint32_t DAC_Channel, uint32_t DAC_IT, FunctionalState NewState);
 #endif
 void DAC_DMACmd(uint32_t DAC_Channel, FunctionalState NewState);
@@ -289,7 +290,7 @@ void DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data);
 void DAC_SetChannel2Data(uint32_t DAC_Align, uint16_t Data);
 void DAC_SetDualChannelData(uint32_t DAC_Align, uint16_t Data2, uint16_t Data1);
 uint16_t DAC_GetDataOutputValue(uint32_t DAC_Channel);
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)  
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL) 
 FlagStatus DAC_GetFlagStatus(uint32_t DAC_Channel, uint32_t DAC_FLAG);
 void DAC_ClearFlag(uint32_t DAC_Channel, uint32_t DAC_FLAG);
 ITStatus DAC_GetITStatus(uint32_t DAC_Channel, uint32_t DAC_IT);
@@ -313,4 +314,4 @@ void DAC_ClearITPendingBit(uint32_t DAC_Channel, uint32_t DAC_IT);
   * @}
   */
 
-/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

@@ -1,9 +1,9 @@
-;******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
+;******************** (C) COPYRIGHT 2011 STMicroelectronics ********************
 ;* File Name          : startup_stm32f10x_xl.s
 ;* Author             : MCD Application Team
-;* Version            : V3.3.0
-;* Date               : 04/16/2010
-;* Description        : STM32F10x XL-Density Devices vector table for RVMDK 
+;* Version            : V3.5.0
+;* Date               : 11-March-2011
+;* Description        : STM32F10x XL-Density Devices vector table for MDK-ARM 
 ;*                      toolchain. 
 ;*                      This module performs:
 ;*                      - Set the initial SP
@@ -355,4 +355,4 @@ __user_initial_stackheap
 
                  END
 
-;******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE*****
+;******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE*****

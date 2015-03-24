@@ -1,33 +1,34 @@
 /**
- ******************************************************************************
- * @file      startup_stm32f10x_hd.s
- * @author    MCD Application Team
- * @version   V3.3.0
- * @date      04/16/2010
- * @brief     STM32F10x High Density Devices vector table for Atollic toolchain.
- *            This module performs:
- *                - Set the initial SP
- *                - Set the initial PC == Reset_Handler,
- *                - Set the vector table entries with the exceptions ISR address,
- *                - Configure the clock system  
- *                - Configure external SRAM mounted on STM3210E-EVAL board
- *                  to be used as data memory (optional, to be enabled by user)
- *                - Branches to main in the C library (which eventually
- *                  calls main()).
- *            After Reset the Cortex-M3 processor is in Thread mode,
- *            priority is Privileged, and the Stack is set to Main.
- *******************************************************************************
- * @copy
- *
- * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
- * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
- * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
- * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
- * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
- * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
- *
- * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
- */
+  ******************************************************************************
+  * @file      startup_stm32f10x_hd.s
+  * @author    MCD Application Team
+  * @version   V3.5.0
+  * @date      11-March-2011
+  * @brief     STM32F10x High Density Devices vector table for Atollic toolchain.
+  *            This module performs:
+  *                - Set the initial SP
+  *                - Set the initial PC == Reset_Handler,
+  *                - Set the vector table entries with the exceptions ISR address,
+  *                - Configure the clock system  
+  *                - Configure external SRAM mounted on STM3210E-EVAL board
+  *                  to be used as data memory (optional, to be enabled by user)
+  *                - Branches to main in the C library (which eventually
+  *                  calls main()).
+  *            After Reset the Cortex-M3 processor is in Thread mode,
+  *            priority is Privileged, and the Stack is set to Main.
+  ******************************************************************************
+  * @attention
+  *
+  * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
+  * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
+  * TIME. AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY
+  * DIRECT, INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING
+  * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
+  * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+  *
+  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  ******************************************************************************
+  */
 
     .syntax unified
 	.cpu cortex-m3
@@ -35,7 +36,6 @@
 	.thumb
 
 .global	g_pfnVectors
-.global	SystemInit_ExtMemCtl_Dummy
 .global	Default_Handler
 
 /* start address for the initialization values of the .data section.
@@ -49,9 +49,7 @@ defined in linker script */
 .word	_sbss
 /* end address for the .bss section. defined in linker script */
 .word	_ebss
-/* stack used for SystemInit_ExtMemCtl; always internal RAM used */
 
-.equ  Initial_spTop,  0x20000400
 .equ  BootRAM,        0xF1E0F85F
 /**
  * @brief  This is the code that gets called when the processor first
@@ -67,12 +65,6 @@ defined in linker script */
 	.type	Reset_Handler, %function
 Reset_Handler:
 
-/* FSMC Bank1 NOR/SRAM3 is used for the STM3210E-EVAL, if another Bank is
-  required, then adjust the Register Addresses */
-  bl	SystemInit_ExtMemCtl
-/* restore original stack pointer */
-  LDR r0, =_estack
-  MSR msp, r0
 /* Copy the data segment initializers from flash to SRAM */
   movs	r1, #0
   b	LoopCopyDataInit
@@ -111,16 +103,6 @@ LoopFillZerobss:
 .size	Reset_Handler, .-Reset_Handler
 
 /**
- * @brief  Dummy SystemInit_ExtMemCtl function
- * @param  None
- * @retval : None
-*/
-	.section	.text.SystemInit_ExtMemCtl_Dummy,"ax",%progbits
-SystemInit_ExtMemCtl_Dummy:
-	bx	lr
-	.size	SystemInit_ExtMemCtl_Dummy, .-SystemInit_ExtMemCtl_Dummy
-
-/**
  * @brief  This is the code that gets called when the processor receives an
  *         unexpected interrupt.  This simply enters an infinite loop, preserving
  *         the system state for examination by a debugger.
@@ -146,7 +128,7 @@ Infinite_Loop:
 
 
 g_pfnVectors:
-	.word	Initial_spTop
+	.word	_estack
 	.word	Reset_Handler
 	.word	NMI_Handler
 	.word	HardFault_Handler
@@ -484,7 +466,4 @@ g_pfnVectors:
 	.weak	DMA2_Channel4_5_IRQHandler
 	.thumb_set DMA2_Channel4_5_IRQHandler,Default_Handler
 
-	.weak	SystemInit_ExtMemCtl
-	.thumb_set SystemInit_ExtMemCtl,SystemInit_ExtMemCtl_Dummy
-
-/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/

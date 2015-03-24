@@ -1,10 +1,10 @@
-;******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
+;******************** (C) COPYRIGHT 2011 STMicroelectronics ********************
 ;* File Name          : startup_stm32f10x_ld_vl.s
 ;* Author             : MCD Application Team
-;* Version            : V3.3.0
-;* Date               : 04/16/2010
+;* Version            : V3.5.0
+;* Date               : 11-March-2011
 ;* Description        : STM32F10x Low Density Value Line Devices vector table  
-;*                      for RVMDK toolchain.  
+;*                      for MDK-ARM toolchain.  
 ;*                      This module performs:
 ;*                      - Set the initial SP
 ;*                      - Set the initial PC == Reset_Handler
@@ -301,4 +301,4 @@ __user_initial_stackheap
 
                  END
 
-;******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE*****
+;******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE*****

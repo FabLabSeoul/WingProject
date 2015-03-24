@@ -2,11 +2,11 @@
   ******************************************************************************
   * @file    stm32f10x_rcc.c
   * @author  MCD Application Team
-  * @version V3.3.0
-  * @date    04/16/2010
+  * @version V3.5.0
+  * @date    11-March-2011
   * @brief   This file provides all the RCC firmware functions.
   ******************************************************************************
-  * @copy
+  * @attention
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
   * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
@@ -15,8 +15,9 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
-  */ 
+  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
+  ******************************************************************************
+  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_rcc.h"
@@ -124,7 +125,7 @@
 #define CR_HSITRIM_Mask           ((uint32_t)0xFFFFFF07)
 
 /* CFGR register bit mask */
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_CL) 
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL) || defined (STM32F10X_CL) 
  #define CFGR_PLL_Mask            ((uint32_t)0xFFC2FFFF)
 #else
  #define CFGR_PLL_Mask            ((uint32_t)0xFFC0FFFF)
@@ -147,7 +148,7 @@
 /* CSR register bit mask */
 #define CSR_RMVF_Set              ((uint32_t)0x01000000)
 
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_CL) 
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL) || defined (STM32F10X_CL) 
 /* CFGR2 register bit mask */
  #define CFGR2_PREDIV1SRC         ((uint32_t)0x00010000)
  #define CFGR2_PREDIV1            ((uint32_t)0x0000000F)
@@ -161,11 +162,6 @@
 /* RCC Flag Mask */
 #define FLAG_Mask                 ((uint8_t)0x1F)
 
-#ifndef HSI_Value
-/* Typical Value of the HSI in Hz */
- #define HSI_Value                 ((uint32_t)8000000)
-#endif /* HSI_Value */
-
 /* CIR register byte 2 (Bits[15:8]) base address */
 #define CIR_BYTE2_ADDRESS         ((uint32_t)0x40021009)
 
@@ -177,11 +173,6 @@
 
 /* BDCR register base address */
 #define BDCR_ADDRESS              (PERIPH_BASE + BDCR_OFFSET)
-
-#ifndef HSEStartUp_TimeOut
-/* Time out for HSE start up */
- #define HSEStartUp_TimeOut        ((uint16_t)0x0500)
-#endif /* HSEStartUp_TimeOut */
 
 /**
   * @}
@@ -201,6 +192,7 @@
 
 static __I uint8_t APBAHBPrescTable[16] = {0, 0, 0, 0, 1, 2, 3, 4, 1, 2, 3, 4, 6, 7, 8, 9};
 static __I uint8_t ADCPrescTable[4] = {2, 4, 6, 8};
+extern uint32_t hse_value;
 
 /**
   * @}
@@ -253,7 +245,7 @@ void RCC_DeInit(void)
 
   /* Reset CFGR2 register */
   RCC->CFGR2 = 0x00000000;
-#elif defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) 
+#elif defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
   /* Disable all interrupts and clear pending bits  */
   RCC->CIR = 0x009F0000;
 
@@ -321,7 +313,7 @@ ErrorStatus RCC_WaitForHSEStartUp(void)
   {
     HSEStatus = RCC_GetFlagStatus(RCC_FLAG_HSERDY);
     StartUpCounter++;  
-  } while((StartUpCounter != HSEStartUp_TimeOut) && (HSEStatus == RESET));
+  } while((StartUpCounter != HSE_STARTUP_TIMEOUT) && (HSEStatus == RESET));
   
   if (RCC_GetFlagStatus(RCC_FLAG_HSERDY) != RESET)
   {
@@ -415,7 +407,7 @@ void RCC_PLLCmd(FunctionalState NewState)
   *(__IO uint32_t *) CR_PLLON_BB = (uint32_t)NewState;
 }
 
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_CL)
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL) || defined (STM32F10X_CL)
 /**
   * @brief  Configures the PREDIV1 division factor.
   * @note 
@@ -877,7 +869,7 @@ void RCC_LSICmd(FunctionalState NewState)
 
 /**
   * @brief  Configures the RTC clock (RTCCLK).
-  * @note   Once the RTC clock is selected it can’t be changed unless the Backup domain is reset.
+  * @note   Once the RTC clock is selected it can't be changed unless the Backup domain is reset.
   * @param  RCC_RTCCLKSource: specifies the RTC clock source.
   *   This parameter can be one of the following values:
   *     @arg RCC_RTCCLKSource_LSE: LSE selected as RTC clock
@@ -909,7 +901,9 @@ void RCC_RTCCLKCmd(FunctionalState NewState)
 /**
   * @brief  Returns the frequencies of different on chip clocks.
   * @param  RCC_Clocks: pointer to a RCC_ClocksTypeDef structure which will hold
-  *   the clocks frequencies.
+  *         the clocks frequencies.
+  * @note   The result of this function could be not correct when using 
+  *         fractional value for HSE crystal.  
   * @retval None
   */
 void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
@@ -920,7 +914,7 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
   uint32_t prediv1source = 0, prediv1factor = 0, prediv2factor = 0, pll2mull = 0;
 #endif /* STM32F10X_CL */
 
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
   uint32_t prediv1factor = 0;
 #endif
     
@@ -930,10 +924,10 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
   switch (tmp)
   {
     case 0x00:  /* HSI used as system clock */
-      RCC_Clocks->SYSCLK_Frequency = HSI_Value;
+      RCC_Clocks->SYSCLK_Frequency = HSI_VALUE;
       break;
     case 0x04:  /* HSE used as system clock */
-      RCC_Clocks->SYSCLK_Frequency = HSE_Value;
+      RCC_Clocks->SYSCLK_Frequency = hse_value;
       break;
     case 0x08:  /* PLL used as system clock */
 
@@ -946,23 +940,23 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
       
       if (pllsource == 0x00)
       {/* HSI oscillator clock divided by 2 selected as PLL clock entry */
-        RCC_Clocks->SYSCLK_Frequency = (HSI_Value >> 1) * pllmull;
+        RCC_Clocks->SYSCLK_Frequency = (HSI_VALUE >> 1) * pllmull;
       }
       else
       {
- #if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)
+ #if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
        prediv1factor = (RCC->CFGR2 & CFGR2_PREDIV1) + 1;
        /* HSE oscillator clock selected as PREDIV1 clock entry */
-       RCC_Clocks->SYSCLK_Frequency = (HSE_Value / prediv1factor) * pllmull; 
+       RCC_Clocks->SYSCLK_Frequency = (HSE_VALUE / prediv1factor) * pllmull; 
  #else
         /* HSE selected as PLL clock entry */
         if ((RCC->CFGR & CFGR_PLLXTPRE_Mask) != (uint32_t)RESET)
         {/* HSE oscillator clock divided by 2 */
-          RCC_Clocks->SYSCLK_Frequency = (HSE_Value >> 1) * pllmull;
+          RCC_Clocks->SYSCLK_Frequency = (hse_value >> 1) * pllmull;
         }
         else
         {
-          RCC_Clocks->SYSCLK_Frequency = HSE_Value * pllmull;
+          RCC_Clocks->SYSCLK_Frequency = hse_value * pllmull;
         }
  #endif
       }
@@ -980,7 +974,7 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
             
       if (pllsource == 0x00)
       {/* HSI oscillator clock divided by 2 selected as PLL clock entry */
-        RCC_Clocks->SYSCLK_Frequency = (HSI_Value >> 1) * pllmull;
+        RCC_Clocks->SYSCLK_Frequency = (hse_value >> 1) * pllmull;
       }
       else
       {/* PREDIV1 selected as PLL clock entry */
@@ -991,7 +985,7 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
         
         if (prediv1source == 0)
         { /* HSE oscillator clock selected as PREDIV1 clock entry */
-          RCC_Clocks->SYSCLK_Frequency = (HSE_Value / prediv1factor) * pllmull;          
+          RCC_Clocks->SYSCLK_Frequency = (hse_value / prediv1factor) * pllmull;          
         }
         else
         {/* PLL2 clock selected as PREDIV1 clock entry */
@@ -999,14 +993,14 @@ void RCC_GetClocksFreq(RCC_ClocksTypeDef* RCC_Clocks)
           /* Get PREDIV2 division factor and PLL2 multiplication factor */
           prediv2factor = ((RCC->CFGR2 & CFGR2_PREDIV2) >> 4) + 1;
           pll2mull = ((RCC->CFGR2 & CFGR2_PLL2MUL) >> 8 ) + 2; 
-          RCC_Clocks->SYSCLK_Frequency = (((HSE_Value / prediv2factor) * pll2mull) / prediv1factor) * pllmull;                         
+          RCC_Clocks->SYSCLK_Frequency = (((hse_value / prediv2factor) * pll2mull) / prediv1factor) * pllmull;                         
         }
       }
 #endif /* STM32F10X_CL */ 
       break;
 
     default:
-      RCC_Clocks->SYSCLK_Frequency = HSI_Value;
+      RCC_Clocks->SYSCLK_Frequency = HSI_VALUE;
       break;
   }
 
@@ -1427,7 +1421,7 @@ ITStatus RCC_GetITStatus(uint8_t RCC_IT)
 }
 
 /**
-  * @brief  Clears the RCC’s interrupt pending bits.
+  * @brief  Clears the RCC's interrupt pending bits.
   * @param  RCC_IT: specifies the interrupt pending bit to clear.
   *   
   *   For @b STM32_Connectivity_line_devices, this parameter can be any combination
@@ -1474,4 +1468,4 @@ void RCC_ClearITPendingBit(uint8_t RCC_IT)
   * @}
   */
 
-/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
