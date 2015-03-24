@@ -1,7 +1,5 @@
 
 #include "global.h"
-//#include "stm32f10x.h"
-//#include "STM32vldiscovery.h"
 
 
 sensor_t acc; // acc access functions
@@ -76,7 +74,7 @@ bool setup()
 	gpio.mode = Mode_Out_PP;
 	gpioInit(GPIOC, &gpio);
 	
-	// HMC5883L과 통신할 i2c를 초기화 한다.
+	// MPU-6050, HMC5883L과 통신할 i2c를 초기화 한다.
 	i2cInit(I2CDEV_1, 0x00); // Init Master i2c 
 	printf( "init i2c\n");
 	
@@ -117,7 +115,7 @@ int main()
 	while(1)
 	{
 		curT = millis();
-		if (curT - oldT > 1000)
+		if (curT - oldT > 100)
 		{
 			int16_t accelgyro[6];	
 			int16_t Mag[3];
@@ -137,8 +135,8 @@ int main()
 			oldT = curT;
 			
 			LED0_TOGGLE;
-			delay(10);
-			LED0_TOGGLE;
+			//delay(10);
+			//LED0_TOGGLE;
 		}
 		
 		//delay(1000);
@@ -173,9 +171,9 @@ void SendSerialAccelGryro( int16_t accelgyro[6] )
 //	  scale factor(16384)로 나눠줘야 한다. +-2g 범위는 16,384값이다. 즉 32766값이면 2가 된다.	
 	
   //acceleration 원시 데이터 저장
-  float accel_x = accelgyro[0];
-  float accel_y = accelgyro[1];
-  float accel_z = accelgyro[2];
+  float accel_x = accelgyro[0];// - base_x_accel;
+  float accel_y = accelgyro[1];// - base_y_accel;
+  float accel_z = accelgyro[2];// - base_z_accel;
 	
 	 
   //accelerometer로 부터 각도 얻기
@@ -199,7 +197,8 @@ void SendSerialAccelGryro( int16_t accelgyro[6] )
   float unfiltered_gyro_angle_z = gyro_z*dt + get_last_gyro_z_angle();
   
   //알파를 이용해서 최종 각도 계산3
-  float alpha = 0.96;
+  //float alpha = 0.96;
+	float alpha = 0.86;
   float angle_x = alpha*gyro_angle_x + (1.0 - alpha)*accel_angle_x;
   float angle_y = alpha*gyro_angle_y + (1.0 - alpha)*accel_angle_y;
   float angle_z = gyro_angle_z;  //Accelerometer는 z-angle 없음	

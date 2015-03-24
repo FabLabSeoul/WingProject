@@ -32,7 +32,7 @@ void setup()  {
   println(Serial.list());
 
   println( "link portName = " + portName );
-  myPort = new Serial(this, portName, 19200);
+  myPort = new Serial(this, portName, 9600);
   myPort.clear();
 } 
 

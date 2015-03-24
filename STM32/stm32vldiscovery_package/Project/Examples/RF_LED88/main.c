@@ -5,6 +5,8 @@
 
 
 
+
+
 bool setup()
 {
 	gpio_config_t gpio;
@@ -19,7 +21,9 @@ bool setup()
 	gpio.pin = Pin_8 | Pin_9;
 	gpioInit(GPIOC, &gpio);
 	
-	SerialSetup(9600);	
+	//SerialSetup(9600);	
+	DMA_SerialSetup(9600);	
+	
 	
 	delay(100);
 
@@ -68,22 +72,27 @@ int main()
 	
 	while (1)
 	{
-		char data;
+//		char data;
 		
 //		while (USART_GetFlagStatus(USART1, USART_FLAG_RXNE)==SET);
-    while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET)
-    {
-    }
+//    while(USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET)
+ //   {
+ //   }
+
 
 		
 		//while (!(USART1->SR & USART_FLAG_RXNE));
 //    if(USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET)		
+		if (isReceiveData())
 		{
-			data = receiveData2();
-			if (data == 'S')
+//			data = receiveData2();
+//			if (data == 'S')
 			{
 				char buff[4];
-//				buff[ 0] = receiveData2();
+				buff[ 0] = *(char*)&RxBuffer1[5];
+				buff[ 1] = *(char*)&RxBuffer1[6];
+				buff[ 2] = *(char*)&RxBuffer1[7];
+				buff[ 3] = *(char*)&RxBuffer1[8];
 //				buff[ 1] = receiveData2();
 //				buff[ 2] = receiveData2();
 //				buff[ 3] = receiveData2();
@@ -142,12 +151,15 @@ int main()
 				}
 
 				
-				LED0_ON;
+				
+				uartStartRxDMA();
+				
+				LED0_OFF;
 			}
 		}
 
- 	  delay(10);		
-		LED0_OFF;
+ 	  delay(10);
+		LED0_ON;
 		//LED1_TOGGLE;
 		
 		//print_byte('A');
