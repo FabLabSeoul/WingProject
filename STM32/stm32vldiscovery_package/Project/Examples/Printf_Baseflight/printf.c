@@ -141,6 +141,7 @@ static void putchw(void *putp, putcf putf, int n, char z, char *bf)
         putf(putp, ch);
 }
 
+
 void tfp_format(void *putp, putcf putf, char *fmt, va_list va)
 {
     char bf[12];
