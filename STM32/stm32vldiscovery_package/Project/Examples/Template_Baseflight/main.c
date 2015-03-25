@@ -35,7 +35,7 @@ int main()
 	{
 		// 시리얼 통신 처리.
 		serialCom();
-
+		
 		printf( "test\n" );
 		
 		delay(1000);
