@@ -1,3 +1,9 @@
+//
+// baseflight MPU-6050, HMC5883L 라이브러리를 이용해 센서를 테스트한다.
+// 
+// I2C1 포트, PB6,7 (SCL, SDA) 에 센서를 연결한다.
+//
+//
 
 #include "global.h"
 
@@ -115,7 +121,7 @@ int main()
 	while(1)
 	{
 		curT = millis();
-		if (curT - oldT > 100)
+		if (curT - oldT > 10)
 		{
 			int16_t accelgyro[6];	
 			int16_t Mag[3];
