@@ -52,3 +52,19 @@
 #endif
 
 
+#include <list>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <functional>
+
+using std::list;
+using std::vector;
+using std::pair;
+using std::string;
+using std::wstring;
+
+
+class CSerialMonitorDlg;
+extern CSerialMonitorDlg *g_MainDlg;
+

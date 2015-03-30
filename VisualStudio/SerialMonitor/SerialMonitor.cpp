@@ -66,6 +66,7 @@ BOOL CSerialMonitorApp::InitInstance()
 		delete pShellManager;
 	}
 
+	dlg->DestroyWindow();
 	delete dlg;
 	return FALSE;
 }

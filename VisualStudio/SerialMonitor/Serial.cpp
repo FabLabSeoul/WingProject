@@ -14,9 +14,7 @@ CSerial::CSerial()
 
 CSerial::~CSerial()
 {
-
 	Close();
-
 }
 
 BOOL CSerial::Open( int nPort, int nBaud )
@@ -138,29 +136,34 @@ int CSerial::ReadDataWaiting( void )
 
 int CSerial::ReadData( void *buffer, int limit )
 {
-
 	if( !m_bOpened || m_hIDComDev == NULL ) return( 0 );
 
 	BOOL bReadStatus;
 	DWORD dwBytesRead, dwErrorFlags;
 	COMSTAT ComStat;
 
-	ClearCommError( m_hIDComDev, &dwErrorFlags, &ComStat );
-	if( !ComStat.cbInQue ) return( 0 );
+	const BOOL isSucceed = ClearCommError( m_hIDComDev, &dwErrorFlags, &ComStat );
+	if (!ComStat.cbInQue) return( 0 );
+	if (!isSucceed)
+	{
+		m_bOpened = FALSE;
+		return -1;
+	}
 
 	dwBytesRead = (DWORD) ComStat.cbInQue;
 	if( limit < (int) dwBytesRead ) dwBytesRead = (DWORD) limit;
 
 	bReadStatus = ReadFile( m_hIDComDev, buffer, dwBytesRead, &dwBytesRead, &m_OverlappedRead );
-	if( !bReadStatus ){
-		if( GetLastError() == ERROR_IO_PENDING ){
+	if( !bReadStatus )
+	{
+		if( GetLastError() == ERROR_IO_PENDING )
+		{
 			WaitForSingleObject( m_OverlappedRead.hEvent, 2000 );
 			return( (int) dwBytesRead );
-			}
-		return( 0 );
 		}
+		return( 0 );
+	}
 
 	return( (int) dwBytesRead );
-
 }
 

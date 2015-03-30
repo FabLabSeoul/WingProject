@@ -7,6 +7,8 @@
 #include "afxwin.h"
 #include "afxcmn.h"
 
+class CGraphDialog;
+
 // CSerialMonitorDlg dialog
 class CSerialMonitorDlg : public CDialogEx
 {
@@ -18,6 +20,9 @@ public:
 	enum { IDD = IDD_SERIALMONITOR_DIALOG };
 
 	void MainLoop();
+	void ShowGraphWindow(const bool isShow);
+	void SaveConfigFile();
+
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
@@ -33,6 +38,11 @@ protected:
 	CSerial m_Serial;
 	bool m_isConnect;
 	bool m_isFastMode;
+	bool m_isShowGraphWnd;
+	int m_PortNumberIndex;
+	int m_BaudrateIndex;
+	CGraphDialog *m_graphDlg; // modeless
+
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -63,4 +73,19 @@ public:
 	int m_FastModeButton;
 	afx_msg void OnBnClickedRadio1();
 	afx_msg void OnBnClickedRadio2();
+	CButton m_TopMostButton;
+	afx_msg void OnBnClickedCheckTopmost();
+	CButton m_Show1LineButton;
+	afx_msg void OnBnClickedCheckShow1line();
+	CStatic m_Static1;
+	CStatic m_Static2;
+	CButton m_ClearButton;
+	int m_ModeSlect;
+	afx_msg void OnBnClickedButtonGraph();
+	afx_msg void OnClose();
 };
+
+
+inline void CSerialMonitorDlg::ShowGraphWindow(const bool isShow) {
+	m_isShowGraphWnd = isShow;
+}
