@@ -1,9 +1,9 @@
-;******************** (C) COPYRIGHT 2011 STMicroelectronics ********************
+;******************** (C) COPYRIGHT 2010 STMicroelectronics ********************
 ;* File Name          : startup_stm32f10x_md.s
 ;* Author             : MCD Application Team
-;* Version            : V3.5.0
-;* Date               : 11-March-2011
-;* Description        : STM32F10x Medium Density Devices vector table for MDK-ARM 
+;* Version            : V3.3.0
+;* Date               : 04/16/2010
+;* Description        : STM32F10x Medium Density Devices vector table for RVMDK 
 ;*                      toolchain.  
 ;*                      This module performs:
 ;*                      - Set the initial SP
@@ -30,7 +30,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00001000
+Stack_Size      EQU     0x00000400
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -304,4 +304,4 @@ __user_initial_stackheap
 
                  END
 
-;******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE*****
+;******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE*****

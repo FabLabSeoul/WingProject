@@ -2,11 +2,11 @@
   ******************************************************************************
   * @file    stm32f10x_dac.c
   * @author  MCD Application Team
-  * @version V3.5.0
-  * @date    11-March-2011
+  * @version V3.3.0
+  * @date    04/16/2010
   * @brief   This file provides all the DAC firmware functions.
   ******************************************************************************
-  * @attention
+  * @copy
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
   * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
@@ -15,9 +15,8 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************
-  */
+  * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
+  */ 
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_dac.h"
@@ -44,20 +43,29 @@
   * @{
   */
 
+/* DAC EN mask */
+#define CR_EN_Set                  ((uint32_t)0x00000001)
+
+/* DAC DMAEN mask */
+#define CR_DMAEN_Set               ((uint32_t)0x00001000)
+
 /* CR register Mask */
-#define CR_CLEAR_MASK              ((uint32_t)0x00000FFE)
+#define CR_CLEAR_Mask              ((uint32_t)0x00000FFE)
+
+/* DAC SWTRIG mask */
+#define SWTRIGR_SWTRIG_Set         ((uint32_t)0x00000001)
 
 /* DAC Dual Channels SWTRIG masks */
-#define DUAL_SWTRIG_SET            ((uint32_t)0x00000003)
-#define DUAL_SWTRIG_RESET          ((uint32_t)0xFFFFFFFC)
+#define DUAL_SWTRIG_Set            ((uint32_t)0x00000003)
+#define DUAL_SWTRIG_Reset          ((uint32_t)0xFFFFFFFC)
 
 /* DHR registers offsets */
-#define DHR12R1_OFFSET             ((uint32_t)0x00000008)
-#define DHR12R2_OFFSET             ((uint32_t)0x00000014)
-#define DHR12RD_OFFSET             ((uint32_t)0x00000020)
+#define DHR12R1_Offset             ((uint32_t)0x00000008)
+#define DHR12R2_Offset             ((uint32_t)0x00000014)
+#define DHR12RD_Offset             ((uint32_t)0x00000020)
 
 /* DOR register offset */
-#define DOR_OFFSET                 ((uint32_t)0x0000002C)
+#define DOR_Offset                 ((uint32_t)0x0000002C)
 /**
   * @}
   */
@@ -105,13 +113,13 @@ void DAC_DeInit(void)
 
 /**
   * @brief  Initializes the DAC peripheral according to the specified 
-  *         parameters in the DAC_InitStruct.
+  *   parameters in the DAC_InitStruct.
   * @param  DAC_Channel: the selected DAC channel. 
   *   This parameter can be one of the following values:
   *     @arg DAC_Channel_1: DAC Channel1 selected
   *     @arg DAC_Channel_2: DAC Channel2 selected
   * @param  DAC_InitStruct: pointer to a DAC_InitTypeDef structure that
-  *        contains the configuration information for the specified DAC channel.
+  *   contains the configuration information for the specified DAC channel.
   * @retval None
   */
 void DAC_Init(uint32_t DAC_Channel, DAC_InitTypeDef* DAC_InitStruct)
@@ -126,9 +134,9 @@ void DAC_Init(uint32_t DAC_Channel, DAC_InitTypeDef* DAC_InitStruct)
   /* Get the DAC CR value */
   tmpreg1 = DAC->CR;
   /* Clear BOFFx, TENx, TSELx, WAVEx and MAMPx bits */
-  tmpreg1 &= ~(CR_CLEAR_MASK << DAC_Channel);
-  /* Configure for the selected DAC channel: buffer output, trigger, wave generation,
-     mask/amplitude for wave generation */
+  tmpreg1 &= ~(CR_CLEAR_Mask << DAC_Channel);
+  /* Configure for the selected DAC channel: buffer output, trigger, wave genration,
+     mask/amplitude for wave genration */
   /* Set TSELx and TENx bits according to DAC_Trigger value */
   /* Set WAVEx bits according to DAC_WaveGeneration value */
   /* Set MAMPx bits according to DAC_LFSRUnmask_TriangleAmplitude value */ 
@@ -144,7 +152,7 @@ void DAC_Init(uint32_t DAC_Channel, DAC_InitTypeDef* DAC_InitStruct)
 /**
   * @brief  Fills each DAC_InitStruct member with its default value.
   * @param  DAC_InitStruct : pointer to a DAC_InitTypeDef structure which will
-  *         be initialized.
+  *   be initialized.
   * @retval None
   */
 void DAC_StructInit(DAC_InitTypeDef* DAC_InitStruct)
@@ -178,15 +186,15 @@ void DAC_Cmd(uint32_t DAC_Channel, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected DAC channel */
-    DAC->CR |= (DAC_CR_EN1 << DAC_Channel);
+    DAC->CR |= CR_EN_Set << DAC_Channel;
   }
   else
   {
     /* Disable the selected DAC channel */
-    DAC->CR &= ~(DAC_CR_EN1 << DAC_Channel);
+    DAC->CR &= ~(CR_EN_Set << DAC_Channel);
   }
 }
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)
 /**
   * @brief  Enables or disables the specified DAC interrupts.
   * @param  DAC_Channel: the selected DAC channel. 
@@ -238,12 +246,12 @@ void DAC_DMACmd(uint32_t DAC_Channel, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable the selected DAC channel DMA request */
-    DAC->CR |= (DAC_CR_DMAEN1 << DAC_Channel);
+    DAC->CR |= CR_DMAEN_Set << DAC_Channel;
   }
   else
   {
     /* Disable the selected DAC channel DMA request */
-    DAC->CR &= ~(DAC_CR_DMAEN1 << DAC_Channel);
+    DAC->CR &= ~(CR_DMAEN_Set << DAC_Channel);
   }
 }
 
@@ -265,12 +273,12 @@ void DAC_SoftwareTriggerCmd(uint32_t DAC_Channel, FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable software trigger for the selected DAC channel */
-    DAC->SWTRIGR |= (uint32_t)DAC_SWTRIGR_SWTRIG1 << (DAC_Channel >> 4);
+    DAC->SWTRIGR |= SWTRIGR_SWTRIG_Set << (DAC_Channel >> 4);
   }
   else
   {
     /* Disable software trigger for the selected DAC channel */
-    DAC->SWTRIGR &= ~((uint32_t)DAC_SWTRIGR_SWTRIG1 << (DAC_Channel >> 4));
+    DAC->SWTRIGR &= ~(SWTRIGR_SWTRIG_Set << (DAC_Channel >> 4));
   }
 }
 
@@ -288,12 +296,12 @@ void DAC_DualSoftwareTriggerCmd(FunctionalState NewState)
   if (NewState != DISABLE)
   {
     /* Enable software trigger for both DAC channels */
-    DAC->SWTRIGR |= DUAL_SWTRIG_SET ;
+    DAC->SWTRIGR |= DUAL_SWTRIG_Set ;
   }
   else
   {
     /* Disable software trigger for both DAC channels */
-    DAC->SWTRIGR &= DUAL_SWTRIG_RESET;
+    DAC->SWTRIGR &= DUAL_SWTRIG_Reset;
   }
 }
 
@@ -331,11 +339,11 @@ void DAC_WaveGenerationCmd(uint32_t DAC_Channel, uint32_t DAC_Wave, FunctionalSt
 
 /**
   * @brief  Set the specified data holding register value for DAC channel1.
-  * @param  DAC_Align: Specifies the data alignment for DAC channel1.
+  * @param  DAC_Align: Specifies the data alignement for DAC channel1.
   *   This parameter can be one of the following values:
-  *     @arg DAC_Align_8b_R: 8bit right data alignment selected
-  *     @arg DAC_Align_12b_L: 12bit left data alignment selected
-  *     @arg DAC_Align_12b_R: 12bit right data alignment selected
+  *     @arg DAC_Align_8b_R: 8bit right data alignement selected
+  *     @arg DAC_Align_12b_L: 12bit left data alignement selected
+  *     @arg DAC_Align_12b_R: 12bit right data alignement selected
   * @param  Data : Data to be loaded in the selected data holding register.
   * @retval None
   */
@@ -348,7 +356,7 @@ void DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
   assert_param(IS_DAC_DATA(Data));
   
   tmp = (uint32_t)DAC_BASE; 
-  tmp += DHR12R1_OFFSET + DAC_Align;
+  tmp += DHR12R1_Offset + DAC_Align;
 
   /* Set the DAC channel1 selected data holding register */
   *(__IO uint32_t *) tmp = Data;
@@ -356,11 +364,11 @@ void DAC_SetChannel1Data(uint32_t DAC_Align, uint16_t Data)
 
 /**
   * @brief  Set the specified data holding register value for DAC channel2.
-  * @param  DAC_Align: Specifies the data alignment for DAC channel2.
+  * @param  DAC_Align: Specifies the data alignement for DAC channel2.
   *   This parameter can be one of the following values:
-  *     @arg DAC_Align_8b_R: 8bit right data alignment selected
-  *     @arg DAC_Align_12b_L: 12bit left data alignment selected
-  *     @arg DAC_Align_12b_R: 12bit right data alignment selected
+  *     @arg DAC_Align_8b_R: 8bit right data alignement selected
+  *     @arg DAC_Align_12b_L: 12bit left data alignement selected
+  *     @arg DAC_Align_12b_R: 12bit right data alignement selected
   * @param  Data : Data to be loaded in the selected data holding register.
   * @retval None
   */
@@ -373,7 +381,7 @@ void DAC_SetChannel2Data(uint32_t DAC_Align, uint16_t Data)
   assert_param(IS_DAC_DATA(Data));
   
   tmp = (uint32_t)DAC_BASE;
-  tmp += DHR12R2_OFFSET + DAC_Align;
+  tmp += DHR12R2_Offset + DAC_Align;
 
   /* Set the DAC channel2 selected data holding register */
   *(__IO uint32_t *)tmp = Data;
@@ -382,11 +390,11 @@ void DAC_SetChannel2Data(uint32_t DAC_Align, uint16_t Data)
 /**
   * @brief  Set the specified data holding register value for dual channel
   *   DAC.
-  * @param  DAC_Align: Specifies the data alignment for dual channel DAC.
+  * @param  DAC_Align: Specifies the data alignement for dual channel DAC.
   *   This parameter can be one of the following values:
-  *     @arg DAC_Align_8b_R: 8bit right data alignment selected
-  *     @arg DAC_Align_12b_L: 12bit left data alignment selected
-  *     @arg DAC_Align_12b_R: 12bit right data alignment selected
+  *     @arg DAC_Align_8b_R: 8bit right data alignement selected
+  *     @arg DAC_Align_12b_L: 12bit left data alignement selected
+  *     @arg DAC_Align_12b_R: 12bit right data alignement selected
   * @param  Data2: Data for DAC Channel2 to be loaded in the selected data 
   *   holding register.
   * @param  Data1: Data for DAC Channel1 to be loaded in the selected data 
@@ -413,14 +421,14 @@ void DAC_SetDualChannelData(uint32_t DAC_Align, uint16_t Data2, uint16_t Data1)
   }
   
   tmp = (uint32_t)DAC_BASE;
-  tmp += DHR12RD_OFFSET + DAC_Align;
+  tmp += DHR12RD_Offset + DAC_Align;
 
   /* Set the dual DAC selected data holding register */
   *(__IO uint32_t *)tmp = data;
 }
 
 /**
-  * @brief  Returns the last data output value of the selected DAC channel.
+  * @brief  Returns the last data output value of the selected DAC cahnnel.
   * @param  DAC_Channel: the selected DAC channel. 
   *   This parameter can be one of the following values:
   *     @arg DAC_Channel_1: DAC Channel1 selected
@@ -435,13 +443,13 @@ uint16_t DAC_GetDataOutputValue(uint32_t DAC_Channel)
   assert_param(IS_DAC_CHANNEL(DAC_Channel));
   
   tmp = (uint32_t) DAC_BASE ;
-  tmp += DOR_OFFSET + ((uint32_t)DAC_Channel >> 2);
+  tmp += DOR_Offset + ((uint32_t)DAC_Channel >> 2);
   
   /* Returns the DAC channel data output register value */
   return (uint16_t) (*(__IO uint32_t*) tmp);
 }
 
-#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL) || defined (STM32F10X_HD_VL)
+#if defined (STM32F10X_LD_VL) || defined (STM32F10X_MD_VL)
 /**
   * @brief  Checks whether the specified DAC flag is set or not.
   * @param  DAC_Channel: thee selected DAC channel. 
@@ -535,7 +543,7 @@ ITStatus DAC_GetITStatus(uint32_t DAC_Channel, uint32_t DAC_IT)
 }
 
 /**
-  * @brief  Clears the DAC channelx's interrupt pending bits.
+  * @brief  Clears the DAC channelx’s interrupt pending bits.
   * @param  DAC_Channel: the selected DAC channel. 
   *   This parameter can be one of the following values:
   *     @arg DAC_Channel_1: DAC Channel1 selected
@@ -568,4 +576,4 @@ void DAC_ClearITPendingBit(uint32_t DAC_Channel, uint32_t DAC_IT)
   * @}
   */
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/

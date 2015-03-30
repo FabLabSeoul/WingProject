@@ -2,11 +2,11 @@
   ******************************************************************************
   * @file    stm32f10x_rtc.c
   * @author  MCD Application Team
-  * @version V3.5.0
-  * @date    11-March-2011
+  * @version V3.3.0
+  * @date    04/16/2010
   * @brief   This file provides all the RTC firmware functions.
   ******************************************************************************
-  * @attention
+  * @copy
   *
   * THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
   * WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE
@@ -15,9 +15,8 @@
   * FROM THE CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE
   * CODING INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
   *
-  * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
-  ******************************************************************************
-  */
+  * <h2><center>&copy; COPYRIGHT 2010 STMicroelectronics</center></h2>
+  */ 
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_rtc.h"
@@ -41,8 +40,11 @@
 /** @defgroup RTC_Private_Defines
   * @{
   */
-#define RTC_LSB_MASK     ((uint32_t)0x0000FFFF)  /*!< RTC LSB Mask */
-#define PRLH_MSB_MASK    ((uint32_t)0x000F0000)  /*!< RTC Prescaler MSB Mask */
+
+#define CRL_CNF_Set      ((uint16_t)0x0010)      /*!< Configuration Flag Enable Mask */
+#define CRL_CNF_Reset    ((uint16_t)0xFFEF)      /*!< Configuration Flag Disable Mask */
+#define RTC_LSB_Mask     ((uint32_t)0x0000FFFF)  /*!< RTC LSB Mask */
+#define PRLH_MSB_Mask    ((uint32_t)0x000F0000)  /*!< RTC Prescaler MSB Mask */
 
 /**
   * @}
@@ -111,7 +113,7 @@ void RTC_ITConfig(uint16_t RTC_IT, FunctionalState NewState)
 void RTC_EnterConfigMode(void)
 {
   /* Set the CNF flag to enter in the Configuration Mode */
-  RTC->CRL |= RTC_CRL_CNF;
+  RTC->CRL |= CRL_CNF_Set;
 }
 
 /**
@@ -122,7 +124,7 @@ void RTC_EnterConfigMode(void)
 void RTC_ExitConfigMode(void)
 {
   /* Reset the CNF flag to exit from the Configuration Mode */
-  RTC->CRL &= (uint16_t)~((uint16_t)RTC_CRL_CNF); 
+  RTC->CRL &= CRL_CNF_Reset;
 }
 
 /**
@@ -148,7 +150,7 @@ void RTC_SetCounter(uint32_t CounterValue)
   /* Set RTC COUNTER MSB word */
   RTC->CNTH = CounterValue >> 16;
   /* Set RTC COUNTER LSB word */
-  RTC->CNTL = (CounterValue & RTC_LSB_MASK);
+  RTC->CNTL = (CounterValue & RTC_LSB_Mask);
   RTC_ExitConfigMode();
 }
 
@@ -164,9 +166,9 @@ void RTC_SetPrescaler(uint32_t PrescalerValue)
   
   RTC_EnterConfigMode();
   /* Set RTC PRESCALER MSB word */
-  RTC->PRLH = (PrescalerValue & PRLH_MSB_MASK) >> 16;
+  RTC->PRLH = (PrescalerValue & PRLH_MSB_Mask) >> 16;
   /* Set RTC PRESCALER LSB word */
-  RTC->PRLL = (PrescalerValue & RTC_LSB_MASK);
+  RTC->PRLL = (PrescalerValue & RTC_LSB_Mask);
   RTC_ExitConfigMode();
 }
 
@@ -181,7 +183,7 @@ void RTC_SetAlarm(uint32_t AlarmValue)
   /* Set the ALARM MSB word */
   RTC->ALRH = AlarmValue >> 16;
   /* Set the ALARM LSB word */
-  RTC->ALRL = (AlarmValue & RTC_LSB_MASK);
+  RTC->ALRL = (AlarmValue & RTC_LSB_Mask);
   RTC_ExitConfigMode();
 }
 
@@ -260,7 +262,7 @@ FlagStatus RTC_GetFlagStatus(uint16_t RTC_FLAG)
 }
 
 /**
-  * @brief  Clears the RTC's pending flags.
+  * @brief  Clears the RTC’s pending flags.
   * @param  RTC_FLAG: specifies the flag to clear.
   *   This parameter can be any combination of the following values:
   *     @arg RTC_FLAG_RSF: Registers Synchronized flag. This flag is cleared only after
@@ -275,12 +277,12 @@ void RTC_ClearFlag(uint16_t RTC_FLAG)
   /* Check the parameters */
   assert_param(IS_RTC_CLEAR_FLAG(RTC_FLAG)); 
     
-  /* Clear the corresponding RTC flag */
+  /* Clear the coressponding RTC flag */
   RTC->CRL &= (uint16_t)~RTC_FLAG;
 }
 
 /**
-  * @brief  Checks whether the specified RTC interrupt has occurred or not.
+  * @brief  Checks whether the specified RTC interrupt has occured or not.
   * @param  RTC_IT: specifies the RTC interrupts sources to check.
   *   This parameter can be one of the following values:
   *     @arg RTC_IT_OW: Overflow interrupt
@@ -307,7 +309,7 @@ ITStatus RTC_GetITStatus(uint16_t RTC_IT)
 }
 
 /**
-  * @brief  Clears the RTC's interrupt pending bits.
+  * @brief  Clears the RTC’s interrupt pending bits.
   * @param  RTC_IT: specifies the interrupt pending bit to clear.
   *   This parameter can be any combination of the following values:
   *     @arg RTC_IT_OW: Overflow interrupt
@@ -320,7 +322,7 @@ void RTC_ClearITPendingBit(uint16_t RTC_IT)
   /* Check the parameters */
   assert_param(IS_RTC_IT(RTC_IT));  
   
-  /* Clear the corresponding RTC pending bit */
+  /* Clear the coressponding RTC pending bit */
   RTC->CRL &= (uint16_t)~RTC_IT;
 }
 
@@ -336,4 +338,4 @@ void RTC_ClearITPendingBit(uint16_t RTC_IT)
   * @}
   */
 
-/******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE****/
+/******************* (C) COPYRIGHT 2010 STMicroelectronics *****END OF FILE****/
