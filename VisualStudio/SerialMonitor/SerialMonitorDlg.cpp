@@ -102,6 +102,7 @@ BOOL CSerialMonitorDlg::OnInitDialog()
 	m_DisconnectButton.EnableWindow(FALSE);
 	m_AutoScrollButton.SetCheck(1);
 	m_NormalModeButton.SetCheck(1);
+	m_Editor.SetBackgroundColor(FALSE, RGB(0, 0, 0));
 
 	m_graphDlg = new CGraphDialog(this);
 	m_graphDlg->Create(CGraphDialog::IDD, this);
@@ -157,8 +158,12 @@ BOOL CSerialMonitorDlg::OnInitDialog()
 
 			// Plot Command Editor Text를 읽어온다. 환경파일 끝까지 읽는다.
 			std::string strCmd((std::istreambuf_iterator<char>(iif)), std::istreambuf_iterator<char>());
-			wstring wstrCmd = common::str2wstr(strCmd);
-			m_graphDlg->m_CommandEditor.SetWindowText(wstrCmd.c_str());
+			common::trim(strCmd);
+			if (!strCmd.empty())
+			{
+				wstring wstrCmd = common::str2wstr(strCmd);
+				m_graphDlg->m_CommandEditor.SetWindowText(wstrCmd.c_str());
+			}
 		}
 	}
 
@@ -404,7 +409,12 @@ void CSerialMonitorDlg::Process(float deltaT)
 		// 일반 출력 모드.
 		CString str;
 		str += data;
-		AppendToLogAndScroll(str, RGB(0,0,0));
+		AppendToLogAndScroll(str, RGB(200,200,200));
+
+		//// 엔터 문자가 들어오면, 시리얼정보를 그래프 창에 전달한다.
+		//if (str == "\n")
+		//	if (m_isShowGraphWnd)
+		//		m_graphDlg->SetString(str);
 	}
 
 }

@@ -42,12 +42,18 @@ protected:
 	int m_headIdx;
 	int m_tailIdx;
 
+	CBrush m_blackBrush;
+	CPen m_plotPen;
+	CPen m_gridPen1; // line width 1
+	CPen m_gridPen2; // line width 2
+
 	virtual void OnDraw(CDC* pDC);      // overridden to draw this view
 	virtual void OnInitialUpdate();     // first time after construct
 
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 };
 
 

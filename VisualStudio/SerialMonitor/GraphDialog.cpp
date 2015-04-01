@@ -234,12 +234,12 @@ void CGraphDialog::CalcGraphWindowSize()
 	for each (auto &it in m_plotWindows)
 	{
 		if (it.wnd)
-			it.wnd->MoveWindow(CRect(5, plotT, cr.Width() - 5, plotT + plotH));
+			it.wnd->MoveWindow(CRect(0, plotT, cr.Width(), plotT + plotH));
 		plotT += plotH;
 	}
 
 	// 명령창 과 Update버튼 위치도 따라 바뀐다.
-	m_CommandEditor.MoveWindow(CRect(5, cr.bottom - editCr.Height() - 5, cr.right - 5, cr.bottom - 5));
+	m_CommandEditor.MoveWindow(CRect(0, cr.bottom - editCr.Height() - 5, cr.right, cr.bottom - 5));
 
 	m_UpdateButton.MoveWindow(CRect(
 		cr.right - 5 - btnR.Width(),
@@ -259,13 +259,15 @@ void CGraphDialog::CalcGraphWindowSize()
 		cr.left + 5 + text1R.Width(),
 		cr.bottom - editCr.Height() - 3 - 5));
 
+	RedrawWindow();
 }
 
 
 void CGraphDialog::OnBnClickedButtonHelp()
 {
 	AfxMessageBox(
-L"plot = x-range, y-range, x-visible-range, y-visible-range, option \n\
+L"그래프는 Fast 1 line 모드일 때만 동작한다.\n\n\
+plot = x-range, y-range, x-visible-range, y-visible-range, option \n\
 	- x-range: 0 - auto \n\
 	- y-range : 0 - auto \n\
 	- x-visible - range : 0 - auto \n\
