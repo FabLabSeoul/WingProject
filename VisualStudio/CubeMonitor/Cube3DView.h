@@ -4,7 +4,7 @@
 static const int ID_VIEW_CUBE3D = 10000;
 
 // CCube3DView
-class C3DView;
+class C3DDialog;
 class CCube3DView : public CDockablePane
 {
 
@@ -14,7 +14,7 @@ public:
 
 
 protected:
-	C3DView *m_view;
+	C3DDialog *m_view = NULL;
 
 
 protected:

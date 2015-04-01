@@ -11,6 +11,7 @@
 #include "CubeMonitorDoc.h"
 #include "CubeMonitorView.h"
 #include <mmsystem.h>
+#include "C3DDialog.h"
 
 
 #ifdef _DEBUG
@@ -139,6 +140,7 @@ BOOL CCubeMonitorApp::InitInstance()
 	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
+
 	return TRUE;
 }
 
@@ -219,6 +221,15 @@ BOOL CCubeMonitorApp::OnIdle(LONG lCount)
 	const int curT = timeGetTime();
 	const float deltaSeconds = (curT - oldT) * 0.001f; // 1초가 경과되면 1이된다.
 	
+	if (deltaSeconds > 0.01f)
+	{
+		if (g_3DView)
+		{
+			g_3DView->Update(deltaSeconds);
+			g_3DView->Render();
+		}
+		oldT = curT;
+	}
 
 	CWinAppEx::OnIdle(lCount);
 	return TRUE; // TRUE를 리턴시켜야 계속 OnIdle()이 호출된다.

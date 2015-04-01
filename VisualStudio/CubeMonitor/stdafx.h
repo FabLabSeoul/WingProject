@@ -52,3 +52,10 @@
 #endif
 
 
+#include "Common/common.h"
+#include "Graphic/graphic.h"
+
+
+class C3DDialog;
+extern C3DDialog *g_3DView;
+

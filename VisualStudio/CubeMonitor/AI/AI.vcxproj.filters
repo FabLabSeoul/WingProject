@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="ai.h" />
+    <ClInclude Include="action\action.h">
+      <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="aidef.h" />
+    <ClInclude Include="action\rootaction.h">
+      <Filter>action</Filter>
+    </ClInclude>
+    <ClInclude Include="control\messagemanager.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="control\aimain.h">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="object\aiinterface.h">
+      <Filter>object</Filter>
+    </ClInclude>
+    <ClInclude Include="action\move.h">
+      <Filter>action</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="action\action.cpp">
+      <Filter>action</Filter>
+    </ClCompile>
+    <ClCompile Include="control\messagemanager.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="control\aimain.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
+    <ClCompile Include="action\move.cpp">
+      <Filter>action</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="action">
+      <UniqueIdentifier>{322a8cf9-8f69-49af-978f-cf4d47dce548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="object">
+      <UniqueIdentifier>{da742f91-e829-4bfb-962c-8f6ec268f459}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="control">
+      <UniqueIdentifier>{3ea91d00-f0eb-4336-bde9-1b6a00d82f7f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

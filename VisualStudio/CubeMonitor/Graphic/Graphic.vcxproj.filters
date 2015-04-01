@@ -1,0 +1,409 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="graphic.h" />
+    <ClInclude Include="model\node.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\mesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="base\indexbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\light.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\material.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\texture.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\vertexbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\resourcemanager.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="model\rawmesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="importer\modelimporter.h">
+      <Filter>importer</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\Renderer.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="base\vertexformat.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="model\track.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\rawani.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\bonenode.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\rigidmesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\skinnedmesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="base\grid.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\grid2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="model\bonemgr.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="base\dxInit.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\graphicdef.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite\sprite.h">
+      <Filter>sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="base\line.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\box.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\cube.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\collision.h">
+      <Filter>collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\collisionmanager.h">
+      <Filter>collision</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\boundingbox.h">
+      <Filter>collision</Filter>
+    </ClInclude>
+    <ClInclude Include="base\shader.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\sphere.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\terrain.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="base\camera.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\skybox.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\terraineditor.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\terraincursor.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\rawterrain.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\terrainimporter.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\terrainexporter.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="base\surface.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\circle.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\maincamera.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="base\shadow1.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="character\character.h">
+      <Filter>character</Filter>
+    </ClInclude>
+    <ClInclude Include="character\characteranalyzer.h">
+      <Filter>character</Filter>
+    </ClInclude>
+    <ClInclude Include="character\teracharacter.h">
+      <Filter>character</Filter>
+    </ClInclude>
+    <ClInclude Include="character\archebladecharacter.h">
+      <Filter>character</Filter>
+    </ClInclude>
+    <ClInclude Include="base\meshbuffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\particles.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="base\text.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="particle\snow.h">
+      <Filter>particle</Filter>
+    </ClInclude>
+    <ClInclude Include="collision\frustum.h">
+      <Filter>collision</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\lightmanager.h">
+      <Filter>manager</Filter>
+    </ClInclude>
+    <ClInclude Include="base\cube2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="model\blendtrack.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="base\quad.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\billboard.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="base\vertexdeclaration.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="character\sc2character.h">
+      <Filter>character</Filter>
+    </ClInclude>
+    <ClInclude Include="base\surface2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain\water.h">
+      <Filter>terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="base\skybox2.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="action\actiondef.h">
+      <Filter>action</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="model\node.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\mesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="base\indexbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\light.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\material.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\texture.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\vertexbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\resourcemanager.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="importer\modelimporter.cpp">
+      <Filter>importer</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\Renderer.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="model\track.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\bonenode.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\rigidmesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\skinnedmesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="base\grid.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\grid2.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="model\bonemgr.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\rawmesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="base\dxinit.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite\sprite.cpp">
+      <Filter>sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="base\line.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\box.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\cube.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="collision\collisionmanager.cpp">
+      <Filter>collision</Filter>
+    </ClCompile>
+    <ClCompile Include="collision\boundingbox.cpp">
+      <Filter>collision</Filter>
+    </ClCompile>
+    <ClCompile Include="base\shader.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\sphere.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain\terrain.cpp">
+      <Filter>terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="base\camera.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\skybox.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain\terraineditor.cpp">
+      <Filter>terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain\terraincursor.cpp">
+      <Filter>terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain\terrainimporter.cpp">
+      <Filter>terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain\terrainexporter.cpp">
+      <Filter>terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="base\surface.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\circle.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\maincamera.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="base\shadow1.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="character\character.cpp">
+      <Filter>character</Filter>
+    </ClCompile>
+    <ClCompile Include="character\characteranalyzer.cpp">
+      <Filter>character</Filter>
+    </ClCompile>
+    <ClCompile Include="character\teracharacter.cpp">
+      <Filter>character</Filter>
+    </ClCompile>
+    <ClCompile Include="character\archebladecharacter.cpp">
+      <Filter>character</Filter>
+    </ClCompile>
+    <ClCompile Include="base\meshbuffer.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\particles.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="base\text.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="particle\snow.cpp">
+      <Filter>particle</Filter>
+    </ClCompile>
+    <ClCompile Include="collision\frustum.cpp">
+      <Filter>collision</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\lightmanager.cpp">
+      <Filter>manager</Filter>
+    </ClCompile>
+    <ClCompile Include="base\cube2.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="model\blendtrack.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="base\quad.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\billboard.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="base\vertexdeclaration.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="character\sc2character.cpp">
+      <Filter>character</Filter>
+    </ClCompile>
+    <ClCompile Include="base\surface2.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain\water.cpp">
+      <Filter>terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="base\skybox2.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="model">
+      <UniqueIdentifier>{26b94ef7-1f2c-401f-a7dd-bcfc4a70711c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{c5706fb9-e586-41aa-9ea2-ac17edb7c4d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="manager">
+      <UniqueIdentifier>{804bc56f-36fa-4643-8c34-4d4bc353e013}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="importer">
+      <UniqueIdentifier>{bb4cb441-0f33-418f-a38f-2d1a634991c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sprite">
+      <UniqueIdentifier>{129f7791-e3a8-4c0e-b8fa-a42d872d79da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="collision">
+      <UniqueIdentifier>{da54e64d-e3e6-4ae6-b8d9-8e2a500dd94e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="terrain">
+      <UniqueIdentifier>{9985855d-6f18-4e28-8f9d-53164cfa9610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="action">
+      <UniqueIdentifier>{3988de06-3223-45da-bf9a-eabd68ea2673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="character">
+      <UniqueIdentifier>{fb7a0270-e7e9-4950-965e-67d8deb6088b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="particle">
+      <UniqueIdentifier>{0aebf8d1-0270-4f98-a8af-2291a0e72bb1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

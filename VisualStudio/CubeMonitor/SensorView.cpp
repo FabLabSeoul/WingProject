@@ -15,6 +15,7 @@ CSensorView::CSensorView()
 
 CSensorView::~CSensorView()
 {
+	SAFE_DELETE(m_view);
 }
 
 

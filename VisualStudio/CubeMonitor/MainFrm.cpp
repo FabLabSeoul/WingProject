@@ -192,6 +192,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 	*/
 
+
+
 	return 0;
 }
 

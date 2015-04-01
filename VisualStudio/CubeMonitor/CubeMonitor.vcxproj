@@ -102,7 +102,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="C3DView.h" />
+    <ClInclude Include="C3DDialog.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="Cube3DView.h" />
     <ClInclude Include="CubeMonitor.h" />
@@ -120,7 +120,7 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C3DView.cpp" />
+    <ClCompile Include="C3DDialog.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="Cube3DView.cpp" />
     <ClCompile Include="CubeMonitor.cpp" />
@@ -170,6 +170,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\CubeMonitor.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="AI\AI.vcxproj">
+      <Project>{c7f9eba2-b553-483b-bc34-d25f1c718255}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Common\Common.vcxproj">
+      <Project>{ef9ca22d-0c8f-42e9-ab66-98bc1a640f10}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Graphic\Graphic.vcxproj">
+      <Project>{3a91e3aa-18df-4733-9f41-ed09a61f97e3}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

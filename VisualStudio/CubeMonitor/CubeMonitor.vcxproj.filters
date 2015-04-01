@@ -57,13 +57,13 @@
     <ClInclude Include="Cube3DView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="C3DView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SensorView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SensorForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C3DDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -101,13 +101,13 @@
     <ClCompile Include="Cube3DView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C3DView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SensorView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SensorForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C3DDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

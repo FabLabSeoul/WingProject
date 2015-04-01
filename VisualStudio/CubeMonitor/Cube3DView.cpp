@@ -4,21 +4,18 @@
 #include "stdafx.h"
 #include "CubeMonitor.h"
 #include "Cube3DView.h"
-#include "C3DView.h"
+#include "C3DDialog.h"
 
 
 // CCube3DView
-
-//IMPLEMENT_DYNAMIC(CCube3DView, CDockablePane)
-
 CCube3DView::CCube3DView()
-	: m_view(NULL)
 {
 
 }
 
 CCube3DView::~CCube3DView()
 {
+	SAFE_DELETE(m_view);
 }
 
 
@@ -35,8 +32,9 @@ int CCube3DView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
-	m_view = new C3DView();
-	m_view->Create(NULL, NULL, WS_VISIBLE | WS_CHILD, CRect(0, 0, 100,100), this, 10);
+	m_view = new C3DDialog();
+	m_view->Create(C3DDialog::IDD, this);
+	m_view->ShowWindow(SW_SHOW);
 
 	return 0;
 }
@@ -51,3 +49,4 @@ void CCube3DView::OnSize(UINT nType, int cx, int cy)
 		m_view->MoveWindow(CRect(0, 0, cx, cy));
 	}
 }
+
