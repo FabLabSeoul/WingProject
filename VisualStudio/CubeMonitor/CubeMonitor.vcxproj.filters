@@ -13,6 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{b3487392-0974-4bab-aad1-1c4c2b0c7770}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Dialog">
+      <UniqueIdentifier>{0ad950fb-da84-472b-90f6-79986618f5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{93a10701-234d-4e6d-b071-b6c3c429fe64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI Component">
+      <UniqueIdentifier>{0483a55d-41de-4f40-a118-3345c7aa8d88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{b20d133a-14f6-4b0d-a95a-9cc596dc0af1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -33,38 +48,86 @@
     <ClInclude Include="CubeMonitorDoc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CubeMonitorView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FileView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ClassView.h">
-      <Filter>Header Files</Filter>
+      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="ViewTree.h">
-      <Filter>Header Files</Filter>
+      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="OutputWnd.h">
-      <Filter>Header Files</Filter>
+      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="PropertiesWnd.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Cube3DView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SensorView.h">
-      <Filter>Header Files</Filter>
+      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="SensorForm.h">
-      <Filter>Header Files</Filter>
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="SensorView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMonitorView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube3DView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassView.h">
+      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="C3DDialog.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="ConnectionDialog.h">
+      <Filter>Dialog</Filter>
+    </ClInclude>
+    <ClInclude Include="ComPortCombo.h">
+      <Filter>UI Component</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumDevices.h">
+      <Filter>UI Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Serial.h">
+      <Filter>UI Component</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeFlight.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialCommunication.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="BPCtrlAnchorMap.h">
+      <Filter>UI Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialObserver.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="DockablePaneBase.h">
+      <Filter>UI Component</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialEditorForm.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialEditorView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="DockablePaneChildView.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialGraphForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlotWindow.h">
+      <Filter>UI Component</Filter>
+    </ClInclude>
+    <ClInclude Include="UpdateObserver.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,35 +143,77 @@
     <ClCompile Include="CubeMonitorDoc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CubeMonitorView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FileView.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="C3DDialog.cpp">
+      <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="ClassView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ViewTree.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OutputWnd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertiesWnd.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="Cube3DView.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="SensorView.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="CubeMonitorView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="FileView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWnd.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesWnd.cpp">
+      <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="SensorForm.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="SensorView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewTree.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="ConnectionDialog.cpp">
+      <Filter>Dialog</Filter>
+    </ClCompile>
+    <ClCompile Include="ComPortCombo.cpp">
+      <Filter>UI Component</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumDevices.cpp">
+      <Filter>UI Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Serial.cpp">
+      <Filter>UI Component</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeFlight.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialCommunication.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialObserver.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="DockablePaneBase.cpp">
+      <Filter>UI Component</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialEditorForm.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialEditorView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="DockablePaneChildView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C3DDialog.cpp">
+    <ClCompile Include="SerialGraphForm.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PlotWindow.cpp">
+      <Filter>UI Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

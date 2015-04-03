@@ -277,6 +277,34 @@ void Quaternion::Euler(const Vector3& v)
 }
 
 
+
+/**
+* @brief Computes the quaternion that is equivalent to a given
+* euler angle rotation.
+* @param euler A 3-vector in order:  roll-pitch-yaw.
+* http://ai.stanford.edu/~acoates/quaternion.h
+*/
+void Quaternion::Euler2(const Vector3& v)
+{
+	float euler[3];
+	euler[0] = v.x;
+	euler[1] = v.y;
+	euler[2] = v.z;
+
+	float c1 = cos(euler[2] * 0.5f);
+	float c2 = cos(euler[1] * 0.5f);
+	float c3 = cos(euler[0] * 0.5f);
+	float s1 = sin(euler[2] * 0.5f);
+	float s2 = sin(euler[1] * 0.5f);
+	float s3 = sin(euler[0] * 0.5f);
+
+	x = c1*c2*s3 - s1*s2*c3;
+	y = c1*s2*c3 + s1*c2*s3;
+	z = s1*c2*c3 - c1*s2*s3;
+	w = c1*c2*c3 + s1*s2*s3;
+}
+
+
 /** @brief Returns an equivalent euler angle representation of
 	* this quaternion.
 	* @return Euler angles in roll-pitch-yaw order.

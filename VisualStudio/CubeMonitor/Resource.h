@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by CubeMonitor.rc
 //
+#define ID_CONNECT                      3
 #define IDD_ABOUTBOX                    100
 #define IDP_OLE_INIT_FAILED             100
 #define IDR_POPUP_EDIT                  119
@@ -84,17 +85,32 @@
 #define IDS_FIND_TAB                    302
 #define IDS_EXPLORER                    305
 #define IDS_EDIT_MENU                   306
+#define IDD_DOCKABLEPANECHILDVIEW       310
 #define IDD_DIALOG1                     311
 #define IDD_DIALOG_SENSOR               311
 #define IDD_DIALOG_3D                   312
+#define IDD_DIALOG_CONNECT              313
+#define IDD_DIALOG_SERIAL_EDITOR        314
+#define IDD_DIALOG_SERIAL_GRAPH         315
+#define IDC_COMBO_PORT                  1003
+#define IDC_COMBO_BAUDRATE              1004
+#define IDC_RICHEDIT_SERIAL             1006
+#define IDC_EDIT_COMMAND                1007
+#define IDC_BUTTON_UPDATE               1008
+#define IDC_CHECK_FIXEDMODE             1009
+#define IDC_STATIC1                     1010
+#define IDC_BUTTON_HELP                 1011
+#define IDC_STATIC_FASTTEXT             1012
+#define IDC_RADIO_MODE                  1013
+#define IDC_RADIO_FAST                  1014
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        313
+#define _APS_NEXT_RESOURCE_VALUE        316
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1003
-#define _APS_NEXT_SYMED_VALUE           310
+#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

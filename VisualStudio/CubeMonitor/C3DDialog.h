@@ -1,9 +1,10 @@
 #pragma once
 
+#include "DockablePaneChildView.h"
 
 // C3DDialog dialog
 
-class C3DDialog : public CDialogEx
+class C3DDialog : public CDockablePaneChildView
 {
 public:
 	C3DDialog(CWnd* pParent = NULL);   // standard constructor
@@ -12,7 +13,7 @@ public:
 // Dialog Data
 	enum { IDD = IDD_DIALOG_3D };
 
-	void Update(const float deltaSeconds);
+	virtual void Update(const float deltaSeconds) override;
 	void Render();
 
 
@@ -29,6 +30,7 @@ protected:
 	bool m_MButtonDown = false;
 	CPoint m_curPos;
 
+	float m_IncSeconds = 0;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
@@ -45,4 +47,5 @@ public:
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	afx_msg void OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/);
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };

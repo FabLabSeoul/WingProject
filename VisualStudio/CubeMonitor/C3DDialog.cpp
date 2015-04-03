@@ -5,6 +5,8 @@
 #include "CubeMonitor.h"
 #include "C3DDialog.h"
 #include "afxdialogex.h"
+#include "Controller.h"
+#include "CubeFlight.h"
 
 using namespace graphic;
 
@@ -13,7 +15,7 @@ C3DDialog *g_3DView = NULL;
 
 // C3DDialog dialog
 C3DDialog::C3DDialog(CWnd* pParent /*=NULL*/)
-	: CDialogEx(C3DDialog::IDD, pParent)
+	: CDockablePaneChildView(C3DDialog::IDD, pParent)
 {
 	g_3DView = this;
 }
@@ -25,11 +27,11 @@ C3DDialog::~C3DDialog()
 
 void C3DDialog::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDockablePaneChildView::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(C3DDialog, CDialogEx)
+BEGIN_MESSAGE_MAP(C3DDialog, CDockablePaneChildView)
 	ON_BN_CLICKED(IDOK, &C3DDialog::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &C3DDialog::OnBnClickedCancel)
 	ON_WM_LBUTTONDOWN()
@@ -39,6 +41,7 @@ BEGIN_MESSAGE_MAP(C3DDialog, CDialogEx)
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_CONTEXTMENU()
+	ON_WM_CREATE()
 END_MESSAGE_MAP()
 
 
@@ -48,21 +51,20 @@ END_MESSAGE_MAP()
 void C3DDialog::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
-	//CDialogEx::OnOK();
+	//CDockablePaneChildView::OnOK();
 }
 
 
 void C3DDialog::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
-	//CDialogEx::OnCancel();
+	//CDockablePaneChildView::OnCancel();
 }
 
 
 BOOL C3DDialog::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
-
+	CDockablePaneChildView::OnInitDialog();
 
 	const int WINSIZE_X = 800;		//초기 윈도우 가로 크기
 	const int WINSIZE_Y = 600;	//초기 윈도우 세로 크기
@@ -93,6 +95,9 @@ BOOL C3DDialog::OnInitDialog()
 
 	m_cube.SetCube(Vector3(-10, -10, -10), Vector3(10, 10, 10));
 
+	cController::Get()->Init();
+	cController::Get()->AddUpdateObserver(this);
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -100,20 +105,32 @@ BOOL C3DDialog::OnInitDialog()
 
 void C3DDialog::Update(const float deltaSeconds)
 {
+	RET(!m_isInitDx);
+
+	m_IncSeconds += deltaSeconds;
+
+	RET(m_IncSeconds < 0.01f); // 시간 간격이 짧으면 실행하지 않는다.
+
+
+	GetRenderer()->Update(m_IncSeconds);
+	cController::Get()->GetCubeFlight().Update(m_IncSeconds);
+
 	static float angle = 0;
-	angle += deltaSeconds;
+	angle += m_IncSeconds;
 	Matrix44 mat;
 	mat.SetRotationY(angle);
-
 	m_cubeTm = mat;
 
+	// 출력.
+	Render();
+
+	m_IncSeconds = 0;
 }
 
 
 void C3DDialog::Render()
 {
-	if (!m_isInitDx)
-		return;
+	RET(!m_isInitDx);
 
 	//화면 청소
 	if (SUCCEEDED(GetDevice()->Clear(
@@ -127,7 +144,8 @@ void C3DDialog::Render()
 		//m_box.Render();
 		//m_sphere.GetMaterial().Bind();
 		//m_sphere.Render(Matrix44::Identity);
-		m_cube.Render(m_cubeTm);
+		cController::Get()->GetCubeFlight().Render();
+		//m_cube.Render(m_cubeTm);
 
 		// 백그라운드 그리드, 축 출력.
 		GetRenderer()->RenderGrid();
@@ -146,7 +164,7 @@ void C3DDialog::OnLButtonDown(UINT nFlags, CPoint point)
 	SetFocus();
 	m_LButtonDown = true;
 	m_curPos = point;
-	CDialogEx::OnLButtonDown(nFlags, point);
+	CDockablePaneChildView::OnLButtonDown(nFlags, point);
 }
 
 
@@ -154,7 +172,7 @@ void C3DDialog::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	ReleaseCapture();
 	m_LButtonDown = false;
-	CDialogEx::OnLButtonUp(nFlags, point);
+	CDockablePaneChildView::OnLButtonUp(nFlags, point);
 }
 
 
@@ -164,7 +182,7 @@ void C3DDialog::OnRButtonDown(UINT nFlags, CPoint point)
 	SetCapture();
 	m_RButtonDown = true;
 	m_curPos = point;
-	CDialogEx::OnRButtonDown(nFlags, point);
+	CDockablePaneChildView::OnRButtonDown(nFlags, point);
 }
 
 
@@ -172,7 +190,7 @@ void C3DDialog::OnRButtonUp(UINT nFlags, CPoint point)
 {
 	ReleaseCapture();
 	m_RButtonDown = false;
-	CDialogEx::OnRButtonUp(nFlags, point);
+	CDockablePaneChildView::OnRButtonUp(nFlags, point);
 }
 
 
@@ -195,13 +213,12 @@ void C3DDialog::OnMouseMove(UINT nFlags, CPoint point)
 		GetMainCamera()->Pitch2(pos.y * 0.005f);
 	}
 
-	CDialogEx::OnMouseMove(nFlags, point);
+	CDockablePaneChildView::OnMouseMove(nFlags, point);
 }
 
 
 BOOL C3DDialog::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-
 	const float len = GetMainCamera()->GetDistance();
 	float zoomLen = (len > 100) ? 50 : (len / 4.f);
 	if (nFlags & 0x4)
@@ -209,11 +226,22 @@ BOOL C3DDialog::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 
 	GetMainCamera()->Zoom((zDelta < 0) ? -zoomLen : zoomLen);
 
-	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+	return CDockablePaneChildView::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 
 void C3DDialog::OnContextMenu(CWnd* /*pWnd*/, CPoint /*point*/)
 {
 	
+}
+
+
+int C3DDialog::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	if (CDockablePaneChildView::OnCreate(lpCreateStruct) == -1)
+		return -1;
+
+	// TODO:  Add your specialized creation code here
+
+	return 0;
 }

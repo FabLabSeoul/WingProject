@@ -12,6 +12,7 @@
 #include "CubeMonitorView.h"
 #include <mmsystem.h>
 #include "C3DDialog.h"
+#include "controller.h"
 
 
 #ifdef _DEBUG
@@ -63,7 +64,8 @@ CCubeMonitorApp theApp;
 
 BOOL CCubeMonitorApp::InitInstance()
 {
-	// InitCommonControlsEx() is required on Windows XP if an application
+	AfxInitRichEdit2();
+
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
 	INITCOMMONCONTROLSEX InitCtrls;
@@ -219,18 +221,23 @@ BOOL CCubeMonitorApp::OnIdle(LONG lCount)
 {
 	static int oldT = timeGetTime();
 	const int curT = timeGetTime();
-	const float deltaSeconds = (curT - oldT) * 0.001f; // 1초가 경과되면 1이된다.
+	const float deltaSeconds = (float)(curT - oldT) * 0.001f; // 1초가 경과되면 1이된다.
 	
-	if (deltaSeconds > 0.01f)
-	{
-		if (g_3DView)
-		{
-			g_3DView->Update(deltaSeconds);
-			g_3DView->Render();
-		}
-		oldT = curT;
-	}
+	//if (deltaSeconds > 0.01f) // max 100 frame
+	//{
+	//	if (g_3DView)
+	//	{
+	//		//g_3DView->Update(deltaSeconds);
+	//		//g_3DView->Render();
+	//	}
 
-	CWinAppEx::OnIdle(lCount);
+	//	oldT = curT;
+	//}
+
+	cController::Get()->Update(deltaSeconds);
+
+	oldT = curT;
+
+	//CWinAppEx::OnIdle(lCount); 호출 안해도 됨.
 	return TRUE; // TRUE를 리턴시켜야 계속 OnIdle()이 호출된다.
 }

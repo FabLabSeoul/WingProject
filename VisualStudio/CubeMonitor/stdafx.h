@@ -55,7 +55,18 @@
 #include "Common/common.h"
 #include "Graphic/graphic.h"
 
+#include <mmsystem.h>
+#include "Serial.h"
+
+using std::pair;
 
 class C3DDialog;
 extern C3DDialog *g_3DView;
 
+
+enum VIEW_TYPE {
+	ID_VIEW_SENSOR = 10001,
+	ID_VIEW_CUBE3D,
+	ID_VIEW_SERIAL_EDITOR,
+	ID_VIEW_SERIAL_GRAPH,
+};

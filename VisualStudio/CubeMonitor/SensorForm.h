@@ -1,12 +1,11 @@
 #pragma once
 
+#include "DockablePaneChildView.h"
 
 // CSensorForm dialog
 
-class CSensorForm : public CDialogEx
+class CSensorForm : public CDockablePaneChildView
 {
-	DECLARE_DYNAMIC(CSensorForm)
-
 public:
 	CSensorForm(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CSensorForm();

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "ViewTree.h"
+#include "DockablePaneBase.h"
 
 class CFileViewToolBar : public CMFCToolBar
 {
@@ -13,9 +14,8 @@ class CFileViewToolBar : public CMFCToolBar
 	virtual BOOL AllowShowOnList() const { return FALSE; }
 };
 
-class CFileView : public CDockablePane
+class CFileView : public CDockablePaneBase
 {
-// Construction
 public:
 	CFileView();
 

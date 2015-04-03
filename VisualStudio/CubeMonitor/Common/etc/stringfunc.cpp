@@ -155,3 +155,35 @@ void common::tokenizer(const string &str, const string &delimeter, const string 
 		}
 	}
 }
+
+
+// 원본 문자열 str에서 구분자 delimeter 로 분해해서 out 에 저장해서 리턴한다.
+// delimeter 는 저장되지 않는다.
+void common::wtokenizer(const wstring &str, const wstring &delimeter, const wstring &ignoreStr, OUT vector<wstring> &out)
+{
+	wstring tmp = str;
+	int offset = 0;
+	int first = 0;
+
+	while (!tmp.empty())
+	{
+		const int pos = tmp.find(delimeter, offset);
+		if (wstring::npos == pos)
+		{
+			out.push_back(tmp.substr(first));
+			break;
+		}
+		else
+		{
+			const wstring tok = tmp.substr(offset, pos - offset);
+			offset += tok.length() + delimeter.length();
+			if (tok != ignoreStr)
+			{
+				out.push_back(tmp.substr(first, pos - first));
+				first = offset;
+			}
+
+		}
+	}
+}
+

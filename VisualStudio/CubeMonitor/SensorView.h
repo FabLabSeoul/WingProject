@@ -1,10 +1,10 @@
 #pragma once
 
-static const int ID_VIEW_SENSOR = 10001;
+#include "DockablePaneBase.h"
 
 // CSensorView
 class CSensorForm;
-class CSensorView : public CDockablePane
+class CSensorView : public CDockablePaneBase
 {
 public:
 	CSensorView();
@@ -18,7 +18,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
-
 

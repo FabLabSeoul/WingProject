@@ -102,36 +102,66 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BPCtrlAnchorMap.h" />
     <ClInclude Include="C3DDialog.h" />
     <ClInclude Include="ClassView.h" />
+    <ClInclude Include="ComPortCombo.h" />
+    <ClInclude Include="ConnectionDialog.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Cube3DView.h" />
+    <ClInclude Include="CubeFlight.h" />
     <ClInclude Include="CubeMonitor.h" />
     <ClInclude Include="CubeMonitorDoc.h" />
     <ClInclude Include="CubeMonitorView.h" />
+    <ClInclude Include="DockablePaneBase.h" />
+    <ClInclude Include="DockablePaneChildView.h" />
+    <ClInclude Include="EnumDevices.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
+    <ClInclude Include="PlotWindow.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SensorForm.h" />
     <ClInclude Include="SensorView.h" />
+    <ClInclude Include="Serial.h" />
+    <ClInclude Include="SerialCommunication.h" />
+    <ClInclude Include="SerialEditorForm.h" />
+    <ClInclude Include="SerialEditorView.h" />
+    <ClInclude Include="SerialGraphForm.h" />
+    <ClInclude Include="SerialObserver.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="UpdateObserver.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C3DDialog.cpp" />
     <ClCompile Include="ClassView.cpp" />
+    <ClCompile Include="ComPortCombo.cpp" />
+    <ClCompile Include="ConnectionDialog.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Cube3DView.cpp" />
+    <ClCompile Include="CubeFlight.cpp" />
     <ClCompile Include="CubeMonitor.cpp" />
     <ClCompile Include="CubeMonitorDoc.cpp" />
     <ClCompile Include="CubeMonitorView.cpp" />
+    <ClCompile Include="DockablePaneBase.cpp" />
+    <ClCompile Include="DockablePaneChildView.cpp" />
+    <ClCompile Include="EnumDevices.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
+    <ClCompile Include="PlotWindow.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
     <ClCompile Include="SensorForm.cpp" />
     <ClCompile Include="SensorView.cpp" />
+    <ClCompile Include="Serial.cpp" />
+    <ClCompile Include="SerialCommunication.cpp" />
+    <ClCompile Include="SerialEditorForm.cpp" />
+    <ClCompile Include="SerialEditorView.cpp" />
+    <ClCompile Include="SerialGraphForm.cpp" />
+    <ClCompile Include="SerialObserver.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

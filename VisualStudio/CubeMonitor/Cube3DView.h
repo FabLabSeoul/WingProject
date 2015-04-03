@@ -1,13 +1,12 @@
 #pragma once
 
+#include "DockablePaneBase.h"
 
-static const int ID_VIEW_CUBE3D = 10000;
 
 // CCube3DView
 class C3DDialog;
-class CCube3DView : public CDockablePane
+class CCube3DView : public CDockablePaneBase
 {
-
 public:
 	CCube3DView();
 	virtual ~CCube3DView();
@@ -21,7 +20,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 
 

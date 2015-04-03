@@ -8,11 +8,8 @@
 
 
 // CSensorForm dialog
-
-IMPLEMENT_DYNAMIC(CSensorForm, CDialogEx)
-
 CSensorForm::CSensorForm(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CSensorForm::IDD, pParent)
+	: CDockablePaneChildView(CSensorForm::IDD, pParent)
 {
 
 }
@@ -23,11 +20,11 @@ CSensorForm::~CSensorForm()
 
 void CSensorForm::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CDockablePaneChildView::DoDataExchange(pDX);
 }
 
 
-BEGIN_MESSAGE_MAP(CSensorForm, CDialogEx)
+BEGIN_MESSAGE_MAP(CSensorForm, CDockablePaneChildView)
 	ON_BN_CLICKED(IDOK, &CSensorForm::OnBnClickedOk)
 	ON_BN_CLICKED(IDCANCEL, &CSensorForm::OnBnClickedCancel)
 END_MESSAGE_MAP()
@@ -39,12 +36,12 @@ END_MESSAGE_MAP()
 void CSensorForm::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
-	CDialogEx::OnOK();
+	//CDockablePaneChildView::OnOK();
 }
 
 
 void CSensorForm::OnBnClickedCancel()
 {
 	// TODO: Add your control notification handler code here
-	CDialogEx::OnCancel();
+	//CDockablePaneChildView::OnCancel();
 }

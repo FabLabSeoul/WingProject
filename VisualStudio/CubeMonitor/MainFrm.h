@@ -9,8 +9,9 @@
 #include "PropertiesWnd.h"
 #include "Cube3DView.h"
 #include "SensorView.h"
+//#include "SerialEditorView.h"
 
-
+class CDockablePaneBase;
 class CMainFrame : public CFrameWndEx
 {
 	
@@ -43,10 +44,14 @@ protected:  // control bar embedded members
 	CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
 
-	CCube3DView m_wndCube3DView;
-	CSensorView m_wndSensorView; 
-	CFileView         m_wndFileView;
-	CClassView        m_wndClassView;
+	list<CDockablePaneBase*> m_viewList;
+	CCube3DView *m_wndCube3DView;
+	CSensorView *m_wndSensorView; 
+	CFileView         *m_wndFileView;
+	CClassView        *m_wndClassView;
+	CDockablePaneBase *m_wndSerialEditorView;
+	CDockablePaneBase *m_serialGraphView;
+
 	//COutputWnd        m_wndOutput;
 	//CPropertiesWnd    m_wndProperties;
 

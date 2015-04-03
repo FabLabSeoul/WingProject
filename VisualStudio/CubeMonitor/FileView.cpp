@@ -22,7 +22,7 @@ CFileView::~CFileView()
 {
 }
 
-BEGIN_MESSAGE_MAP(CFileView, CDockablePane)
+BEGIN_MESSAGE_MAP(CFileView, CDockablePaneBase)
 	ON_WM_CREATE()
 	ON_WM_SIZE()
 	ON_WM_CONTEXTMENU()
@@ -42,7 +42,7 @@ END_MESSAGE_MAP()
 
 int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	if (CDockablePane::OnCreate(lpCreateStruct) == -1)
+	if (CDockablePaneBase::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	CRect rectDummy;
@@ -84,7 +84,7 @@ int CFileView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CFileView::OnSize(UINT nType, int cx, int cy)
 {
-	CDockablePane::OnSize(nType, cx, cy);
+	CDockablePaneBase::OnSize(nType, cx, cy);
 	AdjustLayout();
 }
 
@@ -130,7 +130,7 @@ void CFileView::OnContextMenu(CWnd* pWnd, CPoint point)
 
 	if (pWnd != pWndTree)
 	{
-		CDockablePane::OnContextMenu(pWnd, point);
+		CDockablePaneBase::OnContextMenu(pWnd, point);
 		return;
 	}
 
@@ -218,7 +218,7 @@ void CFileView::OnPaint()
 
 void CFileView::OnSetFocus(CWnd* pOldWnd)
 {
-	CDockablePane::OnSetFocus(pOldWnd);
+	CDockablePaneBase::OnSetFocus(pOldWnd);
 
 	m_wndFileView.SetFocus();
 }
