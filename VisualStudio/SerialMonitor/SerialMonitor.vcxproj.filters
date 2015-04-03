@@ -45,6 +45,12 @@
     <ClInclude Include="stringfunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ComPortCombo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumDevices.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SerialMonitor.cpp">
@@ -66,6 +72,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stringfunc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ComPortCombo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumDevices.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

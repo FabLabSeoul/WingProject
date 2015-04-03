@@ -102,6 +102,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComPortCombo.h" />
+    <ClInclude Include="EnumDevices.h" />
     <ClInclude Include="GraphDialog.h" />
     <ClInclude Include="PlotWindow.h" />
     <ClInclude Include="Resource.h" />
@@ -113,6 +115,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ComPortCombo.cpp" />
+    <ClCompile Include="EnumDevices.cpp" />
     <ClCompile Include="GraphDialog.cpp" />
     <ClCompile Include="PlotWindow.cpp" />
     <ClCompile Include="Serial.cpp" />

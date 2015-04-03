@@ -6,6 +6,7 @@
 #include "Serial.h"
 #include "afxwin.h"
 #include "afxcmn.h"
+#include "ComPortCombo.h"
 
 class CGraphDialog;
 
@@ -26,7 +27,7 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
-	void Process(float deltaT);
+	void Process(float deltaSeconds);
 	int CSerialMonitorDlg::AppendToLogAndScroll(CString str, COLORREF color);
 	int CSerialMonitorDlg::GetNumVisibleLines(CRichEditCtrl* pCtrl);
 
@@ -39,9 +40,12 @@ protected:
 	bool m_isConnect;
 	bool m_isFastMode;
 	bool m_isShowGraphWnd;
-	int m_PortNumberIndex;
+	int m_PortNumber;
 	int m_BaudrateIndex;
 	CGraphDialog *m_graphDlg; // modeless
+
+	TCHAR m_serialBuffer[256];
+	int m_currentBufferIndex = 0;
 
 
 	// Generated message map functions
@@ -55,7 +59,8 @@ public:
 	afx_msg void OnBnClickedCancel();
 	virtual BOOL OnWndMsg(UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 	afx_msg void OnDestroy();
-	CComboBox m_PortCombobox;
+	//CComboBox m_PortCombobox;
+	CComPortCombo m_PortCombobox;
 	CComboBox m_BaudrateCombobox;
 	afx_msg void OnBnClickedButtonConnect();
 	CButton m_ConnectButton;

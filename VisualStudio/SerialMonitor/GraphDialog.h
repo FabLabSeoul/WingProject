@@ -13,7 +13,8 @@ public:
 	CGraphDialog(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CGraphDialog();
 
-	void SetString(const CString &str);
+	void SetString(const TCHAR *str);
+	void DrawGraph(const float deltaSeconds);
 	void ProcessPlotCommand();
 
 // Dialog Data
@@ -63,4 +64,6 @@ public:
 	afx_msg void OnBnClickedButtonHelp();
 	CButton m_HelpButton;
 	CStatic m_Static1;
+	afx_msg void OnBnClickedCheckFixedmode();
+	CButton m_FixedMode;
 };

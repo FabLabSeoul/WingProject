@@ -1,28 +1,15 @@
-8
+9
 6
-831
-325
+819
+384
 475
-445
-
-
-
-
-
-
-
-
-
-
+389
 plot1 = 0,0,0,0,0 
-string1 = %*s %f, %f, %*f 
-
+string1 =Radian, %f, %f, %*f 
 
 plot2 = 0,0,0,0,0 
-string2 = %*s %f, %*f, %f 
+string2 = Radian, %f, %*f, %f 
 
 
 plot3 = 0,0,0,0,0 
-string3 = %*s %f, %*f, %*f, %f
-
-
+string3 = Radian, %f, %*f, %*f, %f

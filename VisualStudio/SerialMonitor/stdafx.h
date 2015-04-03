@@ -57,6 +57,8 @@
 #include <string>
 #include <algorithm>
 #include <functional>
+#include <MMSystem.h>
+
 
 using std::list;
 using std::vector;

@@ -6,7 +6,6 @@
 #include "SerialMonitor.h"
 #include "SerialMonitorDlg.h"
 #include "afxdialogex.h"
-#include <MMSystem.h>
 #include <fstream>
 #include "Serial.h"
 #include "GraphDialog.h"
@@ -108,13 +107,7 @@ BOOL CSerialMonitorDlg::OnInitDialog()
 	m_graphDlg->Create(CGraphDialog::IDD, this);
 
 
-	for (int i = 0; i < 20; ++i)
-	{
-		TCHAR comName[32];
-		wsprintf(comName, L"COM %d", i + 1);
-		m_PortCombobox.InsertString(m_PortCombobox.GetCount(), comName);
-	}
-	m_PortCombobox.SetCurSel(0);
+	m_PortCombobox.InitList();
 
 	int baudRate[] = { 9600, 14400, 19200, 38400, 56000, 57600, 115200 };
 	for (int i = 0; i < ARRAYSIZE(baudRate); ++i)
@@ -131,9 +124,9 @@ BOOL CSerialMonitorDlg::OnInitDialog()
 	std::ifstream iif("serialmonitor_conf.txt");
 	if (iif.is_open())
 	{
-		iif >> m_PortNumberIndex;
+		iif >> m_PortNumber;
 		iif >> m_BaudrateIndex;
-		m_PortCombobox.SetCurSel(m_PortNumberIndex);
+		m_PortCombobox.InitList(m_PortNumber);
 		m_BaudrateCombobox.SetCurSel(m_BaudrateIndex);
 
 		int left, top, width, height;
@@ -272,13 +265,19 @@ void CSerialMonitorDlg::MainLoop()
 
 		const int curT = timeGetTime();
 		static int oldT = curT;
-		const int elapseT = curT - oldT;
-		const float t = elapseT * 0.001f;
+		const int deltaT = curT - oldT;
+		const float t = deltaT * 0.001f;
 		oldT = curT;
 
 		Process(t);
 
-		Sleep(0);
+		// 그래프 화면을 갱신한다.
+		if (deltaT > 0)
+		{
+			if (m_graphDlg)
+				m_graphDlg->DrawGraph(t);
+		}
+		//Sleep(0);
 	}
 }
 
@@ -365,7 +364,7 @@ int CSerialMonitorDlg::GetNumVisibleLines(CRichEditCtrl* pCtrl)
 
 
 // Serial Transmitt/Receive Process
-void CSerialMonitorDlg::Process(float deltaT)
+void CSerialMonitorDlg::Process(float deltaSeconds)
 {
 	if (!m_isConnect)
 	{
@@ -386,37 +385,49 @@ void CSerialMonitorDlg::Process(float deltaT)
 		return;
 	}
 
+	// 빠른 출력 모드 일 때, 한 라인씩 출력한다.
+	m_serialBuffer[m_currentBufferIndex++] = data;
+
+	bool displayBuffer = false;
+	if (m_currentBufferIndex >= 255)
+	{ // 버퍼 끝까지 저장되었다면, 처음부터 쓰게 한다.
+		displayBuffer = true;
+		m_serialBuffer[m_currentBufferIndex] = '\n';
+	}
+
 	if (m_isFastMode)
 	{
-		// 빠른 출력 모드 일 때, 한 라인만 출력한다.
-		static CString str;
-		str += data;
-		// CR Return 일 때만 업데이트 된다.
-		if (data == '\n')
+		// 개행문자가 올 때나, 버퍼 끝까지 왔을 때만 업데이트 된다.
+		if (displayBuffer || (data == '\n'))
 		{
 			// 한 라인 갱신 (고속 출력 모드 용)
-			m_FastReceiveText.SetWindowTextW(str);
+			m_serialBuffer[m_currentBufferIndex] = '\0';
+			m_FastReceiveText.SetWindowTextW(m_serialBuffer);
 			
 			// 시리얼정보를 그래프 창에 전달한다.
 			if (m_isShowGraphWnd)
-				m_graphDlg->SetString(str);
+				m_graphDlg->SetString(m_serialBuffer);
 
-			str = "";
+			m_currentBufferIndex = 0;
 		}
 	}
 	else
 	{
 		// 일반 출력 모드.
-		CString str;
-		str += data;
-		AppendToLogAndScroll(str, RGB(200,200,200));
 
-		//// 엔터 문자가 들어오면, 시리얼정보를 그래프 창에 전달한다.
-		//if (str == "\n")
-		//	if (m_isShowGraphWnd)
-		//		m_graphDlg->SetString(str);
+		// 개행문자가 올 때나, 버퍼 끝까지 왔을 때만 업데이트 된다.
+		if (displayBuffer || (data == '\n'))
+		{
+			m_serialBuffer[m_currentBufferIndex] = '\0';
+			AppendToLogAndScroll(m_serialBuffer, RGB(200, 200, 200));
+
+			// 시리얼 정보를 그래프 창에 전달한다.
+			if (m_isShowGraphWnd)
+				m_graphDlg->SetString(m_serialBuffer);
+
+			m_currentBufferIndex = 0;
+		}
 	}
-
 }
 
 
@@ -426,15 +437,9 @@ void CSerialMonitorDlg::OnBnClickedButtonConnect()
 	if (m_isConnect)
 		return;
 
-	CString port;
-	m_PortCombobox.GetWindowTextW(port);
+	const int portNumber = m_PortCombobox.GetPortNum();
 	CString baudRate;
 	m_BaudrateCombobox.GetWindowTextW(baudRate);
-
-	int portNumber = 0;
-	const int spaceIdx = port.Find(L" ");
-	if (spaceIdx > 0)
-		portNumber = _wtoi(&port.GetBuffer()[spaceIdx]);
 
 	// Open Serial Port
 	if (m_Serial.Open(portNumber, _wtoi(baudRate)))
@@ -442,12 +447,14 @@ void CSerialMonitorDlg::OnBnClickedButtonConnect()
 		m_isConnect = true;
 		m_ConnectButton.EnableWindow(FALSE);
 		m_DisconnectButton.EnableWindow(TRUE);
-		m_PortNumberIndex = m_PortCombobox.GetCurSel();
+		m_PortNumber = portNumber;
 		m_BaudrateIndex = m_BaudrateCombobox.GetCurSel();
 	}
 	else
 	{
-		AfxMessageBox(L"Connect Error!! [" + port + L"]");
+		CString portName;
+		m_PortCombobox.GetWindowTextW(portName);
+		AfxMessageBox(L"Connect Error!! [" + portName + L"]");
 	}
 }
 
@@ -616,7 +623,7 @@ void CSerialMonitorDlg::SaveConfigFile()
 		CRect rect;
 		GetWindowRect(rect);
 
-		of << m_PortCombobox.GetCurSel() << std::endl << m_BaudrateCombobox.GetCurSel() << std::endl;
+		of << m_PortCombobox.GetPortNum() << std::endl << m_BaudrateCombobox.GetCurSel() << std::endl;
 		of << rect.left << std::endl << rect.top << std::endl;
 		of << rect.Width() << std::endl << rect.Height() << std::endl;
 

@@ -31,6 +31,7 @@ void CGraphDialog::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON_UPDATE, m_UpdateButton);
 	DDX_Control(pDX, IDC_BUTTON_HELP, m_HelpButton);
 	DDX_Control(pDX, IDC_STATIC1, m_Static1);
+	DDX_Control(pDX, IDC_CHECK_FIXEDMODE, m_FixedMode);
 }
 
 
@@ -42,6 +43,7 @@ BEGIN_MESSAGE_MAP(CGraphDialog, CDialogEx)
 	ON_WM_SIZE()
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON_HELP, &CGraphDialog::OnBnClickedButtonHelp)
+	ON_BN_CLICKED(IDC_CHECK_FIXEDMODE, &CGraphDialog::OnBnClickedCheckFixedmode)
 END_MESSAGE_MAP()
 
 
@@ -129,7 +131,8 @@ void CGraphDialog::OnClose()
 
 
 // str 정보로 그래프를 업데이트 한다.
-void CGraphDialog::SetString(const CString &str)
+// str: 스트링 배열
+void CGraphDialog::SetString(const TCHAR *str)
 {
 	if (m_plotWindows.empty())
 		return;
@@ -159,8 +162,8 @@ void CGraphDialog::OnBnClickedButtonUpdate()
 bool CGraphDialog::ParsePlotInfo(const int plotIndex, const wstring &str, SPlotInfo &out)
 {
 	CString plotStr, strStr;
-	plotStr.Format(L"plot%d = ", plotIndex + 1);
-	strStr.Format(L"string%d = ", plotIndex + 1);
+	plotStr.Format(L"plot%d =", plotIndex + 1);
+	strStr.Format(L"string%d =", plotIndex + 1);
 
 	wstring plotParameters = ParseKeyValue(str, plotStr.GetBuffer());
 	if (plotParameters.empty())
@@ -181,7 +184,7 @@ bool CGraphDialog::ParsePlotInfo(const int plotIndex, const wstring &str, SPlotI
 	out.yVisibleRange = (float)_wtof(plotParams[3].c_str());
 	out.flags = _wtoi(plotParams[4].c_str());
 
-	out.scanString = strParameters.c_str();
+	out.scanString = strParameters.c_str();// +CString(L"%*s");
 
 	return true;
 }
@@ -202,7 +205,7 @@ wstring CGraphDialog::ParseKeyValue(const wstring &str, const wstring &key)
 	
 	const int endIdx = str.find(L"\n", idx);
 
-	wstring ret = str.substr(beginIdx+1, endIdx);
+	wstring ret = str.substr(beginIdx+1, endIdx-beginIdx);
 	return ret;
 }
 
@@ -225,8 +228,20 @@ void CGraphDialog::CalcGraphWindowSize()
 	m_HelpButton.GetClientRect(helpBtn);
 	CRect text1R;
 	m_Static1.GetClientRect(text1R);
+	CRect checkR;
+	m_FixedMode.GetClientRect(checkR);
 
-	const int plotSize = m_plotWindows.size();
+	// 화면에 보여지는 plot 개수를 구한다.
+	int plotWindowCount = 0;
+	for each (auto &plot in m_plotWindows)
+	{
+		if (plot.wnd->IsWindowVisible())
+			++plotWindowCount;
+	}
+	if (plotWindowCount <= 0)
+		plotWindowCount = m_plotWindows.size(); // 처음 프로그램이 시작될 때, 0 이 된다.
+
+	const int plotSize = plotWindowCount;
 	const int totalHeight = cr.Height() - editCr.Height() - btnR.Height() - 10;
 	const int plotH = totalHeight / plotSize;
 
@@ -257,6 +272,12 @@ void CGraphDialog::CalcGraphWindowSize()
 		cr.left + 5,
 		cr.bottom - editCr.Height() - text1R.Height() - 3 - 5,
 		cr.left + 5 + text1R.Width(),
+		cr.bottom - editCr.Height() - 3 - 5));
+
+	m_FixedMode.MoveWindow(CRect(
+		cr.left + 5 + text1R.Width() + 5,
+		cr.bottom - editCr.Height() - checkR.Height() - 3 - 5,
+		cr.left + 5 + text1R.Width() + checkR.Width() + 5,
 		cr.bottom - editCr.Height() - 3 - 5));
 
 	RedrawWindow();
@@ -351,3 +372,22 @@ void CGraphDialog::ProcessPlotCommand()
 	CalcGraphWindowSize();	
 }
 
+
+// 매프레임마다 호출되어야 한다.
+// 그래프를 갱신한다.
+void CGraphDialog::DrawGraph(const float deltaSeconds)
+{
+	for each(auto &plot in m_plotWindows)
+	{
+		plot.wnd->DrawPlot(deltaSeconds);
+	}
+}
+
+
+void CGraphDialog::OnBnClickedCheckFixedmode()
+{
+	for each(auto &plot in m_plotWindows)
+	{
+		plot.wnd->SetFixedWidthMode(m_FixedMode.GetCheck() > 0);
+	}
+}
