@@ -52,7 +52,7 @@ BOOL CGraphDialog::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
 
-	m_plotWindows.push_back({ CreatePlotWindow(0), L"%*s %f, %*f, %f"});
+	m_plotWindows.push_back({ CreatePlotWindow(0), "%*s %f, %*f, %f"});
 
 	m_CommandEditor.SetWindowText(
 		L"plot1 = 0,0,0,0,0 \r\n\
@@ -132,7 +132,7 @@ void CGraphDialog::OnClose()
 
 // str 정보로 그래프를 업데이트 한다.
 // str: 스트링 배열
-void CGraphDialog::SetString(const TCHAR *str)
+void CGraphDialog::SetString(const char *str)
 {
 	if (m_plotWindows.empty())
 		return;
@@ -140,7 +140,7 @@ void CGraphDialog::SetString(const TCHAR *str)
 	for each (auto &plot in m_plotWindows)
 	{
 		float x, y;
-		const int ret = swscanf_s(str, plot.scanString.c_str(), &x, &y);
+		const int ret = sscanf_s(str, plot.scanString.c_str(), &x, &y);
 		if (ret >= 2)
 			plot.wnd->SetPlotXY(x, y);
 	}
@@ -184,7 +184,7 @@ bool CGraphDialog::ParsePlotInfo(const int plotIndex, const wstring &str, SPlotI
 	out.yVisibleRange = (float)_wtof(plotParams[3].c_str());
 	out.flags = _wtoi(plotParams[4].c_str());
 
-	out.scanString = strParameters.c_str();// +CString(L"%*s");
+	out.scanString = common::wstr2str(strParameters);
 
 	return true;
 }

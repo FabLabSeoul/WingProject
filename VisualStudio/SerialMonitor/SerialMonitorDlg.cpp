@@ -373,60 +373,37 @@ void CSerialMonitorDlg::Process(float deltaSeconds)
 		return;
 	}
 
-	TCHAR data = 0;
-	const int readLength = m_Serial.ReadData(&data, 1);
-	if (readLength == 0)
-		return;
-
-	// 에러 발생. 시리얼 포트 연결과 끊는다.
-	if (0 > readLength)
+	string buff;
+	if (!m_Serial.ReadStringUntil('\n', buff))
 	{
+		// 에러 발생. 시리얼 포트 연결과 끊는다.
 		OnBnClickedButtonDisconnect();
 		return;
 	}
 
-	// 빠른 출력 모드 일 때, 한 라인씩 출력한다.
-	m_serialBuffer[m_currentBufferIndex++] = data;
+	if (buff.empty())
+		return;
 
-	bool displayBuffer = false;
-	if (m_currentBufferIndex >= 255)
-	{ // 버퍼 끝까지 저장되었다면, 처음부터 쓰게 한다.
-		displayBuffer = true;
-		m_serialBuffer[m_currentBufferIndex] = '\n';
-	}
+	CString str = common::str2wstr(buff).c_str();
 
 	if (m_isFastMode)
 	{
-		// 개행문자가 올 때나, 버퍼 끝까지 왔을 때만 업데이트 된다.
-		if (displayBuffer || (data == '\n'))
-		{
-			// 한 라인 갱신 (고속 출력 모드 용)
-			m_serialBuffer[m_currentBufferIndex] = '\0';
-			m_FastReceiveText.SetWindowTextW(m_serialBuffer);
+		m_FastReceiveText.SetWindowTextW(str);
 			
-			// 시리얼정보를 그래프 창에 전달한다.
-			if (m_isShowGraphWnd)
-				m_graphDlg->SetString(m_serialBuffer);
-
-			m_currentBufferIndex = 0;
-		}
+		// 시리얼정보를 그래프 창에 전달한다.
+		if (m_isShowGraphWnd)
+			m_graphDlg->SetString(buff.c_str());
 	}
 	else
 	{
 		// 일반 출력 모드.
 
 		// 개행문자가 올 때나, 버퍼 끝까지 왔을 때만 업데이트 된다.
-		if (displayBuffer || (data == '\n'))
-		{
-			m_serialBuffer[m_currentBufferIndex] = '\0';
-			AppendToLogAndScroll(m_serialBuffer, RGB(200, 200, 200));
+		AppendToLogAndScroll(str, RGB(200, 200, 200));
 
-			// 시리얼 정보를 그래프 창에 전달한다.
-			if (m_isShowGraphWnd)
-				m_graphDlg->SetString(m_serialBuffer);
-
-			m_currentBufferIndex = 0;
-		}
+		// 시리얼 정보를 그래프 창에 전달한다.
+		if (m_isShowGraphWnd)
+			m_graphDlg->SetString(buff.c_str());
 	}
 }
 

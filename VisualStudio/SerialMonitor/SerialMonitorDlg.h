@@ -7,6 +7,8 @@
 #include "afxwin.h"
 #include "afxcmn.h"
 #include "ComPortCombo.h"
+#include "BufferedSerial.h"
+
 
 class CGraphDialog;
 
@@ -36,7 +38,8 @@ protected:
 protected:
 	HICON m_hIcon;
 	bool m_loop;
-	CSerial m_Serial;
+	//CSerial m_Serial;
+	CBufferedSerial m_Serial;
 	bool m_isConnect;
 	bool m_isFastMode;
 	bool m_isShowGraphWnd;

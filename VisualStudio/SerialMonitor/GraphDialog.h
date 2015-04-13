@@ -13,7 +13,7 @@ public:
 	CGraphDialog(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CGraphDialog();
 
-	void SetString(const TCHAR *str);
+	void SetString(const char *str);
 	void DrawGraph(const float deltaSeconds);
 	void ProcessPlotCommand();
 
@@ -24,7 +24,7 @@ protected:
 	struct SPlot
 	{
 		CPlotWindow *wnd;
-		wstring scanString;
+		string scanString;
 	};
 
 	vector<SPlot> m_plotWindows;
@@ -37,7 +37,7 @@ protected:
 		float xVisibleRange;
 		float yVisibleRange;
 		DWORD flags;
-		CString scanString;
+		string scanString;
 	};
 	vector<SPlotInfo> m_PlotInfos;
 

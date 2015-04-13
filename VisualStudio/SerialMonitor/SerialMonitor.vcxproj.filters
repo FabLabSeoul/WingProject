@@ -51,6 +51,9 @@
     <ClInclude Include="EnumDevices.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BufferedSerial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="SerialMonitor.cpp">
@@ -78,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EnumDevices.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferedSerial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
