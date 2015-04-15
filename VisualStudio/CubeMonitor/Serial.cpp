@@ -26,7 +26,7 @@ BOOL CSerial::Open( int nPort, int nBaud )
 	DCB dcb;
 
 	//wsprintf( szPort, TEXT("COM%d"), nPort );
-	wsprintf(szPort, TEXT("COM%d"), nPort);
+	wsprintf(szPort, TEXT("\\\\.\\COM%d"), nPort);
 	m_hIDComDev = CreateFile( szPort, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL );
 	if( m_hIDComDev == NULL ) return( FALSE );
 
@@ -54,10 +54,11 @@ BOOL CSerial::Open( int nPort, int nBaud )
 	ucSet = (unsigned char) ( ( FC_RTSCTS & FC_DTRDSR ) != 0 );
 	ucSet = (unsigned char) ( ( FC_RTSCTS & FC_RTSCTS ) != 0 );
 	ucSet = (unsigned char) ( ( FC_RTSCTS & FC_XONXOFF ) != 0 );
-	if( !SetCommState( m_hIDComDev, &dcb ) ||
+	if (!SetCommState(m_hIDComDev, &dcb) ||
 		!SetupComm( m_hIDComDev, 10000, 10000 ) ||
 		m_OverlappedRead.hEvent == NULL ||
-		m_OverlappedWrite.hEvent == NULL ){
+		m_OverlappedWrite.hEvent == NULL)
+	{
 		DWORD dwError = GetLastError();
 		if( m_OverlappedRead.hEvent != NULL ) CloseHandle( m_OverlappedRead.hEvent );
 		if( m_OverlappedWrite.hEvent != NULL ) CloseHandle( m_OverlappedWrite.hEvent );
@@ -69,7 +70,7 @@ BOOL CSerial::Open( int nPort, int nBaud )
 
 	return( m_bOpened );
 
-}
+ }
 
 BOOL CSerial::Close( void )
 {
