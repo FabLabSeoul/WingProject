@@ -15,7 +15,7 @@ bool g_ledToggle = FALSE;
 int main()
 {
 	
-	RCC_Configuration();	
+	RCC_Configuration();
 	
 	NVIC_InitStructure.NVIC_IRQChannel = TIM3_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
