@@ -7,7 +7,7 @@
 
 // PA6 핀으로 PWM 신호가 출력된다.
 //
-// PA7 핀으로 입력을 받아 PWM 신호를 조절한다.
+// PA7 핀으로 전압을 입력 받아 PWM 신호를 조절한다.
 //        - 가변저항을 달아 0 ~ 3.3V 를 핀으로 보내자.
 //
 // 서보모터는 5V 를 달아줘야 잘 움직인다.
@@ -46,7 +46,7 @@ int main()
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseStructure.TIM_Period = 20000 - 1; // 50 Hz
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
-	TIM_TimeBaseStructure.TIM_RepetitionCounter = 5; // 의미 없음.
+	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0; // 의미 없음.
 
 	TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);	
 
