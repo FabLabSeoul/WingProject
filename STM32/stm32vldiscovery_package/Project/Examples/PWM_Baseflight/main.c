@@ -1,6 +1,13 @@
 
 #include "global.h"
 
+// Baseflight 소스를 이용해서 PWM 신호를 출력하는 예제다.
+// 
+// USART1 포트 =  PA10,9 (Rx,Tx)
+// PA8 로 PWM 신호가 나온다.
+// Servo 모터를 -90 ~ +90 도 사이를 오가게 한다.
+//
+
 
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 TIM_OCInitTypeDef  TIM_OCInitStructure;
@@ -36,99 +43,62 @@ int fputc(int c, FILE *f)
 int main()
 {
 //	 GPIO_InitTypeDef GPIO_InitStructure;
+	drv_pwm_config_t pwm_params;
+	int servoOut = 700;
 
 	
 	// 클럭, 타이머 초기화
 	systemInit();
 	
 	// 시리얼 통신 초기화.
+	// USART1 포트 =  PA10,9 (Rx,Tx)
 	serialInit(9600);
 	
 	
 	
+    pwm_params.airplane = false;
+    pwm_params.useUART = false;
+    pwm_params.useSoftSerial = false;
+    pwm_params.usePPM = false;
+    pwm_params.enableInput = false;
+    pwm_params.useServos = true;
+    pwm_params.extraServos = false;
+    pwm_params.motorPwmRate = 400;
+    pwm_params.servoPwmRate = 50;
+    pwm_params.pwmFilter = NULL;
+    pwm_params.idlePulse = PULSE_1MS; // standard PWM for brushless ESC (default, overridden below)
+    if (pwm_params.motorPwmRate > 500)
+        pwm_params.idlePulse = 0; // brushed motors
+    pwm_params.syncPWM = false;
+    pwm_params.fastPWM = false;
+    pwm_params.servoCenterPulse = 1500;
+    pwm_params.failsafeThreshold = 985;
+    pwm_params.adcChannel = 0;
+	
+	pwmInit( &pwm_params );
 	
 	
-	
-/*	
-  // TIM3 clock enable
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
-
-  // GPIOA and GPIOB clock enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB |
-                         RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
+	// PA8 로 PWM 신호가 나온다.
+	pwmWriteServo(0, servoOut);
 	
 	
-	// GPIOA Configuration:TIM3 Channel1, 2, 3 and 4 as alternate function push-pull
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 | GPIO_Pin_7;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
-  GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-
-  // Compute the prescaler value
-  PrescalerValue = (uint16_t) (SystemCoreClock / 24000000) - 1;
-  // Time base configuration
-  TIM_TimeBaseStructure.TIM_Period = 665;
-  TIM_TimeBaseStructure.TIM_Prescaler = PrescalerValue;
-  TIM_TimeBaseStructure.TIM_ClockDivision = 0;
-  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-
-  TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
-
-  // PWM1 Mode configuration: Channel1
-  TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
-  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR1_Val;
-  TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-
-  TIM_OC1Init(TIM3, &TIM_OCInitStructure);
-
-  TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
-
-  // PWM1 Mode configuration: Channel2
-  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR2_Val;
-
-  TIM_OC2Init(TIM3, &TIM_OCInitStructure);
-
-  TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
-
-  // PWM1 Mode configuration: Channel3
-  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR3_Val;
-
-  TIM_OC3Init(TIM3, &TIM_OCInitStructure);
-
-  TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
-
-  // PWM1 Mode configuration: Channel4
-  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR4_Val;
-
-  TIM_OC4Init(TIM3, &TIM_OCInitStructure);
-
-  TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
-
-  TIM_ARRPreloadConfig(TIM3, ENABLE);
-
-  // TIM3 enable counter
-  TIM_Cmd(TIM3, ENABLE);
-*/
-
-
 	// 루프
 	while (1)
 	{
+		// 700 ~ 2300  사이를 오가며 PWM신호를 보낸다.
+		// -90 ~ +90 사이를 회전한다.
+		servoOut += 10;		
+		pwmWriteServo(0, servoOut);		
+		if (servoOut > 2300)
+			servoOut = 700;
+		
+		
 		// 시리얼 통신 처리.
-		//serialCom();
+		//serialCom();		
+		//printf( "test\n" );		
+
 		
-		//printf( "test\n" );
-		
-		//delay(1000);
+		delay(10);
 	}
 		
 }

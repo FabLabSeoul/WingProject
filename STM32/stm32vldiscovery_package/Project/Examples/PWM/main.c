@@ -25,7 +25,7 @@ void Init_ADC(void);
 double getPot(void);
 void SetPWM(double value);
 
-	
+
 int main()
 {
 	// pwm duty 계산
@@ -147,6 +147,11 @@ double absf(double v)
 // 			: 1 -> _90 degree
 void SetPWM(double value)
 {
+	// pwm duty 계산
+	// -90 degree : 3.5% duty cycle
+	// 0 degree : 7.5% duty cycle
+	// +90 degree: 11.5% duty cycle
+	
 	// -90 degree : 20000 * 3.5 / 100 = 700
 	// 0 degree : 20000 * 7.5 / 100 = 1500
 	// +90 degree : 20000 * 11.5 / 100 = 2300
@@ -163,7 +168,7 @@ void SetPWM(double value)
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
 	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
-	TIM_OCInitStructure.TIM_Pulse = pulse;	
+	TIM_OCInitStructure.TIM_Pulse = pulse;
 
 	// pwm channel 1
 	TIM_OC1Init(TIM3, &TIM_OCInitStructure);	
