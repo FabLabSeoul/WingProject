@@ -5,6 +5,7 @@ int pot1Pin = A2;
 
 void setup() {
   SimonKESC.attach(5);
+   Serial.begin(9600);
 }
 
 void loop() {

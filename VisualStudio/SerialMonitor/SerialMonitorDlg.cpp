@@ -28,7 +28,7 @@ CSerialMonitorDlg::CSerialMonitorDlg(CWnd* pParent /*=NULL*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	m_loop = true;
 	m_isConnect = false;
-	m_isFastMode = false;
+	//m_isFastMode = false;
 	m_isShowGraphWnd = false;
 	g_MainDlg = this;
 }
@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CSerialMonitorDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_SHOW1LINE, &CSerialMonitorDlg::OnBnClickedCheckShow1line)
 	ON_BN_CLICKED(IDC_BUTTON_GRAPH, &CSerialMonitorDlg::OnBnClickedButtonGraph)
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_RADIO_MEM, &CSerialMonitorDlg::OnBnClickedRadioMem)
 END_MESSAGE_MAP()
 
 
@@ -386,7 +387,7 @@ void CSerialMonitorDlg::Process(float deltaSeconds)
 
 	CString str = common::str2wstr(buff).c_str();
 
-	if (m_isFastMode)
+	if (MODE_FAST1 == m_mode)
 	{
 		m_FastReceiveText.SetWindowTextW(str);
 			
@@ -396,6 +397,23 @@ void CSerialMonitorDlg::Process(float deltaSeconds)
 	}
 	else
 	{
+		if (MODE_MEMORY == m_mode)
+		{
+			//CString numStr;
+			string numStr;
+			numStr.reserve(str.GetLength() * 8);
+			for (int i = 0; i < str.GetLength(); ++i)
+			{
+				numStr += common::format("%3d", (int)str[i]);
+				if (i != str.GetLength() - 1)
+				{
+					numStr += ", ";
+				}
+			}
+			str = numStr.c_str();
+			str += "\n";
+		}
+
 		// 일반 출력 모드.
 
 		// 개행문자가 올 때나, 버퍼 끝까지 왔을 때만 업데이트 된다.
@@ -485,14 +503,22 @@ void CSerialMonitorDlg::OnBnClickedButtonClear()
 
 void CSerialMonitorDlg::OnBnClickedRadio1()
 {
-	m_isFastMode = false;
+	//m_isFastMode = false;
+	m_mode = MODE_NORMAL;
 }
 
 
 void CSerialMonitorDlg::OnBnClickedRadio2()
 {
-	m_isFastMode = true;
+	//m_isFastMode = true;
+	m_mode = MODE_FAST1;
 }
+
+void CSerialMonitorDlg::OnBnClickedRadioMem()
+{
+	m_mode = MODE_MEMORY;
+}
+
 
 
 void CSerialMonitorDlg::OnBnClickedCheckTopmost()
@@ -535,7 +561,8 @@ void CSerialMonitorDlg::OnBnClickedCheckShow1line()
 	if (isShow1Line)
 	{
 		// 모드 라디오 버튼을 Fast mode로 바꾼다.
-		m_isFastMode = true;
+		//m_isFastMode = true;
+		m_mode = MODE_FAST1;
 		CheckRadioButton(IDC_RADIO1, IDC_RADIO2, IDC_RADIO2);
 	}
 
@@ -615,3 +642,5 @@ void CSerialMonitorDlg::SaveConfigFile()
 		of << strCmd.c_str() << std::endl;
 	}
 }
+
+

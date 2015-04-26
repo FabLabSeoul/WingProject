@@ -36,12 +36,20 @@ protected:
 
 // Implementation
 protected:
+	enum DISPLAY_MODE
+	{
+		MODE_NORMAL,
+		MODE_FAST1,		// Fast 1 Line
+		MODE_MEMORY,
+	};
+
 	HICON m_hIcon;
 	bool m_loop;
 	//CSerial m_Serial;
 	CBufferedSerial m_Serial;
 	bool m_isConnect;
 	bool m_isFastMode;
+	DISPLAY_MODE m_mode = MODE_NORMAL;
 	bool m_isShowGraphWnd;
 	int m_PortNumber;
 	int m_BaudrateIndex;
@@ -92,6 +100,7 @@ public:
 	int m_ModeSlect;
 	afx_msg void OnBnClickedButtonGraph();
 	afx_msg void OnClose();
+	afx_msg void OnBnClickedRadioMem();
 };
 
 
