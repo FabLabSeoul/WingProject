@@ -201,6 +201,7 @@ bool CPlotWindow::SetPlot(const float x_range, const float y_range,
 
 
 // 그래프 정보 추가.
+// x 값은 시간 t로 대체된다.
 void CPlotWindow::SetPlotXY(const float x, const float y)
 {	
 	// X축은 시간축으로 한다. 

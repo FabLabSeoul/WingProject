@@ -405,6 +405,9 @@ void CSerialMonitorDlg::Process(float deltaSeconds)
 		if (m_isShowGraphWnd)
 			m_graphDlg->SetString(buff.c_str());
 	}
+
+	++m_RxCounter;
+	SetWindowTextW(common::formatw("SerialMonitor [COM %d] Rx=%d", m_PortNumber, m_RxCounter).c_str());
 }
 
 
@@ -422,6 +425,7 @@ void CSerialMonitorDlg::OnBnClickedButtonConnect()
 	if (m_Serial.Open(portNumber, _wtoi(baudRate)))
 	{
 		m_isConnect = true;
+		m_RxCounter = 0;
 		m_ConnectButton.EnableWindow(FALSE);
 		m_DisconnectButton.EnableWindow(TRUE);
 		m_PortNumber = portNumber;

@@ -45,6 +45,7 @@ protected:
 	bool m_isShowGraphWnd;
 	int m_PortNumber;
 	int m_BaudrateIndex;
+	int m_RxCounter = 0;
 	CGraphDialog *m_graphDlg; // modeless
 
 	TCHAR m_serialBuffer[256];

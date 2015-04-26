@@ -139,8 +139,8 @@ void CGraphDialog::SetString(const char *str)
 
 	for each (auto &plot in m_plotWindows)
 	{
-		float x, y;
-		const int ret = sscanf_s(str, plot.scanString.c_str(), &x, &y);
+		float x=0, y;
+		const int ret = sscanf_s(str, plot.scanString.c_str(), &y);
 		if (ret >= 2)
 			plot.wnd->SetPlotXY(x, y);
 	}
