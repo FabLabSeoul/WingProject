@@ -62,15 +62,19 @@ void setup()
 	cfg.accz_deadband = 40;
 	cfg.accxy_deadband = 40;
 	
-    // Configure clock, this figures out HSE for hardware autodetect
+	// RCC 초기화.
 	SystemInit();
+	 
+	 // Configure clock, this figures out HSE for hardware autodetect
     //SetSysClock(mcfg.emf_avoidance);
 	
-	// 클럭, 타이머 초기화
+	
+	//Baseflight 클럭, 타이머 초기화
 	systemInit();
 
+
 	// sleep for 100ms
-	delay(100);	
+	delay(100);
 
 
 	// Stm32 보드에 있는 LED3,4를 활성화 한다.
@@ -84,6 +88,8 @@ void setup()
 	i2cInit(I2CDEV_1, 0x00); // Init Master i2c 
 
 
+	// MPU-6050, HMC6553L 센서 체크, 
+	// 센서 초기화.
 	sensorsOK = sensorsAutodetect();
 	
 	// if gyro was not detected due to whatever reason, we give up now.
@@ -91,9 +97,11 @@ void setup()
 			failureMode(3);
 
 	// IMU 초기화
+	// HMC6553L 지자기 센서 초기화
 	imuInit();
 
 	// 시리얼 통신 초기화.
+	// PA10,9 (Rx,Tx)
 	serialInit(115200);
 	
 

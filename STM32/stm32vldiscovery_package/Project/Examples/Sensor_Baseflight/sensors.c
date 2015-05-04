@@ -49,11 +49,11 @@ bool sensorsAutodetect(void)
 
 		// Autodetect gyro hardware. We have MPU3050 or MPU6050 or MPU6500 on SPI
     if (mpu6050Detect(&acc, &gyro, mcfg.gyro_lpf, &core.mpu6050_scale)) 
-		{
+	{
         // this filled up  acc.* struct with init values
 //        haveMpu6k = true;
     } 
-		else
+	else
     {
             // if this fails, we get a beep + blink pattern. we're doomed, no gyro or i2c error.
            return false;

@@ -118,11 +118,11 @@ int main()
 //
 void SendSerialAccelGryro( int16_t accelgyro[6] )
 {
-	//  250 degree/s 범위를 가지고, 이 값을 16 bit 분해능으로 표현하고 있으므로, 
+	//  +-2000 degree/s 범위를 가지고, 이 값을 16 bit 분해능으로 표현하고 있으므로, 
 	// mpu-6050에서 보내는 값은 -32766 ~ +32766 값이다.
-	// 그러므로 이 값을 실제 250 degree/s 로 변환하려면 131로 나눠줘야 한다. 범위가
+	// 그러므로 이 값을 실제 +-2000 degree/s 로 변환하려면 16.4로 나눠줘야 한다. 범위가
 	// 다르면 이 값도 같이 바껴야한다.
-	float FS_SEL = 131;
+	float FS_SEL = 16.4;
 	
 	  //회전을 했을 떄 시간 알기
   unsigned long t_now = millis();

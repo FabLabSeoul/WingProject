@@ -169,6 +169,7 @@ bool mpu6050Detect(sensor_t *acc, sensor_t *gyro, uint16_t lpf, uint8_t *scale)
     // The contents of WHO_AM_I are the upper 6 bits of the MPU-60X0뭩 7-bit I2C address.
     // The least significant bit of the MPU-60X0뭩 I2C address is determined by the value of the AD0 pin. (we know that already).
     // But here's the best part: The value of the AD0 pin is not reflected in this register.
+	// 정상적으로 작동한다면 sig 값은 1101000(b) = 0x68 값을 가진다. 
     if (sig != (MPU6050_ADDRESS & 0x7e))
         return false;
 
@@ -201,8 +202,14 @@ bool mpu6050Detect(sensor_t *acc, sensor_t *gyro, uint16_t lpf, uint8_t *scale)
     gyro->init = mpu6050GyroInit;
     gyro->read = mpu6050GyroRead;
 
+
+	//자이로센서 Full-Scale Range를 +-2000으로 설정했기 때문에 Sensitivity Scale
+	//Factor는 16.4가 된다.  이 값으로 나눠줘야 실제 각속도 값을 얻을 수 있다.
+	//각도값을 라디안으로 바꾸기 위해 (M_PI / 180.f)를 곱한다.
+	//초당 각속도를 micro second 단위로 바꿔야 하기 때문에 x 0.000001f 를 한다.
     // 16.4 dps/lsb scalefactor
     gyro->scale = (4.0f / 16.4f) * (M_PI / 180.0f) * 0.000001f;
+	
 
     // give halfacc (old revision) back to system
     if (scale)
@@ -268,7 +275,7 @@ static void mpu6050GyroInit(sensor_align_e align)
     delay(100);
     i2cWrite(MPU6050_ADDRESS, MPU_RA_SMPLRT_DIV, 0x00);      //SMPLRT_DIV    -- SMPLRT_DIV = 0  Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV)
     i2cWrite(MPU6050_ADDRESS, MPU_RA_PWR_MGMT_1, 0x03);      //PWR_MGMT_1    -- SLEEP 0; CYCLE 0; TEMP_DIS 0; CLKSEL 3 (PLL with Z Gyro reference)
-    i2cWrite(MPU6050_ADDRESS, MPU_RA_INT_PIN_CFG, 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 1 << 1 | 0 << 0);  // INT_PIN_CFG   -- INT_LEVEL_HIGH, INT_OPEN_DIS, LATCH_INT_DIS, INT_RD_CLEAR_DIS, FSYNC_INT_LEVEL_HIGH, FSYNC_INT_DIS, I2C_BYPASS_EN, CLOCK_DIS
+	i2cWrite(MPU6050_ADDRESS, MPU_RA_INT_PIN_CFG, 0 << 7 | 0 << 6 | 0 << 5 | 0 << 4 | 0 << 3 | 0 << 2 | 1 << 1 | 0 << 0);  // INT_PIN_CFG   -- INT_LEVEL_HIGH, INT_OPEN_DIS, LATCH_INT_DIS, INT_RD_CLEAR_DIS, FSYNC_INT_LEVEL_HIGH, FSYNC_INT_DIS, I2C_BYPASS_EN, CLOCK_DIS
     i2cWrite(MPU6050_ADDRESS, MPU_RA_CONFIG, mpuLowPassFilter);  //CONFIG        -- EXT_SYNC_SET 0 (disable input pin for data sync) ; default DLPF_CFG = 0 => ACC bandwidth = 260Hz  GYRO bandwidth = 256Hz)
     i2cWrite(MPU6050_ADDRESS, MPU_RA_GYRO_CONFIG, INV_FSR_2000DPS << 3);
 
