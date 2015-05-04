@@ -140,6 +140,7 @@ static void ACC_Common(void)
     accADC[YAW] -= mcfg.accZero[YAW];
 }
 
+
 void ACC_getADC(void)
 {
     acc.read(accADC);
@@ -157,6 +158,7 @@ static void devClear(stdev_t *dev)
     dev->m_n = 0;
 }
 
+// 평균과 편차를 구한다.
 static void devPush(stdev_t *dev, float x)
 {
     dev->m_n++;
@@ -171,11 +173,13 @@ static void devPush(stdev_t *dev, float x)
     }
 }
 
+// 분산 계산.
 static float devVariance(stdev_t *dev)
 {
     return ((dev->m_n > 1) ? dev->m_newS / (dev->m_n - 1) : 0.0f);
 }
 
+// 표준 편차 계산
 static float devStandardDeviation(stdev_t *dev)
 {
     return sqrtf(devVariance(dev));

@@ -47,11 +47,7 @@ void imuInit(void)
 
     fc_acc = 0.5f / (M_PI * cfg.accz_lpf_cutoff); // calculate RC time constant used in the accZ lpf
 
-//    if (sensors(SENSOR_MAG))
-        Mag_init();
-	
-//	calibrate_sensors();
-//	set_last_read_angle_data(millis(), 0, 0, 0, 0, 0, 0);	
+    Mag_init();
 }
 
 void computeIMU(void)
