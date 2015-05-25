@@ -20,9 +20,10 @@ public:
 	float m_power;
 	float m_powerNoise; // 0~1, scale of m_power (백색 잡음)
 	float m_delta; // 목표값과의 차이값.
+	float m_deltaIntegral; // 차이값을 계속 쌓아놓는 변수
 	float m_p;
 	float m_i;
-	float m_d;
+	float m_d; // not work
 
 	graphic::cCube2 m_cube;
 	graphic::cLine m_line;

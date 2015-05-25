@@ -21,4 +21,6 @@ public:
 	afx_msg void OnBnClickedButtonPidControl();
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedCancel();
+	afx_msg void OnBnClickedCheckPidcontrol();
+	CString m_staticPIDState;
 };

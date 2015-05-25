@@ -28,8 +28,10 @@ BOOL C3DPhysxPIDView::OnInitDialog()
 
 	// 카메라 이동
 	graphic::GetMainCamera()->SetEyePos(Vector3(1.2f, 2.f, -1.f));
+	SetFixedFrame(false);
 
 	m_machine.Init();
+
 
 	return TRUE;
 }

@@ -91,7 +91,8 @@ bool cMachine::Init()
 }
 
 
-// 물리 엔진 정보를 가져와, 내부 변수를 갱신한다.
+// 모터 추력을 머신에 적용한다.
+// 모든 계산은 물리 엔진에서 처리한다.
 void	cMachine::UpdatePhysX(const float deltaSeconds)
 {
 	if (m_enablePID)
@@ -129,6 +130,8 @@ void	cMachine::UpdatePhysX(const float deltaSeconds)
 
 
 // PID 제어.
+// 머신이 축에서 벗어난 값(delta)를 모터에 저장한다.
+// 모터는 delta 값으로 추력을 계산한다.
 void cMachine::UpdatePIDControl(const float deltaSeconds)
 {
 	RET(!m_enablePID);
@@ -162,6 +165,7 @@ void cMachine::UpdatePIDControl(const float deltaSeconds)
 
 
 // 물리엔진 연산이 모두 끝난후 정보를 갱신한다.
+// 물리엔진에서 계산된 결과 값으로 머신 본체의 자세를 업데이트 한다.
 void cMachine::UpdateAfterPhysX(const float deltaSeconds)
 {
 	// 큐브, 물리엔진에서 계산된 정보를 업데이트 한다.
@@ -180,6 +184,5 @@ void cMachine::UpdateAfterPhysX(const float deltaSeconds)
 // PID 제어 온오프.
 void cMachine::EnablePIDControl(const bool enable)
 {
-
 	m_enablePID = enable;
 }

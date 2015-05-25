@@ -109,7 +109,7 @@ void C3DView::Update(const float deltaSeconds)
 
 	m_IncSeconds += deltaSeconds;
 
-	RET(m_IncSeconds < 0.01f); // 시간 간격이 짧으면 실행하지 않는다.
+	RET(m_isFixedFrame && (m_IncSeconds < 0.01f)); // 시간 간격이 짧으면 실행하지 않는다.
 	if (m_IncSeconds > 0.02f) // 너무 값이 크면, 최소 값으로 설정한다.
 		m_IncSeconds = 0.02f;
 

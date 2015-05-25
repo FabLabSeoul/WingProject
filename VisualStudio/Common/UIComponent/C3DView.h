@@ -25,10 +25,12 @@ public:
 	virtual void Render();
 	virtual void RenderChild() {}
 
+	void SetFixedFrame(const bool isFixedFrame);
 
 
 protected:
 	bool m_isInitDx = false;
+	bool m_isFixedFrame = true; // 고정 프레임모드시 true, (100 frame)
 	graphic::Box m_box;
 	graphic::cSphere m_sphere;
 	graphic::cCube m_cube;
@@ -61,3 +63,5 @@ public:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 };
 
+
+inline void C3DView::SetFixedFrame(const bool isFixedFrame) { m_isFixedFrame = isFixedFrame;  }

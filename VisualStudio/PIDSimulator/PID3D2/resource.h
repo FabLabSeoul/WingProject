@@ -106,6 +106,8 @@
 #define IDC_STATIC_D                    1015
 #define IDC_BUTTON_RESET                1016
 #define IDC_BUTTON_PID_CONTROL          1019
+#define IDC_CHECK_PIDCONTROL            1021
+#define IDC_STATIC_PID                  1022
 #define IDC_SLIDER_DIR_N_X              1026
 #define IDC_SLIDER_DIR_N_Y              1027
 #define IDC_SLIDER_DIR_N_Z              1028
@@ -119,7 +121,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1021
+#define _APS_NEXT_CONTROL_VALUE         1023
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

@@ -16,6 +16,16 @@ CPlotWindow::CPlotWindow()
 	m_gridPen1.CreatePen(0, 1, RGB(100, 100, 100));
 	m_gridPen2.CreatePen(0, 2, RGB(100,100,100));
 
+	COLORREF colors[] = {
+		RGB(255, 255, 0),
+		RGB(0, 255, 0),
+		RGB(0, 255, 255),
+		RGB(255, 255, 255),
+	};
+	for (int i = 0; i < 4; ++i)
+	{
+		m_plotPens[i].CreatePen(0, 1, colors[i]);
+	}
 }
 
 CPlotWindow::~CPlotWindow()
@@ -61,6 +71,7 @@ void CPlotWindow::OnDraw(CDC* pDC)
 	pDC->MoveTo(CPoint(0, cr.Height()* 3 / 4));
 	pDC->LineTo(CPoint(cr.Width(), cr.Height()*3 / 4));
 
+
 	// draw time line grid
 	float TOTAL_DRAW_TIMELINE = 0;
 	int oneSecondsWidth = 0; // 1초당 픽셀 간격
@@ -70,12 +81,118 @@ void CPlotWindow::OnDraw(CDC* pDC)
 	{
 		oneSecondsWidth = 100; // 1초당 픽셀 간격을 100으로 고정시킨다.
 		TOTAL_DRAW_TIMELINE = (float)cr.Width() / (float)oneSecondsWidth;
-		m_renderStartIndex = GetDrawStartIndex(m_renderStartIndex, TOTAL_DRAW_TIMELINE);
+		m_plots[0].renderStartIndex = GetDrawStartIndex(0, m_plots[0].renderStartIndex, TOTAL_DRAW_TIMELINE);
 	}
 	else
 	{ // 화면에 출력할 그래프의 시간을 고정시킬 경우.
 		TOTAL_DRAW_TIMELINE = 5.f; // 한 화면에 5초의 그래프를 출력하게 한다.
-		m_renderStartIndex = GetDrawStartIndex(m_renderStartIndex, TOTAL_DRAW_TIMELINE);
+		oneSecondsWidth = (int)((float)cr.Width() / TOTAL_DRAW_TIMELINE); // 1초당 픽셀 간격
+		m_plots[0].renderStartIndex = GetDrawStartIndex(0, m_plots[0].renderStartIndex, TOTAL_DRAW_TIMELINE);
+	}
+
+	const float timeElapse = m_plots[0].xy[m_plots[0].renderStartIndex].first - m_startTime; // 지나간 시간만큼 timeline을 이동시킨다.
+
+	// 차이가 나는 시간 간격만큼 픽셀을 계산한다. 1초 단위의 간격만 알면된다.
+	const int offsetX = ((int)(timeElapse * (float)oneSecondsWidth)) % oneSecondsWidth;
+	const int timeLineCount = cr.Width() / oneSecondsWidth;
+	for (int i = 1; i <= timeLineCount + 1; ++i)
+	{
+		pDC->MoveTo(CPoint((i * oneSecondsWidth) - offsetX, 0));
+		pDC->LineTo(CPoint((i * oneSecondsWidth) - offsetX, cr.Height()));
+	}
+
+	m_scaleY = (float)cr.Height() / (m_maxY - m_minY);
+	m_scaleX = oneSecondsWidth / 1.f; // 1초 당 픽셀수 //(float)(cr.Width() - 50) / (float)m_plot.size();
+
+
+
+
+
+
+	for (u_int i = 0; i < m_plots.size(); ++i)
+	{
+		sPlotData &plot = m_plots[i];
+
+		// 1초당 픽셀폭이 고정된 모드일 경우.
+		if (m_isFixedPlot)
+		{
+			oneSecondsWidth = 100; // 1초당 픽셀 간격을 100으로 고정시킨다.
+			TOTAL_DRAW_TIMELINE = (float)cr.Width() / (float)oneSecondsWidth;
+			plot.renderStartIndex = GetDrawStartIndex(i, plot.renderStartIndex, TOTAL_DRAW_TIMELINE);
+		}
+		else
+		{ // 화면에 출력할 그래프의 시간을 고정시킬 경우.
+			TOTAL_DRAW_TIMELINE = 5.f; // 한 화면에 5초의 그래프를 출력하게 한다.
+			oneSecondsWidth = (int)((float)cr.Width() / TOTAL_DRAW_TIMELINE); // 1초당 픽셀 간격
+			plot.renderStartIndex = GetDrawStartIndex(i, plot.renderStartIndex, TOTAL_DRAW_TIMELINE);
+		}
+
+		//const float timeElapse = plot.xy[plot.renderStartIndex].first - m_startTime; // 지나간 시간만큼 timeline을 이동시킨다.
+
+		//// 차이가 나는 시간 간격만큼 픽셀을 계산한다. 1초 단위의 간격만 알면된다.
+		//const int offsetX = ((int)(timeElapse * (float)oneSecondsWidth)) % oneSecondsWidth;
+		//const int timeLineCount = cr.Width() / oneSecondsWidth;
+		//for (int i = 1; i <= timeLineCount + 1; ++i)
+		//{
+		//	pDC->MoveTo(CPoint((i * oneSecondsWidth) - offsetX, 0));
+		//	pDC->LineTo(CPoint((i * oneSecondsWidth) - offsetX, cr.Height()));
+		//}
+
+		//m_scaleY = (float)cr.Height() / (m_maxY - m_minY);
+		//m_scaleX = oneSecondsWidth / 1.f; // 1초 당 픽셀수 //(float)(cr.Width() - 50) / (float)m_plot.size();
+
+		// draw graph
+		pDC->SelectObject(m_plotPens[ i]);
+		const int h = cr.Height();
+		int lastX = 0;
+		for (int i = plot.renderStartIndex; i != plot.tailIdx; i = ++i % plot.xy.size())
+		{
+			const int x = (int)((plot.xy[i].first - plot.xy[plot.renderStartIndex].first) * m_scaleX) - 50;
+			const int y = h - (int)((plot.xy[i].second - m_minY) * m_scaleY);
+			lastX = x;
+
+			if (i == plot.renderStartIndex)
+				pDC->MoveTo(CPoint(x, y));
+			else
+				pDC->LineTo(CPoint(x, y));
+		}
+
+
+		// 정보 출력. 최대, 최소, 중간 값, 현재 값.
+		pDC->SetBkMode(TRANSPARENT);
+		pDC->SetTextColor(RGB(220, 220, 220));
+
+		// 가장 마지막 위치에 현재 값을 출력한다.
+		if (plot.headIdx != plot.tailIdx)
+		{
+			int y = h - (int)((plot.xy[(plot.tailIdx - 1) % plot.xy.size()].second - m_minY) * m_scaleY);
+			if (cr.Height() < (y + 20)) {
+				y -= 20;
+			}
+			else {
+				y += 10;
+			}
+
+			CString strLastVal;
+			strLastVal.Format(L"%f", plot.xy[(plot.tailIdx - 1) % plot.xy.size()].second);
+			pDC->TextOutW(lastX - 10, y, strLastVal);
+		}
+	}
+
+
+
+	/*
+	// 1초당 픽셀폭이 고정된 모드일 경우.
+	if (m_isFixedPlot)
+	{
+		oneSecondsWidth = 100; // 1초당 픽셀 간격을 100으로 고정시킨다.
+		TOTAL_DRAW_TIMELINE = (float)cr.Width() / (float)oneSecondsWidth;
+		m_renderStartIndex = GetDrawStartIndex(0, m_renderStartIndex, TOTAL_DRAW_TIMELINE);
+	}
+	else
+	{ // 화면에 출력할 그래프의 시간을 고정시킬 경우.
+		TOTAL_DRAW_TIMELINE = 5.f; // 한 화면에 5초의 그래프를 출력하게 한다.
+		m_renderStartIndex = GetDrawStartIndex(0, m_renderStartIndex, TOTAL_DRAW_TIMELINE);
 		oneSecondsWidth = (int)((float)cr.Width() / TOTAL_DRAW_TIMELINE); // 1초당 픽셀 간격
 	}
 
@@ -128,6 +245,7 @@ void CPlotWindow::OnDraw(CDC* pDC)
 		strLastVal.Format(L"%f", m_plot[(m_tailIdx - 1) % m_plot.size()].second);
 		pDC->TextOutW(lastX-10, y, strLastVal);
 	}
+	*/
 
 	CString strMaxY, strMinY, strCenterY;
 	strMaxY.Format(L"%f", m_maxY);
@@ -182,7 +300,8 @@ void CPlotWindow::Dump(CDumpContext& dc) const
 
 // CPlotWindow message handlers
 bool CPlotWindow::SetPlot(const float x_range, const float y_range,
-	const float x_visble_range, const float y_visible_range, const DWORD flags)
+	const float x_visble_range, const float y_visible_range, const DWORD flags,
+	const int plotCount)
 {
 	m_xRange = x_range;
 	m_yRange = y_range;
@@ -190,7 +309,17 @@ bool CPlotWindow::SetPlot(const float x_range, const float y_range,
 	m_yVisibleRange = y_visible_range;
 	m_flags = flags;
 
-	m_plot.resize(2048, pair<float,float>(0.f,0.f));
+	//m_plot.resize(2048, pair<float,float>(0.f,0.f));
+
+	m_plots.resize(plotCount);
+	for (u_int i = 0; i < m_plots.size(); ++i)
+	{
+		m_plots[ i].xy.resize(2048, pair<float, float>(0.f, 0.f));
+		m_plots[i].headIdx = 0;
+		m_plots[i].tailIdx = 0;
+		m_plots[i].renderStartIndex = 0;
+	}
+
 
 	m_maxX = -FLT_MAX;
 	m_minX = FLT_MAX;
@@ -203,16 +332,23 @@ bool CPlotWindow::SetPlot(const float x_range, const float y_range,
 
 
 // 그래프 정보 추가.
-void CPlotWindow::SetPlotXY(const float x, const float y)
+void CPlotWindow::SetPlotXY(const float x, const float y, const int plotIndex)
 {	
 	// X축은 시간축으로 한다. 
 	const float t = timeGetTime() * 0.001f;
 
 	// Ring형 배열 구조, 추가
-	m_plot[m_tailIdx] = pair<float, float>(t, y);
-	m_tailIdx = ++m_tailIdx % m_plot.size();
-	if (m_headIdx == m_tailIdx)
-		m_headIdx = ++m_headIdx % m_plot.size();
+	//m_plot[m_tailIdx] = pair<float, float>(t, y);
+	//m_tailIdx = ++m_tailIdx % m_plot.size();
+	//if (m_headIdx == m_tailIdx)
+	//	m_headIdx = ++m_headIdx % m_plot.size();
+
+	m_plots[plotIndex].xy[ m_plots[plotIndex].tailIdx] = pair<float, float>(t, y);
+	m_plots[plotIndex].tailIdx = ++m_plots[plotIndex].tailIdx % m_plots[plotIndex].xy.size();
+	if (m_plots[plotIndex].headIdx == m_plots[plotIndex].tailIdx)
+		m_plots[plotIndex].headIdx = ++m_plots[plotIndex].headIdx % m_plots[plotIndex].xy.size();
+
+
 
 	m_maxX = max(x, m_maxX);
 	m_minX = min(x, m_minX);
@@ -240,38 +376,57 @@ BOOL CPlotWindow::OnEraseBkgnd(CDC* pDC)
 
 
 // 가장 먼저 저장된 값을 리턴 한다. (가장 오래된 값)
-pair<float, float> CPlotWindow::GetHeadValue() const
+pair<float, float> CPlotWindow::GetHeadValue(const u_int plotIndex) const
 {
-	if (m_headIdx < m_tailIdx)
+	//if (m_headIdx < m_tailIdx)
+	//{
+	//	return m_plot[m_headIdx];
+	//}
+	//else
+	//{
+	//	const int idx = (m_plot.size() + m_headIdx - 1) % m_plot.size();
+	//	return m_plot[idx];
+	//}
+
+	if (m_plots[plotIndex].headIdx < m_plots[plotIndex].tailIdx)
 	{
-		return m_plot[m_headIdx];
+		return m_plots[plotIndex].xy[m_plots[plotIndex].headIdx];
 	}
 	else
 	{
-		const int idx = (m_plot.size() + m_headIdx - 1) % m_plot.size();
-		return m_plot[idx];
+		const int idx = (m_plots[plotIndex].xy.size() + m_plots[plotIndex].headIdx - 1) % m_plots[plotIndex].xy.size();
+		return m_plots[plotIndex].xy[idx];
 	}
 }
 
 
 // 가장 나중에 저장 된 값을 리턴한다. (가장 최근 값)
-pair<float, float> CPlotWindow::GetTailValue() const
+pair<float, float> CPlotWindow::GetTailValue(const u_int plotIndex) const
 {
-	const int idx = (m_plot.size() + m_tailIdx - 1) % m_plot.size();
-	return m_plot[ idx];
+	//const int idx = (m_plot.size() + m_tailIdx - 1) % m_plot.size();
+	//return m_plot[ idx];
+	const int idx = (m_plots[plotIndex].xy.size() + m_plots[plotIndex].tailIdx - 1) % m_plots[plotIndex].xy.size();
+	return m_plots[plotIndex].xy[idx];
 }
 
 
 // 현재 plot index 부터 tail 까지 쫓아가면서 drawTimeRange 범위에 안에 드는 
 // 첫 번째 plot index 를 찾아 리턴한다.
 // 그래프가 정확히 drawTimeRange 만큼 출력하기 위한 함수다.
-int CPlotWindow::GetDrawStartIndex(const int currentIndex, const float drawTimeRange)
+int CPlotWindow::GetDrawStartIndex(const u_int plotIndex, const int currentIndex, const float drawTimeRange)
 {
-	const float tailSeconds = GetTailValue().first;
+	const float tailSeconds = GetTailValue(plotIndex).first;
 
-	for (int i = currentIndex; i != m_tailIdx; i = ++i % m_plot.size())
+	//for (int i = currentIndex; i != m_tailIdx; i = ++i % m_plot.size())
+	//{
+	//	const float totalDrawTime = tailSeconds - m_plot[i].first;
+	//	if (totalDrawTime < drawTimeRange)
+	//		return i;
+	//}
+
+	for (int i = currentIndex; i != m_plots[plotIndex].tailIdx; i = ++i % m_plots[plotIndex].xy.size())
 	{
-		const float totalDrawTime = tailSeconds - m_plot[i].first;
+		const float totalDrawTime = tailSeconds - m_plots[plotIndex].xy[i].first;
 		if (totalDrawTime < drawTimeRange)
 			return i;
 	}

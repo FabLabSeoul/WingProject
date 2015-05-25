@@ -135,7 +135,7 @@ BOOL CMotorView::OnInitDialog()
 			this, 10001);
 		m_plotP->SetScrollSizes(MM_TEXT, CSize(pr.Width() - 30, 100));
 		m_plotP->ShowWindow(SW_SHOW);
-		m_plotP->SetPlot(0, 0, 0, 0, 0);
+		m_plotP->SetPlot(0, 0, 0, 0, 0, 2);
 	}
 
 	{
@@ -149,7 +149,7 @@ BOOL CMotorView::OnInitDialog()
 			this, 10001);
 		m_plotI->SetScrollSizes(MM_TEXT, CSize(ir.Width() - 30, 100));
 		m_plotI->ShowWindow(SW_SHOW);
-		m_plotI->SetPlot(0, 0, 0, 0, 0);
+		m_plotI->SetPlot(0, 0, 0, 0, 0, 2);
 	}
 
 	{
@@ -192,12 +192,14 @@ void CMotorView::Update(const float deltaSeconds)
 	if (m_plotP)
 	{
 		m_plotP->SetPlotXY(0, delta);
+		m_plotP->SetPlotXY(0, delta*m_motor->m_p, 1);
 		m_plotP->DrawPlot(m_incSeconds);
 	}
 
 	if (m_plotI)
 	{
 		m_plotI->SetPlotXY(0, delta);
+		m_plotI->SetPlotXY(0, m_motor->m_deltaIntegral, 1);
 		m_plotI->DrawPlot(m_incSeconds);
 	}
 
