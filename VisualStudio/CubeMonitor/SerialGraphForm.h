@@ -1,7 +1,7 @@
 #pragma once
 
-#include "DockablePaneChildView.h"
-#include "bpctrlanchormap.h"
+//#include "DockablePaneChildView.h"
+//#include "bpctrlanchormap.h"
 #include "afxwin.h"
 
 

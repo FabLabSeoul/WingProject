@@ -7,8 +7,7 @@
 
 #include "MainFrm.h"
 #include "ConnectionDialog.h"
-#include "controller.h"
-#include "SerialEditorForm.h"
+#include "SerialEditorView.h"
 #include "SerialGraphForm.h"
 
 
@@ -136,12 +135,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	for each (auto &view in m_viewList)
 		view->EnableDocking(CBRS_ALIGN_ANY);
 
-	DockPane(m_wndFileView);
+	DockPane(m_wndCube3DView);
+	//DockPane(m_wndFileView);
 	CDockablePane* pTabbedBar = NULL;
 	for each (auto &view in m_viewList)
 	{
-		if (view != m_wndFileView)
-			view->AttachToTabWnd(m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
+		if (view != m_wndCube3DView)
+			view->AttachToTabWnd(m_wndCube3DView, DM_SHOW, TRUE, &pTabbedBar);
 	}
 
 
@@ -207,8 +207,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 	*/
 
-	CConnectionDialog dlg;
-	dlg.DoModal();
+	//CConnectionDialog dlg;
+	//dlg.DoModal();
 
 	return 0;
 }
@@ -232,26 +232,26 @@ BOOL CMainFrame::CreateDockingWindows()
 	bNameValid = strClassView.LoadString(IDS_CLASS_VIEW);
 	ASSERT(bNameValid);
 
-	m_wndClassView = new CClassView();
-	if (!m_wndClassView->Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create Class View window\n");
-		return FALSE; // failed to create
-	}
+	//m_wndClassView = new CClassView();
+	//if (!m_wndClassView->Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+	//{
+	//	TRACE0("Failed to create Class View window\n");
+	//	return FALSE; // failed to create
+	//}
 
 	// Create file view
-	CString strFileView;
-	bNameValid = strFileView.LoadString(IDS_FILE_VIEW);
-	ASSERT(bNameValid);
-	m_wndFileView = new CFileView();
-	if (!m_wndFileView->Create(strFileView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_FILEVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create File View window\n");
-		return FALSE; // failed to create
-	}
+	//CString strFileView;
+	//bNameValid = strFileView.LoadString(IDS_FILE_VIEW);
+	//ASSERT(bNameValid);
+	//m_wndFileView = new CFileView();
+	//if (!m_wndFileView->Create(strFileView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_FILEVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
+	//{
+	//	TRACE0("Failed to create File View window\n");
+	//	return FALSE; // failed to create
+	//}
 
 	// Create cube3d view
-	m_wndCube3DView = new CCube3DView();
+	m_wndCube3DView = new CCube3DPane();
 	if (!m_wndCube3DView->Create(L"Cube3DView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CUBE3D, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create cube 3d View window\n");
@@ -260,7 +260,7 @@ BOOL CMainFrame::CreateDockingWindows()
 
 
 	// Create sensor view
-	m_wndSensorView = new CSensorView();
+	m_wndSensorView = new CSensorPane();
 	if (!m_wndSensorView->Create(L"SensorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SENSOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
 	{
 		TRACE0("Failed to create cube 3d View window\n");
@@ -276,8 +276,8 @@ BOOL CMainFrame::CreateDockingWindows()
 			return FALSE; // failed to create
 		}
 
-		CSerialEditorForm *view = new CSerialEditorForm(m_wndSerialEditorView);
-		view->Create(CSerialEditorForm::IDD, m_wndSerialEditorView);
+		CSerialEditorView *view = new CSerialEditorView(m_wndSerialEditorView);
+		view->Create(CSerialEditorView::IDD, m_wndSerialEditorView);
 		view->ShowWindow(SW_SHOW);
 		m_wndSerialEditorView->SetChildView(view);
 	}
@@ -299,8 +299,8 @@ BOOL CMainFrame::CreateDockingWindows()
 	}
 
 
-	m_viewList.push_back(m_wndClassView);
-	m_viewList.push_back(m_wndFileView);
+	//m_viewList.push_back(m_wndClassView);
+	//m_viewList.push_back(m_wndFileView);
 	m_viewList.push_back(m_wndCube3DView);
 	m_viewList.push_back(m_wndSensorView);
 	m_viewList.push_back(m_wndSerialEditorView);
@@ -334,10 +334,10 @@ BOOL CMainFrame::CreateDockingWindows()
 void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 {
 	HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndFileView->SetIcon(hFileViewIcon, FALSE);
+	//m_wndFileView->SetIcon(hFileViewIcon, FALSE);
 
 	HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndClassView->SetIcon(hClassViewIcon, FALSE);
+	//m_wndClassView->SetIcon(hClassViewIcon, FALSE);
 
 	HICON hCube3DViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndCube3DView->SetIcon(hCube3DViewIcon, FALSE);

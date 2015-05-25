@@ -1,14 +1,15 @@
-// SensorView.cpp : implementation file
+// SensorForm.cpp : implementation file
 //
 
 #include "stdafx.h"
 #include "CubeMonitor.h"
 #include "SensorView.h"
-#include "SensorForm.h"
+#include "afxdialogex.h"
 
 
-// CSensorView
-CSensorView::CSensorView() 
+// CSensorForm dialog
+CSensorView::CSensorView(CWnd* pParent /*=NULL*/)
+	: CDockablePaneChildView(CSensorView::IDD, pParent)
 {
 
 }
@@ -17,24 +18,30 @@ CSensorView::~CSensorView()
 {
 }
 
+void CSensorView::DoDataExchange(CDataExchange* pDX)
+{
+	CDockablePaneChildView::DoDataExchange(pDX);
+}
 
-BEGIN_MESSAGE_MAP(CSensorView, CDockablePaneBase)
-	ON_WM_CREATE()
+
+BEGIN_MESSAGE_MAP(CSensorView, CDockablePaneChildView)
+	ON_BN_CLICKED(IDOK, &CSensorView::OnBnClickedOk)
+	ON_BN_CLICKED(IDCANCEL, &CSensorView::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
+// CSensorForm message handlers
 
-// CSensorView message handlers
-int CSensorView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+
+void CSensorView::OnBnClickedOk()
 {
-	if (CDockablePaneBase::OnCreate(lpCreateStruct) == -1)
-		return -1;
-
-	m_view = new CSensorForm();
-	m_view->Create(CSensorForm::IDD, this);
-	m_view->ShowWindow(SW_SHOW);
-	SetChildView(m_view);
-
-	return 0;
+	// TODO: Add your control notification handler code here
+	//CDockablePaneChildView::OnOK();
 }
 
+
+void CSensorView::OnBnClickedCancel()
+{
+	// TODO: Add your control notification handler code here
+	//CDockablePaneChildView::OnCancel();
+}

@@ -7,8 +7,8 @@
 #include "ClassView.h"
 #include "OutputWnd.h"
 #include "PropertiesWnd.h"
-#include "Cube3DView.h"
-#include "SensorView.h"
+#include "Cube3DPane.h"
+#include "SensorPane.h"
 //#include "SerialEditorView.h"
 
 class CDockablePaneBase;
@@ -45,10 +45,10 @@ protected:  // control bar embedded members
 	CMFCToolBarImages m_UserImages;
 
 	list<CDockablePaneBase*> m_viewList;
-	CCube3DView *m_wndCube3DView;
-	CSensorView *m_wndSensorView; 
-	CFileView         *m_wndFileView;
-	CClassView        *m_wndClassView;
+	CCube3DPane *m_wndCube3DView;
+	CSensorPane *m_wndSensorView; 
+	//CFileView         *m_wndFileView;
+	//CClassView        *m_wndClassView;
 	CDockablePaneBase *m_wndSerialEditorView;
 	CDockablePaneBase *m_serialGraphView;
 

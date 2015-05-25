@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="math\Math.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\matrix44.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector3.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector4.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="common.h" />
+    <ClInclude Include="etc\singleton.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\filepath.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\stringfunc.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="math\quaternion.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\dbg.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="container\vectorhelper.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="math\vector2.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\observer.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\rect.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="math\triangle.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\plane.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\ray.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\observer2.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\genid.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="math\mathutility.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\memorypool.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="etc\rand.h">
+      <Filter>Etc</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="math\matrix44.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector3.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector4.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\filepath.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\stringfunc.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="math\quaternion.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\dbg.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\observer.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\rect.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="math\triangle.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\plane.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\ray.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\observer2.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="etc\genid.cpp">
+      <Filter>Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="math\vector2.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="math">
+      <UniqueIdentifier>{09e41562-7a55-4d7d-b787-1e97e14beb8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Etc">
+      <UniqueIdentifier>{c61673fa-04bb-421e-ad9e-ad682ac30936}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="container">
+      <UniqueIdentifier>{5fbca98c-399a-486a-a487-cad45a0e473d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

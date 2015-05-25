@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7F767374-0BD3-4D46-A8C7-93C1736542C1}</ProjectGuid>
+    <RootNamespace>PID3D2</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>C:\Project\GitHub\WingProject\VisualStudio\Common\UIComponent;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>winmm.lib;PhysX3CommonDEBUG_x86.lib;PhysX3DEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PxTaskDEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\UIComponent\BPCtrlAnchorMap.h" />
+    <ClInclude Include="..\..\Common\UIComponent\C3DPhysxView.h" />
+    <ClInclude Include="..\..\Common\UIComponent\C3DView.h" />
+    <ClInclude Include="..\..\Common\UIComponent\ComPortCombo.h" />
+    <ClInclude Include="..\..\Common\UIComponent\Controller.h" />
+    <ClInclude Include="..\..\Common\UIComponent\CubeFlight.h" />
+    <ClInclude Include="..\..\Common\UIComponent\DockablePaneBase.h" />
+    <ClInclude Include="..\..\Common\UIComponent\DockablePaneChildView.h" />
+    <ClInclude Include="..\..\Common\UIComponent\EnumDevices.h" />
+    <ClInclude Include="..\..\Common\UIComponent\PlotWindow.h" />
+    <ClInclude Include="..\..\Common\UIComponent\Serial.h" />
+    <ClInclude Include="..\..\Common\UIComponent\SerialCommunication.h" />
+    <ClInclude Include="..\..\Common\UIComponent\SerialObserver.h" />
+    <ClInclude Include="..\..\Common\UIComponent\UIComponent.h" />
+    <ClInclude Include="..\..\Common\UIComponent\UpdateObserver.h" />
+    <ClInclude Include="C3DPhysxPIDView.h" />
+    <ClInclude Include="Environment.h" />
+    <ClInclude Include="Machine.h" />
+    <ClInclude Include="MachineView.h" />
+    <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="Motor.h" />
+    <ClInclude Include="MotorView.h" />
+    <ClInclude Include="pid.h" />
+    <ClInclude Include="PID3D2.h" />
+    <ClInclude Include="PID3D2Doc.h" />
+    <ClInclude Include="PID3D2View.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Sensor.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Common\UIComponent\C3DPhysxView.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\C3DView.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\ComPortCombo.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\Controller.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\CubeFlight.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\DockablePaneBase.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\DockablePaneChildView.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\EnumDevices.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\PlotWindow.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\Serial.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\SerialCommunication.cpp" />
+    <ClCompile Include="..\..\Common\UIComponent\SerialObserver.cpp" />
+    <ClCompile Include="C3DPhysxPIDView.cpp" />
+    <ClCompile Include="Environment.cpp" />
+    <ClCompile Include="Machine.cpp" />
+    <ClCompile Include="MachineView.cpp" />
+    <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="Motor.cpp" />
+    <ClCompile Include="MotorView.cpp" />
+    <ClCompile Include="pid.cpp" />
+    <ClCompile Include="PID3D2.cpp" />
+    <ClCompile Include="PID3D2Doc.cpp" />
+    <ClCompile Include="PID3D2View.cpp" />
+    <ClCompile Include="Sensor.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PID3D2.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\classview.bmp" />
+    <Image Include="res\classview_hc.bmp" />
+    <Image Include="res\class_view.ico" />
+    <Image Include="res\class_view_hc.ico" />
+    <Image Include="res\explorer.bmp" />
+    <Image Include="res\explorer_hc.bmp" />
+    <Image Include="res\fileview.bmp" />
+    <Image Include="res\fileview_hc.bmp" />
+    <Image Include="res\file_view.ico" />
+    <Image Include="res\file_view_hc.ico" />
+    <Image Include="res\menuimages.bmp" />
+    <Image Include="res\menuimages_hc.bmp" />
+    <Image Include="res\output_wnd.ico" />
+    <Image Include="res\output_wnd_hc.ico" />
+    <Image Include="res\PID3D2.ico" />
+    <Image Include="res\PID3D2Doc.ico" />
+    <Image Include="res\properties.bmp" />
+    <Image Include="res\properties_hc.bmp" />
+    <Image Include="res\properties_wnd.ico" />
+    <Image Include="res\properties_wnd_hc.ico" />
+    <Image Include="res\sort.bmp" />
+    <Image Include="res\sort_hc.bmp" />
+    <Image Include="res\Toolbar.bmp" />
+    <Image Include="res\Toolbar256.bmp" />
+    <Image Include="UserImages.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\PID3D2.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\AI\AI.vcxproj">
+      <Project>{c7f9eba2-b553-483b-bc34-d25f1c718255}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Common\Common.vcxproj">
+      <Project>{ef9ca22d-0c8f-42e9-ab66-98bc1a640f10}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Graphic\Graphic.vcxproj">
+      <Project>{3a91e3aa-18df-4733-9f41-ed09a61f97e3}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="PID3D2.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

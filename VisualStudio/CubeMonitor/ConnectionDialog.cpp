@@ -5,7 +5,6 @@
 #include "CubeMonitor.h"
 #include "ConnectionDialog.h"
 #include "afxdialogex.h"
-#include "controller.h"
 
 
 // CConnectionDialog dialog

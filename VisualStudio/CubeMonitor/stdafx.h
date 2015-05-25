@@ -52,16 +52,18 @@
 #endif
 
 
-#include "Common/common.h"
-#include "Graphic/graphic.h"
-
+#include "../Common/Common/common.h"
+#include "../Common/Graphic/graphic.h"
+#include "../Common/UIComponent/uicomponent.h"
 #include <mmsystem.h>
-#include "Serial.h"
+//#include "Serial.h"
 
 using std::pair;
 
-class C3DDialog;
-extern C3DDialog *g_3DView;
+class C3DView;
+class C3DPhysxView;
+extern C3DView *g_3DView;
+extern C3DPhysxView *g_3DPhysxView;
 
 
 enum VIEW_TYPE {

@@ -5,7 +5,7 @@
 #include "CubeMonitor.h"
 #include "SerialGraphForm.h"
 #include "afxdialogex.h"
-#include "PlotWindow.h"
+//#include "PlotWindow.h"
 
 
 
@@ -70,7 +70,12 @@ BOOL CSerialGraphForm::OnInitDialog()
 
 	m_CommandEditor.SetWindowTextW(
 		//		L"plot1 = 0,0,0,0,0\n\rstring1 = %*s %f, %f, %*f");
-L"plot1 = 0, 0, 0, 0, 0\r\n\string1 = %*s %f, %f, %*f\r\n\plot2 = 0, 0, 0, 0, 0\r\n\string2 = %*s %f, %*f, %f\r\n\plot3 = 0, 0, 0, 0, 0\r\n\string3 = %*s %f, %*f, %*f, %f\r\n");
+L"plot1 = 0, 0, 0, 0, 0\r\n\
+string1 = %*s %f, %f, %*f\r\n\
+plot2 = 0, 0, 0, 0, 0\r\n\
+string2 = %*s %f, %*f, %f\r\n\
+plot3 = 0, 0, 0, 0, 0\r\n\
+string3 = %*s %f, %*f, %*f, %f\r\n");
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE

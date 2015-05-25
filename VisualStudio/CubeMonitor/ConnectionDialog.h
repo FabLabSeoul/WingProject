@@ -1,6 +1,6 @@
 #pragma once
 #include "afxwin.h"
-#include "ComPortCombo.h"
+//#include "ComPortCombo.h"
 
 
 // CConnectionDialog dialog

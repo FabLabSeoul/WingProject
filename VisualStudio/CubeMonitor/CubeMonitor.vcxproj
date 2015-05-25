@@ -21,7 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <UseOfMfc>Dynamic</UseOfMfc>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -54,11 +54,16 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\Project\GitHub\WingProject\VisualStudio\Common\UIComponent;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;PhysX3CommonDEBUG_x86.lib;PhysX3DEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysX3CharacterKinematicDEBUG_x86.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysXProfileSDKDEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PxTaskDEBUG.lib</AdditionalDependencies>
+      <TargetMachine>MachineX86</TargetMachine>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -102,66 +107,69 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BPCtrlAnchorMap.h" />
-    <ClInclude Include="C3DDialog.h" />
+    <ClInclude Include="..\Common\UIComponent\BPCtrlAnchorMap.h" />
+    <ClInclude Include="..\Common\UIComponent\C3DView.h" />
+    <ClInclude Include="..\Common\UIComponent\C3DPhysxView.h" />
+    <ClInclude Include="..\Common\UIComponent\ComPortCombo.h" />
+    <ClInclude Include="..\Common\UIComponent\Controller.h" />
+    <ClInclude Include="..\Common\UIComponent\CubeFlight.h" />
+    <ClInclude Include="..\Common\UIComponent\DockablePaneBase.h" />
+    <ClInclude Include="..\Common\UIComponent\DockablePaneChildView.h" />
+    <ClInclude Include="..\Common\UIComponent\EnumDevices.h" />
+    <ClInclude Include="..\Common\UIComponent\PlotWindow.h" />
+    <ClInclude Include="..\Common\UIComponent\Serial.h" />
+    <ClInclude Include="..\Common\UIComponent\SerialCommunication.h" />
+    <ClInclude Include="..\Common\UIComponent\SerialObserver.h" />
+    <ClInclude Include="..\Common\UIComponent\UIComponent.h" />
+    <ClInclude Include="..\Common\UIComponent\UpdateObserver.h" />
     <ClInclude Include="ClassView.h" />
-    <ClInclude Include="ComPortCombo.h" />
     <ClInclude Include="ConnectionDialog.h" />
-    <ClInclude Include="Controller.h" />
-    <ClInclude Include="Cube3DView.h" />
-    <ClInclude Include="CubeFlight.h" />
+    <ClInclude Include="Cube3DPane.h" />
     <ClInclude Include="CubeMonitor.h" />
     <ClInclude Include="CubeMonitorDoc.h" />
     <ClInclude Include="CubeMonitorView.h" />
-    <ClInclude Include="DockablePaneBase.h" />
-    <ClInclude Include="DockablePaneChildView.h" />
-    <ClInclude Include="EnumDevices.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="OutputWnd.h" />
-    <ClInclude Include="PlotWindow.h" />
     <ClInclude Include="PropertiesWnd.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SensorForm.h" />
     <ClInclude Include="SensorView.h" />
-    <ClInclude Include="Serial.h" />
-    <ClInclude Include="SerialCommunication.h" />
-    <ClInclude Include="SerialEditorForm.h" />
+    <ClInclude Include="SensorPane.h" />
     <ClInclude Include="SerialEditorView.h" />
+    <ClInclude Include="SerialEditorPane.h" />
     <ClInclude Include="SerialGraphForm.h" />
-    <ClInclude Include="SerialObserver.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="UpdateObserver.h" />
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C3DDialog.cpp" />
+    <ClCompile Include="..\Common\UIComponent\C3DView.cpp" />
+    <ClCompile Include="..\Common\UIComponent\C3DPhysxView.cpp" />
+    <ClCompile Include="..\Common\UIComponent\ComPortCombo.cpp" />
+    <ClCompile Include="..\Common\UIComponent\Controller.cpp" />
+    <ClCompile Include="..\Common\UIComponent\CubeFlight.cpp" />
+    <ClCompile Include="..\Common\UIComponent\DockablePaneBase.cpp" />
+    <ClCompile Include="..\Common\UIComponent\DockablePaneChildView.cpp" />
+    <ClCompile Include="..\Common\UIComponent\EnumDevices.cpp" />
+    <ClCompile Include="..\Common\UIComponent\PlotWindow.cpp" />
+    <ClCompile Include="..\Common\UIComponent\Serial.cpp" />
+    <ClCompile Include="..\Common\UIComponent\SerialCommunication.cpp" />
+    <ClCompile Include="..\Common\UIComponent\SerialObserver.cpp" />
     <ClCompile Include="ClassView.cpp" />
-    <ClCompile Include="ComPortCombo.cpp" />
     <ClCompile Include="ConnectionDialog.cpp" />
-    <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="Cube3DView.cpp" />
-    <ClCompile Include="CubeFlight.cpp" />
+    <ClCompile Include="Cube3DPane.cpp" />
     <ClCompile Include="CubeMonitor.cpp" />
     <ClCompile Include="CubeMonitorDoc.cpp" />
     <ClCompile Include="CubeMonitorView.cpp" />
-    <ClCompile Include="DockablePaneBase.cpp" />
-    <ClCompile Include="DockablePaneChildView.cpp" />
-    <ClCompile Include="EnumDevices.cpp" />
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
-    <ClCompile Include="PlotWindow.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
-    <ClCompile Include="SensorForm.cpp" />
     <ClCompile Include="SensorView.cpp" />
-    <ClCompile Include="Serial.cpp" />
-    <ClCompile Include="SerialCommunication.cpp" />
-    <ClCompile Include="SerialEditorForm.cpp" />
+    <ClCompile Include="SensorPane.cpp" />
     <ClCompile Include="SerialEditorView.cpp" />
+    <ClCompile Include="SerialEditorPane.cpp" />
     <ClCompile Include="SerialGraphForm.cpp" />
-    <ClCompile Include="SerialObserver.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -202,13 +210,13 @@
     <None Include="res\CubeMonitor.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="AI\AI.vcxproj">
+    <ProjectReference Include="..\Common\AI\AI.vcxproj">
       <Project>{c7f9eba2-b553-483b-bc34-d25f1c718255}</Project>
     </ProjectReference>
-    <ProjectReference Include="Common\Common.vcxproj">
+    <ProjectReference Include="..\Common\Common\Common.vcxproj">
       <Project>{ef9ca22d-0c8f-42e9-ab66-98bc1a640f10}</Project>
     </ProjectReference>
-    <ProjectReference Include="Graphic\Graphic.vcxproj">
+    <ProjectReference Include="..\Common\Graphic\Graphic.vcxproj">
       <Project>{3a91e3aa-18df-4733-9f41-ed09a61f97e3}</Project>
     </ProjectReference>
   </ItemGroup>

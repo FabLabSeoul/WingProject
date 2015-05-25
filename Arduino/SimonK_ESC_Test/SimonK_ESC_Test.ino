@@ -1,3 +1,6 @@
+// Input A2 = Potentialmeter to control Servo Output
+// Output D5 =  PWM Output
+
 #include <Servo.h>
 
 Servo SimonKESC;

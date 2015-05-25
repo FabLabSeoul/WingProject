@@ -11,8 +11,7 @@
 #include "CubeMonitorDoc.h"
 #include "CubeMonitorView.h"
 #include <mmsystem.h>
-#include "C3DDialog.h"
-#include "controller.h"
+#include "C3DView.h"
 
 
 #ifdef _DEBUG
@@ -142,7 +141,7 @@ BOOL CCubeMonitorApp::InitInstance()
 	// The one and only window has been initialized, so show and update it
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
-
+	m_pMainWnd->SetWindowTextW(L"Cube Monitor");
 	return TRUE;
 }
 

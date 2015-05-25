@@ -1,22 +1,23 @@
 #pragma once
 
-#include "DockablePaneBase.h"
+//#include "DockablePaneChildView.h"
 
-// CSensorView
-class CSensorForm;
-class CSensorView : public CDockablePaneBase
+// CSensorForm dialog
+
+class CSensorView : public CDockablePaneChildView
 {
 public:
-	CSensorView();
+	CSensorView(CWnd* pParent = NULL);   // standard constructor
 	virtual ~CSensorView();
 
+// Dialog Data
+	enum { IDD = IDD_DIALOG_SENSOR };
 
 protected:
-	CSensorForm *m_view;
+	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
-protected:
 	DECLARE_MESSAGE_MAP()
 public:
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedCancel();
 };
-

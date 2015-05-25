@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ViewTree.h"
-#include "DockablePaneBase.h"
+
 
 class CClassToolBar : public CMFCToolBar
 {
