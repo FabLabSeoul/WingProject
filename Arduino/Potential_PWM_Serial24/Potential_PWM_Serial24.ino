@@ -21,16 +21,27 @@ void loop() {
   int sendData1 = map(pot1, 0, 1023, 0, 255);
   int sendData2 = sendData1;
   int sendData3 = sendData1;
-  char buffer[6];
+  char buffer[27];
   buffer[0] = 'S';
-  buffer[1] = sendData1;
-  buffer[2] = sendData2;
-  buffer[3] = sendData3;
-  int CRC = (buffer[1] + buffer[2] + buffer[3]) % 255;
-  buffer[4] = CRC;
-  buffer[5] = 'E';
-  Serial.write(buffer,6);
+ 
+ for (int i=0; i < 24; i=i+3)
+ {
+    buffer[i+1] = sendData1;
+    buffer[i+2] = sendData2;
+    buffer[i+3] = sendData3;
+ }
+
+ int totalNumber = 0;
+ for (int i=0; i < 24; ++i)
+ {
+    totalNumber += buffer[i+1];
+ }
+  int CRC = (totalNumber) % 255;
   
-  delay(20);
+  buffer[25] = CRC;
+  buffer[26] = 'E';
+  Serial.write(buffer,27);
+  
+  delay(200);
 }
 
