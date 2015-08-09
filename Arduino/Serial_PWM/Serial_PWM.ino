@@ -18,7 +18,7 @@ void setup()
    SimonKESC1.attach(5);
    SimonKESC2.attach(6);   
    SimonKESC3.attach(9);
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 unsigned char buffer[32];
@@ -53,13 +53,22 @@ void loop()
          Serial.println( "CRC~");
          return;
       }
-      
+    
+      // maximum servo value = 156      
       servoOut1 = map(servo1, 0, 255, 28, 156);
       servoOut2 = map(servo2, 0, 255, 28, 156);
       servoOut3 = map(servo3, 0, 255, 28, 156);     
       SimonKESC1.write(servoOut1);
       SimonKESC2.write(servoOut2);
       SimonKESC3.write(servoOut3);      
+      
+      Serial.print(servoOut1);
+      Serial.print(";");
+      Serial.print(servoOut2);
+      Serial.print(";");      
+      Serial.print(servoOut3);      
+      Serial.print(";\n");      
+            
     }
     else
     {

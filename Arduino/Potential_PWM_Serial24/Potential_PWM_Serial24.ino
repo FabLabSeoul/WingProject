@@ -10,7 +10,7 @@ Servo SimonKESC;
 int pot1Pin = A2;
 void setup() {
   SimonKESC.attach(5);
-   Serial.begin(9600);
+   Serial.begin(115200);
 }
 void loop() {
   int pot1 = analogRead(pot1Pin);
@@ -21,7 +21,7 @@ void loop() {
   int sendData1 = map(pot1, 0, 1023, 0, 255);
   int sendData2 = sendData1;
   int sendData3 = sendData1;
-  char buffer[27];
+  unsigned char buffer[27];
   buffer[0] = 'S';
  
  for (int i=0; i < 24; i=i+3)
@@ -42,6 +42,6 @@ void loop() {
   buffer[26] = 'E';
   Serial.write(buffer,27);
   
-  delay(200);
+  delay(10);
 }
 
