@@ -1,3 +1,7 @@
+//
+// USART1_TX    PA9
+ // USART1_RX    PA10
+//
 
 #include "global.h"
 
