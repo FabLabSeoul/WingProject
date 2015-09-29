@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EnumDevices.h"
+#define CENUMERATESERIAL_USE_STL
 
 // CComPortCombo
 // http://www.codeproject.com/Articles/293273/Ready-to-use-serial-port-enumeration-list-box 

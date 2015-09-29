@@ -9,11 +9,33 @@
 #include "ConnectionDialog.h"
 #include "SerialEditorView.h"
 #include "SerialGraphForm.h"
+#include "CubeSerialView.h"
 
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+#define CREATE_DOCKPANE(CLASS, DOCKNAME, PANE_ID, VAR)\
+{\
+	CDockablePaneBase *pane = new CDockablePaneBase();\
+	if (!pane->Create(DOCKNAME, this, CRect(0, 0, 460, 500), TRUE, PANE_ID, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))\
+				{\
+		TRACE0("Failed to create pane window\n");\
+		return FALSE;\
+				}\
+	VAR = new CLASS(pane);\
+	VAR->Create(CLASS::IDD, pane);\
+	VAR->ShowWindow(SW_SHOW);\
+	pane->SetChildView(VAR);\
+	m_viewList.push_back(pane);\
+	HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(theApp.m_bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);\
+	pane->SetIcon(hClassViewIcon, FALSE);\
+}
+
+
+
 
 // CMainFrame
 
@@ -101,12 +123,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Allow user-defined toolbars operations:
 	//InitUserToolbars(NULL, uiFirstUserToolBarId, uiLastUserToolBarId);
 
-	if (!m_wndStatusBar.Create(this))
-	{
-		TRACE0("Failed to create status bar\n");
-		return -1;      // fail to create
-	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+// 	if (!m_wndStatusBar.Create(this))
+// 	{
+// 		TRACE0("Failed to create status bar\n");
+// 		return -1;      // fail to create
+// 	}
+// 	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
 	
 	// TODO: Delete these five lines if you don't want the toolbar and menubar to be dockable
 	m_wndMenuBar.EnableDocking(CBRS_ALIGN_ANY);
@@ -207,8 +229,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 	*/
 
-	CConnectionDialog dlg;
-	dlg.DoModal();
+// 	CConnectionDialog dlg;
+// 	dlg.DoModal();
 
 	return 0;
 }
@@ -231,6 +253,10 @@ BOOL CMainFrame::CreateDockingWindows()
 	CString strClassView;
 	bNameValid = strClassView.LoadString(IDS_CLASS_VIEW);
 	ASSERT(bNameValid);
+
+
+	HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(theApp.m_bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
+
 
 	//m_wndClassView = new CClassView();
 	//if (!m_wndClassView->Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
@@ -257,54 +283,59 @@ BOOL CMainFrame::CreateDockingWindows()
 		TRACE0("Failed to create cube 3d View window\n");
 		return FALSE; // failed to create
 	}
+	m_viewList.push_back(m_wndCube3DView);
+
+	CREATE_DOCKPANE(CCubeSerialView, L"Cube Serial View", ID_VIEW_CUBE_SERIAL, m_cubeSerialView);
 
 
-	// Create sensor view
-	m_wndSensorView = new CSensorPane();
-	if (!m_wndSensorView->Create(L"SensorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SENSOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create cube 3d View window\n");
-		return FALSE; // failed to create
-	}
 
-	// Create serial editor view
-	{
-		m_wndSerialEditorView = new CDockablePaneBase();
-		if (!m_wndSerialEditorView->Create(L"SerialEditorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SERIAL_EDITOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-		{
-			TRACE0("Failed to create SerialEditor View window\n");
-			return FALSE; // failed to create
-		}
-
-		CSerialEditorView *view = new CSerialEditorView(m_wndSerialEditorView);
-		view->Create(CSerialEditorView::IDD, m_wndSerialEditorView);
-		view->ShowWindow(SW_SHOW);
-		m_wndSerialEditorView->SetChildView(view);
-	}
-
-
-	// Create serial graph view
-	{
-		m_serialGraphView = new CDockablePaneBase();
-		if (!m_serialGraphView->Create(L"SerialGraphView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SERIAL_GRAPH, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-		{
-			TRACE0("Failed to create SerialGraph View window\n");
-			return FALSE; // failed to create
-		}
-
-		CSerialGraphForm *view = new CSerialGraphForm(m_serialGraphView);
-		view->Create(CSerialGraphForm::IDD, m_serialGraphView);
-		view->ShowWindow(SW_SHOW);
-		m_serialGraphView->SetChildView(view);
-	}
-
+// 
+// 
+// 	// Create sensor view
+// 	m_wndSensorView = new CSensorPane();
+// 	if (!m_wndSensorView->Create(L"SensorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SENSOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+// 	{
+// 		TRACE0("Failed to create cube 3d View window\n");
+// 		return FALSE; // failed to create
+// 	}
+// 
+// 	// Create serial editor view
+// 	{
+// 		m_wndSerialEditorView = new CDockablePaneBase();
+// 		if (!m_wndSerialEditorView->Create(L"SerialEditorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SERIAL_EDITOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+// 		{
+// 			TRACE0("Failed to create SerialEditor View window\n");
+// 			return FALSE; // failed to create
+// 		}
+// 
+// 		CSerialEditorView *view = new CSerialEditorView(m_wndSerialEditorView);
+// 		view->Create(CSerialEditorView::IDD, m_wndSerialEditorView);
+// 		view->ShowWindow(SW_SHOW);
+// 		m_wndSerialEditorView->SetChildView(view);
+// 	}
+// 
+// 
+// 	// Create serial graph view
+// 	{
+// 		m_serialGraphView = new CDockablePaneBase();
+// 		if (!m_serialGraphView->Create(L"SerialGraphView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SERIAL_GRAPH, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
+// 		{
+// 			TRACE0("Failed to create SerialGraph View window\n");
+// 			return FALSE; // failed to create
+// 		}
+// 
+// 		CSerialGraphForm *view = new CSerialGraphForm(m_serialGraphView);
+// 		view->Create(CSerialGraphForm::IDD, m_serialGraphView);
+// 		view->ShowWindow(SW_SHOW);
+// 		m_serialGraphView->SetChildView(view);
+// 	}
+// 
 
 	//m_viewList.push_back(m_wndClassView);
 	//m_viewList.push_back(m_wndFileView);
-	m_viewList.push_back(m_wndCube3DView);
-	m_viewList.push_back(m_wndSensorView);
-	m_viewList.push_back(m_wndSerialEditorView);
-	m_viewList.push_back(m_serialGraphView);
+// 	m_viewList.push_back(m_wndSensorView);
+// 	m_viewList.push_back(m_wndSerialEditorView);
+// 	m_viewList.push_back(m_serialGraphView);
 
 
 	//// Create output window
@@ -341,9 +372,9 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
 
 	HICON hCube3DViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	m_wndCube3DView->SetIcon(hCube3DViewIcon, FALSE);
-	m_wndSensorView->SetIcon(hCube3DViewIcon, FALSE);
-	m_wndSerialEditorView->SetIcon(hCube3DViewIcon, FALSE);
-	m_serialGraphView->SetIcon(hCube3DViewIcon, FALSE);
+// 	m_wndSensorView->SetIcon(hCube3DViewIcon, FALSE);
+// 	m_wndSerialEditorView->SetIcon(hCube3DViewIcon, FALSE);
+// 	m_serialGraphView->SetIcon(hCube3DViewIcon, FALSE);
 
 	//HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 	//m_wndOutput.SetIcon(hOutputBarIcon, FALSE);

@@ -92,6 +92,7 @@
 #define IDD_DIALOG_CONNECT              313
 #define IDD_DIALOG_SERIAL_EDITOR        314
 #define IDD_DIALOG_SERIAL_GRAPH         315
+#define IDD_DIALOG_CUBE_SERIAL          316
 #define IDC_COMBO_PORT                  1003
 #define IDC_COMBO_BAUDRATE              1004
 #define IDC_RICHEDIT_SERIAL             1006
@@ -103,14 +104,23 @@
 #define IDC_STATIC_FASTTEXT             1012
 #define IDC_RADIO_MODE                  1013
 #define IDC_RADIO_FAST                  1014
+#define IDC_COMBO_COM                   1014
+#define IDC_BUTTON_START                1015
+#define IDC_RICHEDIT2_RCVEDIT           1016
+#define IDC_STATIC_RCV_COUNT            1017
+#define IDC_EDIT_SEND                   1018
+#define IDC_BUTTON_SEND                 1019
+#define IDC_CHECK_IMU                   1020
+#define IDC_EDIT2                       1021
+#define IDC_EDIT_CUBE_ATTITUDE          1021
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        316
+#define _APS_NEXT_RESOURCE_VALUE        317
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1014
+#define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

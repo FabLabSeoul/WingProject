@@ -18,8 +18,9 @@ public:
 	void SetEulerAngle(const float roll, const float pitch, const float yaw);
 
 
-protected:
-	graphic::cCube m_mesh;
+//protected:
+	graphic::cModel m_model;
+	graphic::cCube2 m_mesh;
 	Vector3 m_locate;
 	Quaternion m_rotate;
 	Matrix44 m_tm;

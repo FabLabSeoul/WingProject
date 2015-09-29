@@ -900,10 +900,12 @@ bool importer::ReadTextureCoordinate( std::ifstream &fin, const string &fileName
 
 	rawMesh.tex.resize(vtxSize);
 
+	vector<Vector3> texVertices;
 	if (numTex > 0)
 	{
 		float fnum1, fnum2;
-		vector<Vector3> texVertices(numTex);
+//		vector<Vector3> texVertices(numTex);
+		texVertices.resize(numTex);
 		for (int i = 0; i < numTex; i++)
 		{
 			fin >> fnum1 >> fnum2;
@@ -930,7 +932,7 @@ bool importer::ReadTextureCoordinate( std::ifstream &fin, const string &fileName
 			texFaces.push_back( num3 );
 		}
 
-/*
+
 		map<int, vector<int> > vtxIdxMap; // vertex index, vertex index array
 		for (int i=0; i < vtxSize; ++i)
 		{
@@ -1635,5 +1637,5 @@ float importer::ReadFloat(std::ifstream &fin)
 		return FLT_MIN;
 	}
 
-	return atof(value.c_str());
+	return (float)atof(value.c_str());
 }

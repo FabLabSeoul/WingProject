@@ -129,6 +129,27 @@
     <ClInclude Include="SerialEditorView.h">
       <Filter>Pane</Filter>
     </ClInclude>
+    <ClInclude Include="CubeSerialView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\UIComponent\enumser.h">
+      <Filter>UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\UIComponent\AutoHandle.h">
+      <Filter>UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\UIComponent\AutoHeapAlloc.h">
+      <Filter>UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\UIComponent\AutoHModule.h">
+      <Filter>UIComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseFlightProtocol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CubeMonitor.cpp">
@@ -217,6 +238,15 @@
     </ClCompile>
     <ClCompile Include="SerialEditorView.cpp">
       <Filter>Pane</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeSerialView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\UIComponent\enumser.cpp">
+      <Filter>UIComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Global.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

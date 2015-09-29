@@ -3,13 +3,16 @@
 //
 
 #pragma once
-#include "FileView.h"
-#include "ClassView.h"
-#include "OutputWnd.h"
-#include "PropertiesWnd.h"
+// #include "FileView.h"
+// #include "ClassView.h"
+// #include "OutputWnd.h"
+// #include "PropertiesWnd.h"
 #include "Cube3DPane.h"
-#include "SensorPane.h"
+//#include "SensorPane.h"
+
 //#include "SerialEditorView.h"
+class CCubeSerialView;
+
 
 class CDockablePaneBase;
 class CMainFrame : public CFrameWndEx
@@ -40,17 +43,18 @@ public:
 
 protected:  // control bar embedded members
 	CMFCMenuBar       m_wndMenuBar;
-	CMFCToolBar       m_wndToolBar;
-	CMFCStatusBar     m_wndStatusBar;
+	//CMFCToolBar       m_wndToolBar;
+	//CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
 
 	list<CDockablePaneBase*> m_viewList;
 	CCube3DPane *m_wndCube3DView;
-	CSensorPane *m_wndSensorView; 
+	//CSensorPane *m_wndSensorView; 
 	//CFileView         *m_wndFileView;
 	//CClassView        *m_wndClassView;
-	CDockablePaneBase *m_wndSerialEditorView;
-	CDockablePaneBase *m_serialGraphView;
+// 	CDockablePaneBase *m_wndSerialEditorView;
+// 	CDockablePaneBase *m_serialGraphView;
+	CCubeSerialView *m_cubeSerialView;
 
 	//COutputWnd        m_wndOutput;
 	//CPropertiesWnd    m_wndProperties;

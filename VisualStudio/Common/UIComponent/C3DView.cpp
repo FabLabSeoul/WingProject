@@ -74,8 +74,10 @@ BOOL C3DView::OnInitDialog()
 		return 0;
 	}
 
+	graphic::cResourceManager::Get()->SetMediaDirectory("./");
 	GetMainCamera()->SetCamera(Vector3(12, 20, -10), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	GetMainCamera()->SetProjection(D3DX_PI / 4.f, (float)WINSIZE_X / (float)WINSIZE_Y, 1.f, 1000.0f);
+	GetMainCamera()->SetEyePos(Vector3(17, 20, -25));
 
 	GetDevice()->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
