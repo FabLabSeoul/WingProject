@@ -1,9 +1,7 @@
 // 액추에이터 정보를 나타낸다.
 //
 //
-
 #pragma once
-
 
 class cMotor
 {
@@ -28,4 +26,3 @@ public:
 	graphic::cCube2 m_cube;
 	graphic::cLine m_line;
 };
-

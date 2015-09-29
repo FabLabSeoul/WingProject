@@ -207,8 +207,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	CMFCToolBar::SetBasicCommands(lstBasicCommands);
 	*/
 
-	//CConnectionDialog dlg;
-	//dlg.DoModal();
+	CConnectionDialog dlg;
+	dlg.DoModal();
 
 	return 0;
 }
