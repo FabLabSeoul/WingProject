@@ -59,6 +59,7 @@
 #include <functional>
 #include <MMSystem.h>
 
+#define CENUMERATESERIAL_USE_STL
 
 using std::list;
 using std::vector;

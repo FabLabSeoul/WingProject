@@ -102,9 +102,13 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AutoHandle.h" />
+    <ClInclude Include="AutoHeapAlloc.h" />
+    <ClInclude Include="AutoHModule.h" />
     <ClInclude Include="BufferedSerial.h" />
     <ClInclude Include="ComPortCombo.h" />
     <ClInclude Include="EnumDevices.h" />
+    <ClInclude Include="enumser.h" />
     <ClInclude Include="GraphDialog.h" />
     <ClInclude Include="PlotWindow.h" />
     <ClInclude Include="Resource.h" />
@@ -119,6 +123,7 @@
     <ClCompile Include="BufferedSerial.cpp" />
     <ClCompile Include="ComPortCombo.cpp" />
     <ClCompile Include="EnumDevices.cpp" />
+    <ClCompile Include="enumser.cpp" />
     <ClCompile Include="GraphDialog.cpp" />
     <ClCompile Include="PlotWindow.cpp" />
     <ClCompile Include="Serial.cpp" />

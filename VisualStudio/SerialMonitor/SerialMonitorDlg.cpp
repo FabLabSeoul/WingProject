@@ -378,7 +378,7 @@ void CSerialMonitorDlg::Process(float deltaSeconds)
 	if (!m_Serial.ReadStringUntil('\n', buff))
 	{
 		// 에러 발생. 시리얼 포트 연결과 끊는다.
-		OnBnClickedButtonDisconnect();
+		//OnBnClickedButtonDisconnect();
 		return;
 	}
 
@@ -404,11 +404,12 @@ void CSerialMonitorDlg::Process(float deltaSeconds)
 			numStr.reserve(str.GetLength() * 8);
 			for (int i = 0; i < str.GetLength(); ++i)
 			{
-				numStr += common::format("%3d", (int)str[i]);
-				if (i != str.GetLength() - 1)
-				{
-					numStr += ", ";
-				}
+				//numStr += common::format("%3d", (int)str[i]);
+				numStr += common::format("%2x", (int)str[i]);
+// 				if (i != str.GetLength() - 1)
+// 				{
+// 					numStr += ", ";
+// 				}
 			}
 			str = numStr.c_str();
 			str += "\n";
@@ -440,6 +441,7 @@ void CSerialMonitorDlg::OnBnClickedButtonConnect()
 	m_BaudrateCombobox.GetWindowTextW(baudRate);
 
 	// Open Serial Port
+	m_Serial.SetMaxWaitTime(100);
 	if (m_Serial.Open(portNumber, _wtoi(baudRate)))
 	{
 		m_isConnect = true;
