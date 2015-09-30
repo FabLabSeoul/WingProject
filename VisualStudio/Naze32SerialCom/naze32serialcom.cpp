@@ -30,12 +30,10 @@ void main(char argc, char *argv[])
 
 	cout << "Success Serial Connect" << endl;
 
-	bool loop = true;
-	while (loop)
+	while (1)
 	{
 		if (!serial.IsOpened())
 		{
-			loop = false;
 			break;
 		}
 
@@ -73,7 +71,7 @@ void main(char argc, char *argv[])
 		else if (cmd == "exit")
 		{
 			cout << "close" << endl;
-			loop = false;
+			break;
 		}
 		else if (cmd == "#")
 		{
