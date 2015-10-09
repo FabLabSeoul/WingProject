@@ -41,5 +41,12 @@ namespace common
 		return vVector;
 	}
 
-
+	inline float clamp(const float val, const float min0, const float max0)
+	{
+		if (val < min0)
+			return min0;
+		if (val > max0)
+			return max0;
+		return val;
+	}
 }

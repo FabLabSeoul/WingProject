@@ -23,13 +23,15 @@ public:
 
 	cCubeFlight& GetCubeFlight();
 	cSerialCommunication& GetSerialComm();
+	CSerial& GetSerial();
 
 
 protected:
 	cCubeFlight *m_cubeFlight;
 	cSerialCommunication *m_serialComm;
+	CSerial m_serial;
 };
-
 
 inline cCubeFlight& cController::GetCubeFlight() { return *m_cubeFlight;  }
 inline cSerialCommunication& cController::GetSerialComm() { return *m_serialComm;  }
+inline CSerial& cController::GetSerial() { return m_serial; }

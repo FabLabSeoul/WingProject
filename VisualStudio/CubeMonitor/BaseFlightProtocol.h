@@ -71,6 +71,9 @@
 #define MSP_REBOOT               68     //in message          reboot settings
 #define MSP_BUILDINFO            69     //out message         build date as well as some space for future expansion
 
-#define INBUF_SIZE 128
+// Cube commands
+#define MSP_CUBE_MOTOR                70 //out message         24 motors
+#define MSP_CUBE_MOTOR_SET        71 //In message         24 motors
+#define MSP_CUBE_RC_SET                72 //In message         8 rc
 
-
+// #define INBUF_SIZE 128

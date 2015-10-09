@@ -21,14 +21,15 @@ protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	bool SyncIMU();
 	void UpdateRecvCount();
-	void SendCommand(CSerial &serial, const unsigned char cmd);
-	int RecvCommand(CSerial &serial, OUT unsigned char buffer[], const int maxLen);
+	void Start();
+	void Stop();
 
 	bool m_isStart;
-	CSerial m_serial;
+	//CSerial m_serial;
 	int m_serialRcvCount;
 	float m_updateIncTime;
 	int m_syncIMUState;
+	int m_errorCount;
 
 
 	DECLARE_MESSAGE_MAP()
@@ -47,4 +48,5 @@ public:
 	BOOL m_IsSyncIMU;
 	afx_msg void OnBnClickedCheckImu();
 	CEdit m_AttitudeEdit;
+	afx_msg void OnBnClickedButtonResetHeading();
 };

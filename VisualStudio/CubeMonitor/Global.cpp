@@ -83,3 +83,129 @@ int GetNumVisibleLines(CRichEditCtrl* pCtrl)
 	return (nLastLine - nFirstLine);
 }
 
+
+// Naze32 CLI 명령 전송
+void SendCommand(CSerial &serial, const unsigned char cmd)
+{
+	unsigned char packet[64];
+	int checksum = 0;
+	int idx = 0;
+	packet[idx++] = '$';
+	packet[idx++] = 'M';
+	packet[idx++] = '<';
+	packet[idx++] = 0;
+	checksum ^= 0;
+	packet[idx++] = cmd;
+	checksum ^= cmd;
+	packet[idx++] = checksum;
+	serial.SendData((char*)packet, idx);
+}
+
+
+// 모터 정보를 받는다.
+// Naze32 CLI 정보 수신
+// return value : 0 정보 수신중
+//						   n 수신된 정보 수
+//						   -1 수신 완료, 실패
+int RecvCommand(CSerial &serial, const unsigned char cmd, OUT unsigned char buffer[], const int maxLen)
+{
+	if (!serial.IsOpened())
+		return 0;
+
+	int state = 0;
+	int len = 0;
+	int readLen = 0;
+	int msp = 0;
+	int noDataCnt = 0;
+	int checkSum = 0;
+	while (1)
+	{
+		unsigned char c;
+		if (serial.ReadData(&c, 1) <= 0)
+		{
+			Sleep(1);
+			++noDataCnt;
+			if (noDataCnt > 100)
+				break; // exception
+			continue;
+		}
+
+		switch (state)
+		{
+		case 0:
+		{
+			state = (c == '$') ? 1 : 0;
+			//cout << c;
+		}
+		break;
+
+		case 1:
+		{
+			state = (c == 'M') ? 2 : 0;
+			//cout << c;
+		}
+		break;
+
+		case 2:
+		{
+			state = (c == '>') ? 3 : 0;
+			//cout << c;
+		}
+		break;
+
+		case 3:
+		{
+			len = c;
+			//cout << (int)c;
+			checkSum ^= c;
+			state = 4;
+		}
+		break;
+
+		case 4:
+		{
+			msp = c;
+			//cout << (int)c << " ";
+			checkSum ^= c;
+			state = 5;
+		}
+		break;
+
+		case 5:
+		{
+			if (len > readLen)
+			{
+				checkSum ^= c;
+				if (readLen < maxLen)
+					buffer[readLen] = c;
+
+				//cout << (int)c << " ";
+			}
+			else
+			{
+				if (checkSum == c)
+				{
+					if (msp != cmd)
+						return 0;
+					return readLen; // end;
+				}
+				else
+				{
+					if (msp != cmd)
+						return 0;
+					return -1; // end;
+				}
+			}
+
+			++readLen;
+		}
+		break;
+
+		default:
+			break;
+		}
+	}
+
+	return 0;
+}
+

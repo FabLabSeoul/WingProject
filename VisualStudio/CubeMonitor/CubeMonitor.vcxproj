@@ -137,8 +137,10 @@
     <ClInclude Include="FileView.h" />
     <ClInclude Include="Global.h" />
     <ClInclude Include="MainFrm.h" />
+    <ClInclude Include="MotorView.h" />
     <ClInclude Include="OutputWnd.h" />
     <ClInclude Include="PropertiesWnd.h" />
+    <ClInclude Include="ReceiverView.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SensorView.h" />
     <ClInclude Include="SensorPane.h" />
@@ -173,8 +175,10 @@
     <ClCompile Include="FileView.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="MotorView.cpp" />
     <ClCompile Include="OutputWnd.cpp" />
     <ClCompile Include="PropertiesWnd.cpp" />
+    <ClCompile Include="ReceiverView.cpp" />
     <ClCompile Include="SensorView.cpp" />
     <ClCompile Include="SensorPane.cpp" />
     <ClCompile Include="SerialEditorView.cpp" />

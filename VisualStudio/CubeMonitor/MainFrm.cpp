@@ -4,12 +4,10 @@
 
 #include "stdafx.h"
 #include "CubeMonitor.h"
-
 #include "MainFrm.h"
-#include "ConnectionDialog.h"
-#include "SerialEditorView.h"
-#include "SerialGraphForm.h"
 #include "CubeSerialView.h"
+#include "MotorView.h"
+#include "ReceiverView.h"
 
 
 #ifdef _DEBUG
@@ -17,7 +15,7 @@
 #endif
 
 
-#define CREATE_DOCKPANE(CLASS, DOCKNAME, PANE_ID, VAR)\
+#define CREATE_DOCKPANE(CLASS, DOCKNAME, PANE_ID, RESOURCE_ID, VAR)\
 {\
 	CDockablePaneBase *pane = new CDockablePaneBase();\
 	if (!pane->Create(DOCKNAME, this, CRect(0, 0, 460, 500), TRUE, PANE_ID, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))\
@@ -26,7 +24,7 @@
 		return FALSE;\
 				}\
 	VAR = new CLASS(pane);\
-	VAR->Create(CLASS::IDD, pane);\
+	VAR->Create(RESOURCE_ID, pane);\
 	VAR->ShowWindow(SW_SHOW);\
 	pane->SetChildView(VAR);\
 	m_viewList.push_back(pane);\
@@ -34,7 +32,8 @@
 	pane->SetIcon(hClassViewIcon, FALSE);\
 }
 
-
+#define CREATE_DOCKPANE2(CLASS, DOCKNAME, PANE_ID, VAR)\
+	CREATE_DOCKPANE(CLASS, DOCKNAME, PANE_ID, CLASS::IDD, VAR)
 
 
 // CMainFrame
@@ -157,13 +156,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	for each (auto &view in m_viewList)
 		view->EnableDocking(CBRS_ALIGN_ANY);
 
-	DockPane(m_wndCube3DView);
+	CDockablePaneBase *parentView = m_viewList.front();
+	DockPane(parentView);
 	//DockPane(m_wndFileView);
 	CDockablePane* pTabbedBar = NULL;
 	for each (auto &view in m_viewList)
 	{
-		if (view != m_wndCube3DView)
-			view->AttachToTabWnd(m_wndCube3DView, DM_SHOW, TRUE, &pTabbedBar);
+		if (view != parentView)
+			view->AttachToTabWnd(parentView, DM_SHOW, TRUE, &pTabbedBar);
 	}
 
 
@@ -198,37 +198,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 
 
-	/*
-	// enable menu personalization (most-recently used commands)
-	// TODO: define your own basic commands, ensuring that each pulldown menu has at least one basic command.
-	CList<UINT, UINT> lstBasicCommands;
-
-	lstBasicCommands.AddTail(ID_FILE_NEW);
-	lstBasicCommands.AddTail(ID_FILE_OPEN);
-	lstBasicCommands.AddTail(ID_FILE_SAVE);
-	lstBasicCommands.AddTail(ID_FILE_PRINT);
-	lstBasicCommands.AddTail(ID_APP_EXIT);
-	lstBasicCommands.AddTail(ID_EDIT_CUT);
-	lstBasicCommands.AddTail(ID_EDIT_PASTE);
-	lstBasicCommands.AddTail(ID_EDIT_UNDO);
-	lstBasicCommands.AddTail(ID_APP_ABOUT);
-	lstBasicCommands.AddTail(ID_VIEW_STATUS_BAR);
-	lstBasicCommands.AddTail(ID_VIEW_TOOLBAR);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2003);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_VS_2005);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLUE);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_SILVER);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_BLACK);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_OFF_2007_AQUA);
-	lstBasicCommands.AddTail(ID_VIEW_APPLOOK_WINDOWS_7);
-	lstBasicCommands.AddTail(ID_SORTING_SORTALPHABETIC);
-	lstBasicCommands.AddTail(ID_SORTING_SORTBYTYPE);
-	lstBasicCommands.AddTail(ID_SORTING_SORTBYACCESS);
-	lstBasicCommands.AddTail(ID_SORTING_GROUPBYTYPE);
-
-	CMFCToolBar::SetBasicCommands(lstBasicCommands);
-	*/
-
 // 	CConnectionDialog dlg;
 // 	dlg.DoModal();
 
@@ -254,134 +223,14 @@ BOOL CMainFrame::CreateDockingWindows()
 	bNameValid = strClassView.LoadString(IDS_CLASS_VIEW);
 	ASSERT(bNameValid);
 
-
 	HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(theApp.m_bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
 
+	CREATE_DOCKPANE(C3DView, L"3DView", ID_VIEW_CUBE3D, IDD_DIALOG_3D, m_wndCube3DView);
+	CREATE_DOCKPANE2(CCubeSerialView, L"Cube Serial View", ID_VIEW_CUBE_SERIAL, m_cubeSerialView);
+	CREATE_DOCKPANE2(CMotorView, L"Motor View", ID_VIEW_MOTOR, m_motorView);
+	CREATE_DOCKPANE2(CReceiverView, L"Receiver View", ID_VIEW_RECEIVER, m_receiverView);
 
-	//m_wndClassView = new CClassView();
-	//if (!m_wndClassView->Create(strClassView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CLASSVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-	//{
-	//	TRACE0("Failed to create Class View window\n");
-	//	return FALSE; // failed to create
-	//}
-
-	// Create file view
-	//CString strFileView;
-	//bNameValid = strFileView.LoadString(IDS_FILE_VIEW);
-	//ASSERT(bNameValid);
-	//m_wndFileView = new CFileView();
-	//if (!m_wndFileView->Create(strFileView, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_FILEVIEW, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT| CBRS_FLOAT_MULTI))
-	//{
-	//	TRACE0("Failed to create File View window\n");
-	//	return FALSE; // failed to create
-	//}
-
-	// Create cube3d view
-	m_wndCube3DView = new CCube3DPane();
-	if (!m_wndCube3DView->Create(L"Cube3DView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_CUBE3D, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-	{
-		TRACE0("Failed to create cube 3d View window\n");
-		return FALSE; // failed to create
-	}
-	m_viewList.push_back(m_wndCube3DView);
-
-	CREATE_DOCKPANE(CCubeSerialView, L"Cube Serial View", ID_VIEW_CUBE_SERIAL, m_cubeSerialView);
-
-
-
-// 
-// 
-// 	// Create sensor view
-// 	m_wndSensorView = new CSensorPane();
-// 	if (!m_wndSensorView->Create(L"SensorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SENSOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-// 	{
-// 		TRACE0("Failed to create cube 3d View window\n");
-// 		return FALSE; // failed to create
-// 	}
-// 
-// 	// Create serial editor view
-// 	{
-// 		m_wndSerialEditorView = new CDockablePaneBase();
-// 		if (!m_wndSerialEditorView->Create(L"SerialEditorView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SERIAL_EDITOR, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-// 		{
-// 			TRACE0("Failed to create SerialEditor View window\n");
-// 			return FALSE; // failed to create
-// 		}
-// 
-// 		CSerialEditorView *view = new CSerialEditorView(m_wndSerialEditorView);
-// 		view->Create(CSerialEditorView::IDD, m_wndSerialEditorView);
-// 		view->ShowWindow(SW_SHOW);
-// 		m_wndSerialEditorView->SetChildView(view);
-// 	}
-// 
-// 
-// 	// Create serial graph view
-// 	{
-// 		m_serialGraphView = new CDockablePaneBase();
-// 		if (!m_serialGraphView->Create(L"SerialGraphView", this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_SERIAL_GRAPH, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI))
-// 		{
-// 			TRACE0("Failed to create SerialGraph View window\n");
-// 			return FALSE; // failed to create
-// 		}
-// 
-// 		CSerialGraphForm *view = new CSerialGraphForm(m_serialGraphView);
-// 		view->Create(CSerialGraphForm::IDD, m_serialGraphView);
-// 		view->ShowWindow(SW_SHOW);
-// 		m_serialGraphView->SetChildView(view);
-// 	}
-// 
-
-	//m_viewList.push_back(m_wndClassView);
-	//m_viewList.push_back(m_wndFileView);
-// 	m_viewList.push_back(m_wndSensorView);
-// 	m_viewList.push_back(m_wndSerialEditorView);
-// 	m_viewList.push_back(m_serialGraphView);
-
-
-	//// Create output window
-	//CString strOutputWnd;
-	//bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
-	//ASSERT(bNameValid);
-	//if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
-	//{
-	//	TRACE0("Failed to create Output window\n");
-	//	return FALSE; // failed to create
-	//}
-
-	//// Create properties window
-	//CString strPropertiesWnd;
-	//bNameValid = strPropertiesWnd.LoadString(IDS_PROPERTIES_WND);
-	//ASSERT(bNameValid);
-	//if (!m_wndProperties.Create(strPropertiesWnd, this, CRect(0, 0, 200, 200), TRUE, ID_VIEW_PROPERTIESWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI))
-	//{
-	//	TRACE0("Failed to create Properties window\n");
-	//	return FALSE; // failed to create
-	//}
-
-	SetDockingWindowIcons(theApp.m_bHiColorIcons);
 	return TRUE;
-}
-
-void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
-{
-	HICON hFileViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_FILE_VIEW_HC : IDI_FILE_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	//m_wndFileView->SetIcon(hFileViewIcon, FALSE);
-
-	HICON hClassViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	//m_wndClassView->SetIcon(hClassViewIcon, FALSE);
-
-	HICON hCube3DViewIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_CLASS_VIEW_HC : IDI_CLASS_VIEW), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	m_wndCube3DView->SetIcon(hCube3DViewIcon, FALSE);
-// 	m_wndSensorView->SetIcon(hCube3DViewIcon, FALSE);
-// 	m_wndSerialEditorView->SetIcon(hCube3DViewIcon, FALSE);
-// 	m_serialGraphView->SetIcon(hCube3DViewIcon, FALSE);
-
-	//HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	//m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
-
-	//HICON hPropertiesBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_PROPERTIES_WND_HC : IDI_PROPERTIES_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
-	//m_wndProperties.SetIcon(hPropertiesBarIcon, FALSE);
-
 }
 
 // CMainFrame diagnostics
@@ -430,73 +279,6 @@ LRESULT CMainFrame::OnToolbarCreateNew(WPARAM wp,LPARAM lp)
 
 void CMainFrame::OnApplicationLook(UINT id)
 {
-	//CWaitCursor wait;
-
-	//theApp.m_nAppLook = id;
-
-	//switch (theApp.m_nAppLook)
-	//{
-	//case ID_VIEW_APPLOOK_WIN_2000:
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManager));
-	//	break;
-
-	//case ID_VIEW_APPLOOK_OFF_XP:
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOfficeXP));
-	//	break;
-
-	//case ID_VIEW_APPLOOK_WIN_XP:
-	//	CMFCVisualManagerWindows::m_b3DTabsXPTheme = TRUE;
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
-	//	break;
-
-	//case ID_VIEW_APPLOOK_OFF_2003:
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2003));
-	//	CDockingManager::SetDockingMode(DT_SMART);
-	//	break;
-
-	//case ID_VIEW_APPLOOK_VS_2005:
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2005));
-	//	CDockingManager::SetDockingMode(DT_SMART);
-	//	break;
-
-	//case ID_VIEW_APPLOOK_VS_2008:
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerVS2008));
-	//	CDockingManager::SetDockingMode(DT_SMART);
-	//	break;
-
-	//case ID_VIEW_APPLOOK_WINDOWS_7:
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows7));
-	//	CDockingManager::SetDockingMode(DT_SMART);
-	//	break;
-
-	//default:
-	//	switch (theApp.m_nAppLook)
-	//	{
-	//	case ID_VIEW_APPLOOK_OFF_2007_BLUE:
-	//		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_LunaBlue);
-	//		break;
-
-	//	case ID_VIEW_APPLOOK_OFF_2007_BLACK:
-	//		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
-	//		break;
-
-	//	case ID_VIEW_APPLOOK_OFF_2007_SILVER:
-	//		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Silver);
-	//		break;
-
-	//	case ID_VIEW_APPLOOK_OFF_2007_AQUA:
-	//		CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_Aqua);
-	//		break;
-	//	}
-
-	//	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
-	//	CDockingManager::SetDockingMode(DT_SMART);
-	//}
-
-	//m_wndOutput.UpdateFonts();
-	//RedrawWindow(NULL, NULL, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
-
-	//theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
 }
 
 void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)
@@ -528,17 +310,6 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 			pUserToolbar->EnableCustomizeButton(TRUE, ID_VIEW_CUSTOMIZE, strCustomize);
 		}
 	}
-
-	//BOOL isDocked = FALSE;
-	//CPane *parent = m_wndFileView.DockPaneStandard(isDocked);
-	//m_wndClassView.UndockPane();
-	//m_wndFileView.UndockPane();
-	//m_wndClassView.ShowPane(TRUE, FALSE, TRUE);
-	//m_wndFileView.ShowPane(TRUE, FALSE, TRUE);
-	////m_wndFileView.MoveWindow(CRect(0, 0, 100, 100));
-	//m_wndClassView.DockToFrameWindow(CBRS_ALIGN_LEFT, CRect(0, 0, 500, 500));
-	//CDockablePane* pTabbedBar = NULL;
-	//m_wndClassView.AttachToTabWnd(&m_wndFileView, DM_SHOW, TRUE, &pTabbedBar);
 
 	return TRUE;
 }

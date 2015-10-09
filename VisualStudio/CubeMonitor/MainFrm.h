@@ -3,35 +3,26 @@
 //
 
 #pragma once
-// #include "FileView.h"
-// #include "ClassView.h"
-// #include "OutputWnd.h"
-// #include "PropertiesWnd.h"
 #include "Cube3DPane.h"
-//#include "SensorPane.h"
 
-//#include "SerialEditorView.h"
 class CCubeSerialView;
-
-
+class CMotorView;
 class CDockablePaneBase;
+class CReceiverView;
+
 class CMainFrame : public CFrameWndEx
-{
-	
+{	
 protected: // create from serialization only
 	CMainFrame();
 	DECLARE_DYNCREATE(CMainFrame)
 
-// Attributes
-public:
-
-// Operations
-public:
 
 // Overrides
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-	virtual BOOL LoadFrame(UINT nIDResource, DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
+	virtual BOOL LoadFrame(UINT nIDResource, 
+		DWORD dwDefaultStyle = WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, 
+		CWnd* pParentWnd = NULL, CCreateContext* pContext = NULL);
 
 // Implementation
 public:
@@ -41,23 +32,16 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 
-protected:  // control bar embedded members
+protected: 
 	CMFCMenuBar       m_wndMenuBar;
-	//CMFCToolBar       m_wndToolBar;
-	//CMFCStatusBar     m_wndStatusBar;
 	CMFCToolBarImages m_UserImages;
-
+	
 	list<CDockablePaneBase*> m_viewList;
-	CCube3DPane *m_wndCube3DView;
-	//CSensorPane *m_wndSensorView; 
-	//CFileView         *m_wndFileView;
-	//CClassView        *m_wndClassView;
-// 	CDockablePaneBase *m_wndSerialEditorView;
-// 	CDockablePaneBase *m_serialGraphView;
+	C3DView *m_wndCube3DView;
 	CCubeSerialView *m_cubeSerialView;
+	CMotorView *m_motorView;
+	CReceiverView *m_receiverView;
 
-	//COutputWnd        m_wndOutput;
-	//CPropertiesWnd    m_wndProperties;
 
 // Generated message map functions
 protected:

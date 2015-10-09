@@ -61,6 +61,8 @@
 #include <mmsystem.h>
 //#include "Serial.h"
 #include "Global.h"
+#include "BaseFlightProtocol.h"
+
 
 using std::pair;
 
@@ -76,6 +78,8 @@ enum VIEW_TYPE {
 	ID_VIEW_SERIAL_EDITOR,
 	ID_VIEW_SERIAL_GRAPH,
 	ID_VIEW_CUBE_SERIAL,
+	ID_VIEW_MOTOR,
+	ID_VIEW_RECEIVER,
 };
 
 

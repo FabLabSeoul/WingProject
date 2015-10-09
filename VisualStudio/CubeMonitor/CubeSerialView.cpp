@@ -5,7 +5,6 @@
 #include "CubeMonitor.h"
 #include "CubeSerialView.h"
 #include "afxdialogex.h"
-#include "BaseFlightProtocol.h"
 
 
 // CCubeSerialView dialog
@@ -17,8 +16,8 @@ CCubeSerialView::CCubeSerialView(CWnd* pParent /*=NULL*/)
 	, m_updateIncTime(0)
 	, m_IsSyncIMU(FALSE)
 	, m_syncIMUState(0)
+	, m_errorCount(0)
 {
-
 }
 
 CCubeSerialView::~CCubeSerialView()
@@ -45,6 +44,7 @@ BEGIN_MESSAGE_MAP(CCubeSerialView, CDockablePaneChildView)
 	ON_BN_CLICKED(IDC_BUTTON_START, &CCubeSerialView::OnBnClickedButtonStart)
 	ON_BN_CLICKED(IDC_BUTTON_SEND, &CCubeSerialView::OnBnClickedButtonSend)
 	ON_BN_CLICKED(IDC_CHECK_IMU, &CCubeSerialView::OnBnClickedCheckImu)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_HEADING, &CCubeSerialView::OnBnClickedButtonResetHeading)
 END_MESSAGE_MAP()
 
 
@@ -86,6 +86,7 @@ BOOL CCubeSerialView::OnInitDialog()
 void CCubeSerialView::Update(const float deltaSeconds)
 {
 	RET(!m_isStart);
+	RET(!IsWindowVisible());
 
 	m_updateIncTime += deltaSeconds;
 	RET(m_updateIncTime < 0.03f);
@@ -100,7 +101,7 @@ void CCubeSerialView::Update(const float deltaSeconds)
 
 	char buffer[128];
 	ZeroMemory(buffer, sizeof(buffer));
-	if (m_serial.ReadData(buffer, sizeof(buffer)) > 0)
+	if (cController::Get()->GetSerial().ReadData(buffer, sizeof(buffer)) > 0)
 	{
 		AppendToLogAndScroll(&m_RecvEdit, common::str2wstr(string(buffer) + "\n").c_str(), RGB(200, 200, 200));
 		UpdateRecvCount();
@@ -113,29 +114,41 @@ void CCubeSerialView::OnBnClickedButtonStart()
 {
 	if (m_isStart)
 	{
-		m_isStart = false;
-		m_serial.Close();
-		m_StartButton.SetWindowTextW(L"Start");
-		SetBackgroundColor(g_grayColor);
+		Stop();
 	}
 	else
 	{
-		const int portNumber = m_ComPort.GetPortNum();
-		CString baudRate;
-		m_Baudrate.GetWindowTextW(baudRate);
-
-		if (m_serial.Open(portNumber, _wtoi(baudRate)))
-		{
-			m_isStart = true;
-			m_StartButton.SetWindowTextW(L"Stop");
-			SetBackgroundColor(g_blueColor);
-		}
-		else
-		{
-			// error
-			AfxMessageBox(L"COM Connect Error!!");
-		}
+		Start();
 	}
+}
+
+
+void CCubeSerialView::Start()
+{
+	const int portNumber = m_ComPort.GetPortNum();
+	CString baudRate;
+	m_Baudrate.GetWindowTextW(baudRate);
+
+	if (cController::Get()->GetSerial().Open(portNumber, _wtoi(baudRate)))
+	{
+		m_isStart = true;
+		m_StartButton.SetWindowTextW(L"Stop");
+		SetBackgroundColor(g_blueColor);
+	}
+	else
+	{
+		// error
+		AfxMessageBox(L"COM Connect Error!!");
+	}
+}
+
+
+void CCubeSerialView::Stop()
+{
+	m_isStart = false;
+	cController::Get()->GetSerial().Close();
+	m_StartButton.SetWindowTextW(L"Start");
+	SetBackgroundColor(g_grayColor);
 }
 
 
@@ -147,7 +160,7 @@ void CCubeSerialView::OnBnClickedButtonSend()
 	UpdateData();
 
 	string sendText = wstr2str((LPCTSTR)m_SendText);
-	m_serial.SendData(sendText.c_str(), sendText.size());
+	cController::Get()->GetSerial().SendData(sendText.c_str(), sendText.size());
 
 	AppendToLogAndScroll(&m_RecvEdit, m_SendText, RGB(240, 240, 240));
 
@@ -179,14 +192,14 @@ bool CCubeSerialView::SyncIMU()
 
 	if (m_syncIMUState == 0)
 	{
-		SendCommand(m_serial, MSP_ATTITUDE);
+		SendCommand(cController::Get()->GetSerial(), MSP_ATTITUDE);
 		m_syncIMUState = 1;
 	}
 	else
 	{
 		m_syncIMUState = 0;
 		BYTE buffer[64];
-		const int len = RecvCommand(m_serial, buffer, sizeof(buffer));
+		const int len = RecvCommand(cController::Get()->GetSerial(), MSP_ATTITUDE, buffer, sizeof(buffer));
 		if (len > 0)
 		{
 			// 자세정보 업데이트
@@ -195,19 +208,27 @@ bool CCubeSerialView::SyncIMU()
 			int yaw = *(short*)&buffer[4]; // 0 ~ 360
 			//common::dbg::Print("%d %d %d", roll, pitch, yaw);
 
-			//cController::Get()->GetCubeFlight().SetEulerAngle(roll*0.1f, yaw, pitch*0.1f);// pitch*0.1f, 0);
 			Quaternion qr, qp, qy;
-			qr.Euler(Vector3(roll*0.1f,0,0));
-			qp.Euler(Vector3(0, 0, pitch*0.1f));
+			qr.Euler(Vector3(0,0,-roll*0.1f));
+			qp.Euler(Vector3(pitch*0.1f, 0,0));
 			qy.Euler(Vector3(0, (float)yaw, 0));
 
 			Quaternion q = qy * qp * qr;
 			cController::Get()->GetCubeFlight().m_tm = q.GetMatrix();
 
 			CString attitudeStr;
-			attitudeStr.Format(L"%f %f %f", roll*0.1f, pitch*0.1f, (float)yaw);
+			attitudeStr.Format(L"%f %f %f", -roll*0.1f, pitch*0.1f, (float)yaw);
 			m_AttitudeEdit.SetWindowTextW(attitudeStr);
+
+			m_errorCount = 0;
 			return true;
+		}
+		else
+		{
+			// 정보를 못받으면, 연결을 끊는다.
+			++m_errorCount;
+			if (m_errorCount > 5)
+				Stop();
 		}
 	}
 
@@ -215,121 +236,7 @@ bool CCubeSerialView::SyncIMU()
 }
 
 
-// Naze32 CLI 명령 전송
-void CCubeSerialView::SendCommand(CSerial &serial, const unsigned char cmd)
+void CCubeSerialView::OnBnClickedButtonResetHeading()
 {
-	unsigned char packet[64];
-	int checksum = 0;
-	int idx = 0;
-	packet[idx++] = '$';
-	packet[idx++] = 'M';
-	packet[idx++] = '<';
-	packet[idx++] = 0;
-	checksum ^= 0;
-	packet[idx++] = cmd;
-	checksum ^= cmd;
-	packet[idx++] = checksum;
-	serial.SendData((char*)packet, idx);
-}
-
-
-// Naze32 CLI 정보 수신
-// return value : 0 정보 수신중
-//						   n 수신된 정보 수
-//						   -1 수신 완료, 실패
-int CCubeSerialView::RecvCommand(CSerial &serial, OUT unsigned char buffer[], const int maxLen)
-{
-	int state = 0;
-	int len = 0;
-	int readLen = 0;
-	int msp = 0;
-	int noDataCnt = 0;
-	int checkSum = 0;
-	while (1)
-	{
-		unsigned char c;
-		if (serial.ReadData(&c, 1) <= 0)
-		{
-			Sleep(1);
-			++noDataCnt;
-			if (noDataCnt > 500)
-				break; // exception
-			continue;
-		}
-
-		switch (state)
-		{
-		case 0:
-		{
-			state = (c == '$') ? 1 : 0;
-			//cout << c;
-		}
-		break;
-
-		case 1:
-		{
-			state = (c == 'M') ? 2 : 0;
-			//cout << c;
-		}
-		break;
-
-		case 2:
-		{
-			state = (c == '>') ? 3 : 0;
-			//cout << c;
-		}
-		break;
-
-		case 3:
-		{
-			len = c;
-			//cout << (int)c;
-			checkSum ^= c;
-			state = 4;
-		}
-		break;
-
-		case 4:
-		{
-			msp = c;
-			//cout << (int)c << " ";
-			checkSum ^= c;
-			state = 5;
-		}
-		break;
-
-		case 5:
-		{
-			if (len > readLen)
-			{
-				checkSum ^= c;
-				if (readLen < maxLen)
-					buffer[readLen] = c;
-
-				//cout << (int)c << " ";
-			}
-			else
-			{
-				if (checkSum == c)
-				{
-					//cout << "ok" << endl;
-					return readLen; // end;
-				}
-				else
-				{
-					//cout << "error!!" << endl;
-					return -1; // end;
-				}
-			}
-
-			++readLen;
-		}
-		break;
-
-		default:
-			break;
-		}
-	}
-
-	return 0;
+	cController::Get()->GetCubeFlight().ResetHeading();
 }

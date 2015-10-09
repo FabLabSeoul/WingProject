@@ -150,6 +150,12 @@
     <ClInclude Include="BaseFlightProtocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MotorView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ReceiverView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CubeMonitor.cpp">
@@ -246,6 +252,12 @@
       <Filter>UIComponent</Filter>
     </ClCompile>
     <ClCompile Include="Global.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MotorView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ReceiverView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
