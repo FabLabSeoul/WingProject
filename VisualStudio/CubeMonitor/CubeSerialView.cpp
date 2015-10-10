@@ -14,9 +14,11 @@ CCubeSerialView::CCubeSerialView(CWnd* pParent /*=NULL*/)
 	, m_SendText(_T(""))
 	, m_serialRcvCount(0)
 	, m_updateIncTime(0)
-	, m_IsSyncIMU(FALSE)
+	, m_IsSyncIMU(TRUE)
 	, m_syncIMUState(0)
 	, m_errorCount(0)
+	, m_IsShowThrust(TRUE)
+	, m_IsShowIdealThrust(FALSE)
 {
 }
 
@@ -35,6 +37,8 @@ void CCubeSerialView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_EDIT_SEND, m_SendText);
 	DDX_Check(pDX, IDC_CHECK_IMU, m_IsSyncIMU);
 	DDX_Control(pDX, IDC_EDIT_CUBE_ATTITUDE, m_AttitudeEdit);
+	DDX_Check(pDX, IDC_CHECK_SHOWTHRUST, m_IsShowThrust);
+	DDX_Check(pDX, IDC_CHECK_SHOWIDEALTHRUST, m_IsShowIdealThrust);
 }
 
 
@@ -45,6 +49,8 @@ BEGIN_MESSAGE_MAP(CCubeSerialView, CDockablePaneChildView)
 	ON_BN_CLICKED(IDC_BUTTON_SEND, &CCubeSerialView::OnBnClickedButtonSend)
 	ON_BN_CLICKED(IDC_CHECK_IMU, &CCubeSerialView::OnBnClickedCheckImu)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_HEADING, &CCubeSerialView::OnBnClickedButtonResetHeading)
+	ON_BN_CLICKED(IDC_CHECK_SHOWTHRUST, &CCubeSerialView::OnBnClickedCheckShowthrust)
+	ON_BN_CLICKED(IDC_CHECK_SHOWIDEALTHRUST, &CCubeSerialView::OnBnClickedCheckShowidealthrust)
 END_MESSAGE_MAP()
 
 
@@ -239,4 +245,24 @@ bool CCubeSerialView::SyncIMU()
 void CCubeSerialView::OnBnClickedButtonResetHeading()
 {
 	cController::Get()->GetCubeFlight().ResetHeading();
+}
+
+
+void CCubeSerialView::OnBnClickedCheckShowthrust()
+{
+	UpdateData();
+
+	cController::Get()->GetCubeFlight().SetRenderOption(
+		m_IsShowThrust ? true : false,
+		m_IsShowIdealThrust ? true : false);
+}
+
+
+void CCubeSerialView::OnBnClickedCheckShowidealthrust()
+{
+	UpdateData();
+
+	cController::Get()->GetCubeFlight().SetRenderOption(
+		m_IsShowThrust ? true : false,
+		m_IsShowIdealThrust ? true : false);
 }

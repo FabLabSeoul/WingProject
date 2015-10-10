@@ -115,7 +115,9 @@
 #define IDC_CHECK_IMU                   1020
 #define IDC_EDIT_CUBE_ATTITUDE          1021
 #define IDC_SLIDER1                     1022
+#define IDC_CHECK_SHOWTHRUST            1022
 #define IDC_SLIDER2                     1023
+#define IDC_CHECK_SHOWIDEALTHRUST       1023
 #define IDC_SLIDER3                     1024
 #define IDC_SLIDER4                     1025
 #define IDC_SLIDER5                     1026

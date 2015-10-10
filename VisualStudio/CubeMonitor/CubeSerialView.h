@@ -49,4 +49,8 @@ public:
 	afx_msg void OnBnClickedCheckImu();
 	CEdit m_AttitudeEdit;
 	afx_msg void OnBnClickedButtonResetHeading();
+	BOOL m_IsShowThrust;
+	BOOL m_IsShowIdealThrust;
+	afx_msg void OnBnClickedCheckShowthrust();
+	afx_msg void OnBnClickedCheckShowidealthrust();
 };

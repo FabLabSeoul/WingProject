@@ -160,18 +160,24 @@ void CReceiverView::SyncReceiver()
 				m_Slider[i].SetPos(data);
 			}
 
+			// Rotation
 			// roll, pitch 값으로 큐브를 회전시키는 벡터를 생성한다.
 			const int roll = *(short*)&buffer[0]; // 988 ~ 1500 ~ 2010
 			const int pitch = *(short*)&buffer[2]; // 988 ~ 1500 ~ 2010
-			const float x = (float)(roll - 1500) / (float)(2010 - 988);
-			const float y = (float)(pitch - 1500) / (float)(2010 - 988);
-			Vector3 dir(x, y, 0);
+			const float rot_x = (float)(roll - 1500);// / (float)(2010 - 988);
+			const float rot_y = (float)(pitch - 1500);// / (float)(2010 - 988);
+			Vector3 rotation(rot_x, rot_y, 0);
 
-			if (dir.Length() > 0.01f)
-			{
-				dir.Normalize();
-				cController::Get()->GetCubeFlight().Thrust(-dir);
-			}
+			// Move
+			const int up = *(short*)&buffer[6]; // 988 ~ 1500 ~ 2010
+			const int right = *(short*)&buffer[4]; // 988 ~ 1500 ~ 2010
+			const int forward = *(short*)&buffer[10]; // 988 ~ 1500 ~ 2010
+			const float mov_x = (float)(right - 1500);// / (float)(2010 - 988);
+			const float mov_y = (float)(up - 1500);// / (float)(2010 - 988);
+			const float mov_z = (float)(forward - 1500);// / (float)(2010 - 988);
+			Vector3 move(mov_x, mov_y, mov_z);
+
+			cController::Get()->GetCubeFlight().Thrust(-rotation, move);
 
 			m_syncState = 3;
 		}
