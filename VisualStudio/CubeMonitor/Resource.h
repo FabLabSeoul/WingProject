@@ -119,6 +119,7 @@
 #define IDC_SLIDER2                     1023
 #define IDC_CHECK_SHOWIDEALTHRUST       1023
 #define IDC_SLIDER3                     1024
+#define IDC_CHECK_SHOWCUBETHRUST        1024
 #define IDC_SLIDER4                     1025
 #define IDC_SLIDER5                     1026
 #define IDC_SLIDER6                     1027

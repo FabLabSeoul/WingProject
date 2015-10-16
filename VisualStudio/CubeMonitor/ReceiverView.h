@@ -22,6 +22,10 @@ protected:
 	int m_syncState;
 	float m_updateIncTime;
 	int m_errorCount;
+	Quaternion m_q;
+	Quaternion m_qr;
+	Quaternion m_qp;
+	Quaternion m_qy;
 
 	DECLARE_MESSAGE_MAP()
 public:

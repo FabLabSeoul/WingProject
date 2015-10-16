@@ -7,8 +7,10 @@ cCubeFlight::cCubeFlight() :
 m_model(0)
 , m_arrow(1)
 , m_arrow2(2)
+, m_arrow3(3)
 , m_isShowThrust(true)
 , m_isShowIdealThrust(false)
+, m_isShowCubeThrust(false)
 {
 }
 
@@ -26,6 +28,7 @@ bool cCubeFlight::Init()
 	m_model.Create("cube.dat");
 	m_arrow.Create("arrow.dat");
 	m_arrow2.Create("arrow2.dat");
+	m_arrow3.Create("arrow3.dat");
 
 	m_line.GetMaterial().InitRed();
 
@@ -33,11 +36,11 @@ bool cCubeFlight::Init()
 	// 24개의 모터 추력벡터를 설정한다.
 	//            1  ----------- 2
 	//          / |                  / |
-	//        /   |                /   |
-	//       /    |              /    |
+	//        /   |  top         /   |
+	//       /    |     front  /    |
 	//     0 ----------- 3      |
 	//     |       5 ------|----6
-	//     |      /           |     /
+	//     |      / back   |     /
 	//     |    /             |   /
 	//     |  /               |  /
 	//    4 -------------7
@@ -132,13 +135,19 @@ void cCubeFlight::Render()
 	{
 		// 로컬좌표를 월드좌표로 변환한다.
 		Quaternion rot;
-		rot.SetRotationArc(Vector3(0, 1, 0), m_thrust[i].thrust);
+		rot.SetRotationArc(Vector3(0, 1, 0), m_thrust[i].thrust, Vector3(1,0,0));
 		Quaternion idealRot;
-		idealRot.SetRotationArc(Vector3(0, 1, 0), m_thrust[i].idealThrust);
+		idealRot.SetRotationArc(Vector3(0, 1, 0), m_thrust[i].idealThrust, Vector3(1,0,0));
+		Quaternion cubeRot;
+		cubeRot.SetRotationArc(Vector3(0, 1, 0), m_thrust[i].cubeThrust, Vector3(1, 0, 0));
 		Matrix44 r = rot.GetMatrix();
 		Matrix44 ir = idealRot.GetMatrix();
+		Matrix44 cr = cubeRot.GetMatrix();
+
 		Matrix44 s; // Thrust Power 크기에 따라, 모델 크기를 조정한다.
 		s.SetScale(Vector3(1, 1, 1)*0.5f * m_thrust[i].totalPower/128);
+		Matrix44 s2; // Thrust Power 크기에 따라, 모델 크기를 조정한다.
+		s2.SetScale(Vector3(1, 1, 1)*0.5f * m_thrust[i].totalCubePower / 128);
 		Matrix44 t;
 		t.SetTranslate(m_thrust[i].normal * 12);
 
@@ -147,6 +156,8 @@ void cCubeFlight::Render()
 			m_arrow.Render(s * r * t * m_tm * m_offset);
 		if (m_isShowIdealThrust)
 			m_arrow2.Render(s * ir * t * m_tm * m_offset);
+		if (m_isShowCubeThrust)
+			m_arrow3.Render(s2 * cr * t * m_tm * m_offset);
 
 		// 3축 모터 추력 세기 출력
 		for (int k = 0; k < 3; ++k)
@@ -269,8 +280,8 @@ void cCubeFlight::Thrust(const Vector3 &dir, const Vector3 &mov) //mov=Vector3(0
 		// 실제 모터에 힘이 가해지는 값을 토대로 계산된다.
 		// 이 값은, 모터의 방향과 관계되기 때문에, 하드웨어에 제한을 받게 된다.
 		Vector3 thrust = m_thrust[i].axis[0] * m_thrust[i].power[0]
-			+ m_thrust[i].axis[1] * m_thrust[i].power[1]
-			+ m_thrust[i].axis[2] * m_thrust[i].power[2];
+								+ m_thrust[i].axis[1] * m_thrust[i].power[1]
+								+ m_thrust[i].axis[2] * m_thrust[i].power[2];
 		const float totalPower = thrust.Length();
 		m_thrust[i].totalPower = totalPower;
 
@@ -285,3 +296,29 @@ void cCubeFlight::Thrust(const Vector3 &dir, const Vector3 &mov) //mov=Vector3(0
 	}
 }
 
+
+// Naze32 Board에서 연산된 추력값을 토대로 벡터를 계산한다.
+void cCubeFlight::CubeThrust(unsigned char buffer[24])
+{
+
+	for (int i = 0; i < 24; i+=3)
+	{
+		const int vertexIdx = i / 3;
+		const int power1 = buffer[i];
+		const int power2 = buffer[i + 1];
+		const int power3 = buffer[i + 2];
+
+		Vector3 thrust = m_thrust[vertexIdx].axis[0] * power1
+								+ m_thrust[vertexIdx].axis[1] * power2
+								+ m_thrust[vertexIdx].axis[2] * power3;
+		const float totalPower = thrust.Length();
+		m_thrust[vertexIdx].totalCubePower = totalPower;
+
+		if (totalPower > 1)
+		{
+			thrust.Normalize();
+			m_thrust[vertexIdx].cubeThrust = thrust;
+		}
+	}
+
+}

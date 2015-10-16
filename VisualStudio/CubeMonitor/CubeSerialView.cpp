@@ -11,6 +11,7 @@
 CCubeSerialView::CCubeSerialView(CWnd* pParent /*=NULL*/)
 	: CDockablePaneChildView(CCubeSerialView::IDD, pParent)
 	, m_isStart(false)
+	, m_resetHead(false)
 	, m_SendText(_T(""))
 	, m_serialRcvCount(0)
 	, m_updateIncTime(0)
@@ -19,6 +20,7 @@ CCubeSerialView::CCubeSerialView(CWnd* pParent /*=NULL*/)
 	, m_errorCount(0)
 	, m_IsShowThrust(TRUE)
 	, m_IsShowIdealThrust(FALSE)
+	, m_IsShowCubeThrust(FALSE)
 {
 }
 
@@ -39,6 +41,7 @@ void CCubeSerialView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT_CUBE_ATTITUDE, m_AttitudeEdit);
 	DDX_Check(pDX, IDC_CHECK_SHOWTHRUST, m_IsShowThrust);
 	DDX_Check(pDX, IDC_CHECK_SHOWIDEALTHRUST, m_IsShowIdealThrust);
+	DDX_Check(pDX, IDC_CHECK_SHOWCUBETHRUST, m_IsShowCubeThrust);
 }
 
 
@@ -51,6 +54,7 @@ BEGIN_MESSAGE_MAP(CCubeSerialView, CDockablePaneChildView)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_HEADING, &CCubeSerialView::OnBnClickedButtonResetHeading)
 	ON_BN_CLICKED(IDC_CHECK_SHOWTHRUST, &CCubeSerialView::OnBnClickedCheckShowthrust)
 	ON_BN_CLICKED(IDC_CHECK_SHOWIDEALTHRUST, &CCubeSerialView::OnBnClickedCheckShowidealthrust)
+	ON_BN_CLICKED(IDC_CHECK_SHOWCUBETHRUST, &CCubeSerialView::OnBnClickedCheckShowcubethrust)
 END_MESSAGE_MAP()
 
 
@@ -201,7 +205,7 @@ bool CCubeSerialView::SyncIMU()
 		SendCommand(cController::Get()->GetSerial(), MSP_ATTITUDE);
 		m_syncIMUState = 1;
 	}
-	else
+	else if (m_syncIMUState == 1)
 	{
 		m_syncIMUState = 0;
 		BYTE buffer[64];
@@ -226,6 +230,9 @@ bool CCubeSerialView::SyncIMU()
 			attitudeStr.Format(L"%f %f %f", -roll*0.1f, pitch*0.1f, (float)yaw);
 			m_AttitudeEdit.SetWindowTextW(attitudeStr);
 
+			if (m_resetHead)
+				m_syncIMUState = 2;
+
 			m_errorCount = 0;
 			return true;
 		}
@@ -237,6 +244,12 @@ bool CCubeSerialView::SyncIMU()
 				Stop();
 		}
 	}
+	else if (m_syncIMUState == 2)
+	{
+		SendCommand(cController::Get()->GetSerial(), MSP_CUBE_RESETHEAD);
+		m_resetHead = false;
+		m_syncIMUState = 0;
+	}
 
 	return false;
 }
@@ -244,6 +257,7 @@ bool CCubeSerialView::SyncIMU()
 
 void CCubeSerialView::OnBnClickedButtonResetHeading()
 {
+	m_resetHead = true;
 	cController::Get()->GetCubeFlight().ResetHeading();
 }
 
@@ -254,7 +268,8 @@ void CCubeSerialView::OnBnClickedCheckShowthrust()
 
 	cController::Get()->GetCubeFlight().SetRenderOption(
 		m_IsShowThrust ? true : false,
-		m_IsShowIdealThrust ? true : false);
+		m_IsShowIdealThrust ? true : false,
+		m_IsShowCubeThrust? true : false);
 }
 
 
@@ -264,5 +279,17 @@ void CCubeSerialView::OnBnClickedCheckShowidealthrust()
 
 	cController::Get()->GetCubeFlight().SetRenderOption(
 		m_IsShowThrust ? true : false,
-		m_IsShowIdealThrust ? true : false);
+		m_IsShowIdealThrust ? true : false,
+		m_IsShowCubeThrust ? true : false);
 }
+
+void CCubeSerialView::OnBnClickedCheckShowcubethrust()
+{
+	UpdateData();
+
+	cController::Get()->GetCubeFlight().SetRenderOption(
+		m_IsShowThrust ? true : false,
+		m_IsShowIdealThrust ? true : false,
+		m_IsShowCubeThrust ? true : false);
+}
+

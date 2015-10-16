@@ -149,11 +149,14 @@ void CMotorView::SyncMotor()
 			for (int i = 0; i < 24; ++i)
 			{
 				CString str;
-				str.Format(L"%d", buffer[i]);
+
+				int power = buffer[i];
+				str.Format(L"%d", power);
 				m_Edit[i].SetWindowTextW(str);
-				m_Slider[i].SetPos(buffer[i]);
+				m_Slider[i].SetPos(power);
 			}
 
+			cController::Get()->GetCubeFlight().CubeThrust(buffer);
 		}
 
 		m_syncState = 0;

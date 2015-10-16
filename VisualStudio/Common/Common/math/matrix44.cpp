@@ -210,12 +210,11 @@ Quaternion Matrix44::GetQuaternion() const
 	}
 /**/
 	
-	Vector3 s, t;
-	D3DXMatrixDecompose((D3DXVECTOR3*)&s, (D3DXQUATERNION*)&q, (D3DXVECTOR3*)&t, (D3DXMATRIX*)this);
+ 	Vector3 s, t;
+ 	D3DXMatrixDecompose((D3DXVECTOR3*)&s, (D3DXQUATERNION*)&q, (D3DXVECTOR3*)&t, (D3DXMATRIX*)this);
 
 	return q;
 }
-
 
 
 //---------------------------

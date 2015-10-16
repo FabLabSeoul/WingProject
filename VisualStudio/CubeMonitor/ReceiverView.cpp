@@ -215,8 +215,37 @@ void CReceiverView::SyncReceiver()
 			qy.Euler(Vector3(0, (float)yaw, 0));
 
 			Quaternion q = qy * qp * qr;
+			m_q = q;
+			m_qr = qr;
+			m_qp = qp;
+			m_qy = qy;
 			cController::Get()->GetCubeFlight().m_tm = q.GetMatrix();
 
+			m_errorCount = 0;
+			m_syncState = 5;
+		}
+		else
+		{
+			++m_errorCount;
+			if (m_errorCount > MAX_ERROR_CNT)
+			{
+				m_IsSyncReceiverRcv = FALSE;
+				SetBackgroundColor(g_grayColor);
+				UpdateData(FALSE);
+			}
+		}
+	}
+	else if (m_syncState == 5)
+	{
+		SendCommand(cController::Get()->GetSerial(), MSP_CUBE_MOTOR);
+		m_syncState = 6;
+	}
+	else if (m_syncState == 6)
+	{
+		unsigned char buffer[24];
+		if (RecvCommand(cController::Get()->GetSerial(), MSP_CUBE_MOTOR, buffer, sizeof(buffer)) > 0)
+		{
+			cController::Get()->GetCubeFlight().CubeThrust(buffer);
 			m_errorCount = 0;
 			m_syncState = 0;
 		}
@@ -231,5 +260,67 @@ void CReceiverView::SyncReceiver()
 			}
 		}
 	}
+	else if (m_syncState == 7)
+	{
+		SendCommand(cController::Get()->GetSerial(), MSP_CUBE_DEBUG);
+		m_syncState = 8;
+	}
+	else if (m_syncState == 8)
+	{
+		unsigned char buffer[128];
+		if (RecvCommand(cController::Get()->GetSerial(), MSP_CUBE_DEBUG, buffer, sizeof(buffer)) > 0)
+		{
+			Vector3 v;
+			int idx = 0;
+			v.x = *(float*)&buffer[idx];
+			v.y = *(float*)&buffer[idx+=4];
+			v.z = *(float*)&buffer[idx += 4];
+
+			const Matrix44 tm = cController::Get()->GetCubeFlight().m_tm *
+				cController::Get()->GetCubeFlight().m_offset;
+			Vector3 dir = Vector3(0, 0, 1).MultiplyNormal(tm);
+			dir.Normalize();
+
+			Quaternion q;
+			q.x = *(float*)&buffer[idx+=4];
+			q.y = *(float*)&buffer[idx+= 4];
+			q.z = *(float*)&buffer[idx += 4];
+			q.w = *(float*)&buffer[idx += 4];
+
+			Quaternion qr;
+			qr.x = *(float*)&buffer[idx += 4];
+			qr.y = *(float*)&buffer[idx += 4];
+			qr.z = *(float*)&buffer[idx += 4];
+			qr.w = *(float*)&buffer[idx += 4];
+
+			Quaternion qp;
+			qp.x = *(float*)&buffer[idx += 4];
+			qp.y = *(float*)&buffer[idx += 4];
+			qp.z = *(float*)&buffer[idx += 4];
+			qp.w = *(float*)&buffer[idx += 4];
+
+			Quaternion qy;
+			qy.x = *(float*)&buffer[idx += 4];
+			qy.y = *(float*)&buffer[idx += 4];
+			qy.z = *(float*)&buffer[idx += 4];
+			qy.w = *(float*)&buffer[idx += 4];
+
+			m_errorCount = 0;
+			m_syncState = 0;
+		}
+		else
+		{
+			++m_errorCount;
+			if (m_errorCount > MAX_ERROR_CNT)
+			{
+				m_IsSyncReceiverRcv = FALSE;
+				SetBackgroundColor(g_grayColor);
+				UpdateData(FALSE);
+			}
+		}
+
+	}
+
+
 }
 

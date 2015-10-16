@@ -95,34 +95,37 @@ Matrix44 Quaternion::GetMatrix() const
 {
 	Matrix44 m;
 /*
-	float	xx = x * x;
-	float	yy = y * y;
-	float	zz = z * z;
-	float	ww = w * w;
-	float	xy = x * y;
-	float	yz = y * z;
-	float	zx = z * x;
-	float	wx = w * x;
-	float	wy = w * y;
-	float	wz = w * z;
+	float X = x;
+	float Y = y;
+	float Z = z;
+	float W = -w;
 
-	m._11 = 1.0F - 2.0F * ( yy + zz );
-	m._12 =        2.0F * ( xy - wz );
-	m._13 =        2.0F * ( zx + wy );
+	float xx = X * X;
+	float xy = X * Y;
+	float xz = X * Z;
+	float xw = X * W;
+	float yy = Y * Y;
+	float yz = Y * Z;
+	float yw = Y * W;
+	float zz = Z * Z;
+	float zw = Z * W;
 
-	m._21 =        2.0F * ( xy + wz );
-	m._22 = 1.0F - 2.0F * ( xx + zz );
-	m._23 =        2.0F * ( yz - wx );
+	m._11 = 1.0f - 2.0f * (yy + zz);
+	m._12 = 2.0f * (xy - zw);
+	m._13 = 2.0f * (xz + yw);
 
-	m._31 =        2.0F * ( zx - wy );
-	m._32 =        2.0F * ( yz + wx );
-	m._33 = 1.0F - 2.0F * ( xx + yy );
+	m._21 = 2.0f * (xy + zw);
+	m._22 = 1 - 2.0f * (xx + zz);
+	m._23 = 2.0f * (yz - xw);
 
-	m._14 = m._24 = m._34 = 0.0F;
-	m._41 = m._42 = m._43 = 0.0F;
-	m._44 = 1.0F;
-/**/
+	m._31 = 2.0f * (xz - yw);
+	m._32 = 2.0f * (yz + xw);
+	m._33 = 1.0f - 2.0f * (xx + yy);
 
+	m._14 = m._24 = m._34 = 0.0f;
+	m._41 = m._42 = m._43 = 0.0f;
+	m._44 = 1.0f;
+*/
 	D3DXMatrixRotationQuaternion( (D3DXMATRIX*)&m, (D3DXQUATERNION*)this );
 	return m;
 } //Quaternion::GetMatrix4
@@ -214,6 +217,30 @@ void Quaternion::SetRotationArc( const Vector3& v0, const Vector3& v1 )
 	z = vCross.z / s;
 	w = s * 0.5f;
 } //Quaternion::SetRotationArc
+
+
+void	Quaternion::SetRotationArc(const Vector3& v0, const Vector3& v1, const Vector3 &norm)
+{
+	Vector3 vCross = v0.CrossProduct(v1);
+	const float len = vCross.Length();
+	if (len <= 0.01f)
+	{
+		// v0 - v1 벡터가 정확히 반대 방향이거나, 정확히 같은 방향을 가르킬때,
+		// 두 벡터에 직교하는 벡터 norm 에서 180도 회전하거나, 회전하지 않거나
+		// 결정한다.
+		*this = Quaternion(norm, v0.DotProduct(v1) > 0? 0 : MATH_PI);
+		return;
+	}
+
+	float fDot = v0.DotProduct(v1);
+	float s = (float)sqrtf((1.0f + fDot) * 2.0f);
+
+	x = vCross.x / s;
+	y = vCross.y / s;
+	z = vCross.z / s;
+	w = s * 0.5f;
+} //Quaternion::SetRotationArc
+
 
 //--------------------------------
 //

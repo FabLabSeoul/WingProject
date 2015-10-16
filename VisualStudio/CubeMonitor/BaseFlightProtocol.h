@@ -75,5 +75,7 @@
 #define MSP_CUBE_MOTOR                70 //out message         24 motors
 #define MSP_CUBE_MOTOR_SET        71 //In message         24 motors
 #define MSP_CUBE_RC_SET                72 //In message         8 rc
+#define MSP_CUBE_RESETHEAD         73 //in message
+#define MSP_CUBE_DEBUG         74 //out message cube direction x,y,z (uint8_t, 0~100)
 
 // #define INBUF_SIZE 128

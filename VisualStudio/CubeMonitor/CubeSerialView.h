@@ -30,6 +30,7 @@ protected:
 	float m_updateIncTime;
 	int m_syncIMUState;
 	int m_errorCount;
+	bool m_resetHead;
 
 
 	DECLARE_MESSAGE_MAP()
@@ -53,4 +54,6 @@ public:
 	BOOL m_IsShowIdealThrust;
 	afx_msg void OnBnClickedCheckShowthrust();
 	afx_msg void OnBnClickedCheckShowidealthrust();
+	BOOL m_IsShowCubeThrust;
+	afx_msg void OnBnClickedCheckShowcubethrust();
 };
