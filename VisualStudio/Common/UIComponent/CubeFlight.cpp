@@ -39,11 +39,11 @@ bool cCubeFlight::Init()
 	//        /   |  top         /   |
 	//       /    |     front  /    |
 	//     0 ----------- 3      |
-	//     |       5 ------|----6
+	//     |       7------|----6
 	//     |      / back   |     /
 	//     |    /             |   /
 	//     |  /               |  /
-	//    4 -------------7
+	//    4 -------------5
 	//
 	// 각 꼭지점의 순서는 다음과 같다.
 
@@ -78,9 +78,9 @@ bool cCubeFlight::Init()
 
 	// bottom plane
 	m_thrust[idx++].normal = Vector3(-1, -1, -1);
-	m_thrust[idx++].normal = Vector3(-1, -1, 1);
-	m_thrust[idx++].normal = Vector3(1, -1, 1);
 	m_thrust[idx++].normal = Vector3(1, -1, -1);
+	m_thrust[idx++].normal = Vector3(1, -1, 1);
+	m_thrust[idx++].normal = Vector3(-1, -1, 1);
 
 	for (int i = 0; i < 8; ++i)
 	{
@@ -110,16 +110,16 @@ bool cCubeFlight::Init()
 	m_thrust[4].axis[2] = Vector3(0, 0, -1);
 
 	m_thrust[5].axis[0] = Vector3(0, -1, 0);
-	m_thrust[5].axis[1] = Vector3(0, 0, 1);
-	m_thrust[5].axis[2] = Vector3(-1, 0, 0);
+	m_thrust[5].axis[1] = Vector3(0, 0, -1);
+	m_thrust[5].axis[2] = Vector3(1, 0, 0);
 
 	m_thrust[6].axis[0] = Vector3(0, -1, 0);
 	m_thrust[6].axis[1] = Vector3(1, 0, 0);
 	m_thrust[6].axis[2] = Vector3(0, 0, 1);
 
 	m_thrust[7].axis[0] = Vector3(0, -1, 0);
-	m_thrust[7].axis[1] = Vector3(0, 0, -1);
-	m_thrust[7].axis[2] = Vector3(1, 0, 0);
+	m_thrust[7].axis[1] = Vector3(0, 0, 1);
+	m_thrust[7].axis[2] = Vector3(-1, 0, 0);
 
 	return true;
 }

@@ -75,7 +75,7 @@ BOOL CCubeSerialView::OnInitDialog()
 
 	m_ComPort.InitList();
 
-	const int baudRate[] = { 9600, 14400, 19200, 38400, 56000, 57600, 115200 };
+	const int baudRate[] = { 9600, 14400, 19200, 38400, 56000, 57600, 115200, 921600 };
 	for (int i = 0; i < ARRAYSIZE(baudRate); ++i)
 	{
 		TCHAR brateName[32];
@@ -292,4 +292,3 @@ void CCubeSerialView::OnBnClickedCheckShowcubethrust()
 		m_IsShowIdealThrust ? true : false,
 		m_IsShowCubeThrust ? true : false);
 }
-

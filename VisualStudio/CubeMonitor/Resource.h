@@ -170,6 +170,7 @@
 #define IDC_CHECK_SYNC_RECEIVER_RCV     1071
 #define IDC_CHECK_SYNC_RECEIVER_SEND    1072
 #define IDC_BUTTON_RESET_HEADING        1072
+#define IDC_BUTTON_PAIRING_BLUETOOTH    1073
 
 // Next default values for new objects
 // 
