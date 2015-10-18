@@ -9,7 +9,7 @@
 
 #define SOFT_SERIAL_BUFFER_SIZE 256
 // Max baud rate of current soft serial implementation
-#define SOFT_SERIAL_MAX_BAUD_RATE 19200
+#define SOFT_SERIAL_MAX_BAUD_RATE 38400
 
 typedef struct softSerial_s {
     serialPort_t port;
@@ -19,7 +19,7 @@ typedef struct softSerial_s {
 
     const timerHardware_t *txTimerHardware;
     volatile uint8_t txBuffer[SOFT_SERIAL_BUFFER_SIZE];
-    
+
     uint8_t          isSearchingForStartBit;
     uint8_t          rxBitIndex;
     uint8_t          rxLastLeadingEdgeAtBitIndex;
@@ -37,7 +37,7 @@ typedef struct softSerial_s {
     uint16_t         receiveErrors;
 } softSerial_t;
 
-extern timerHardware_t* serialTimerHardware;
+extern timerHardware_t *serialTimerHardware;
 extern softSerial_t softSerialPorts[];
 
 extern const struct serialPortVTable softSerialVTable[];

@@ -24,6 +24,7 @@ static void cliMotor(char *cmdline);
 static void cliProfile(char *cmdline);
 static void cliSave(char *cmdline);
 static void cliSet(char *cmdline);
+static void cliServo(char *cmdline);
 static void cliServoMix(char *cmdline);
 static void cliStatus(char *cmdline);
 static void cliVersion(char *cmdline);
@@ -49,37 +50,37 @@ static float _atof(const char *p);
 static char *ftoa(float x, char *floatString);
 
 // sync this with MultiType enum from mw.h
-static const char * const mixerNames[] = {
+static const char *const mixerNames[] = {
     "TRI", "QUADP", "QUADX", "BI",
     "GIMBAL", "Y6", "HEX6",
     "FLYING_WING", "Y4", "HEX6X", "OCTOX8", "OCTOFLATP", "OCTOFLATX",
-    "AIRPLANE", "HELI_120_CCPM", "HELI_90_DEG", "VTAIL4", 
+    "AIRPLANE", "HELI_120_CCPM", "HELI_90_DEG", "VTAIL4",
     "HEX6H", "PPM_TO_SERVO", "DUALCOPTER", "SINGLECOPTER",
     "ATAIL4", "CUSTOM", "CUSTOMPLANE", NULL
 };
 
 // sync this with AvailableFeatures enum from board.h
-static const char * const featureNames[] = {
+static const char *const featureNames[] = {
     "PPM", "VBAT", "INFLIGHT_ACC_CAL", "SERIALRX", "MOTOR_STOP",
     "SERVO_TILT", "SOFTSERIAL", "LED_RING", "GPS",
     "FAILSAFE", "SONAR", "TELEMETRY", "POWERMETER", "VARIO", "3D",
-    "FW_FAILSAFE_RTH",
+    "FW_FAILSAFE_RTH", "SYNCPWM", "FASTPWM", "SERVO_MIXER",
     NULL
 };
 
 // sync this with AvailableSensors enum from board.h
-static const char * const sensorNames[] = {
+static const char *const sensorNames[] = {
     "GYRO", "ACC", "BARO", "MAG", "SONAR", "GPS", "GPS+MAG", NULL
 };
 
 // sync this with AccelSensors enum from board.h
-static const char * const accNames[] = {
+static const char *const accNames[] = {
     "", "ADXL345", "MPU6050", "MMA845x", "BMA280", "MPU6500", "None", NULL
 };
 
 // sync this with HardwareRevision in board.h
-static const char * const hwNames[] = {
-    "", "Naze 32", "Naze32 rev.5", "Naze32 SP"
+static const char *const hwNames[] = {
+    "", "Naze 32", "Naze32 rev.5", "Naze32 SP", "Naze32 rev.6"
 };
 
 typedef struct {
@@ -105,6 +106,7 @@ const clicmd_t cmdTable[] = {
     { "motor", "get/set motor output value", cliMotor },
     { "profile", "index (0 to 2)", cliProfile },
     { "save", "save and reboot", cliSave },
+    { "servo", "edit servo configuration", cliServo },
     { "set", "name=value or blank or * for list", cliSet },
     { "smix", "design custom servo mixer", cliServoMix },
     { "status", "show system status", cliStatus },
@@ -130,7 +132,7 @@ typedef struct {
 } clivalue_t;
 
 const clivalue_t valueTable[] = {
-    { "looptime", VAR_UINT16, &mcfg.looptime, 0, 9000 },
+    { "looptime", VAR_UINT16, &mcfg.looptime, 0, 5000 },
     { "emf_avoidance", VAR_UINT8, &mcfg.emf_avoidance, 0, 1 },
     { "midrc", VAR_UINT16, &mcfg.midrc, 1200, 1700 },
     { "minthrottle", VAR_UINT16, &mcfg.minthrottle, 0, 2000 },
@@ -196,7 +198,8 @@ const clivalue_t valueTable[] = {
     { "rc_expo", VAR_UINT8, &cfg.rcExpo8, 0, 100 },
     { "thr_mid", VAR_UINT8, &cfg.thrMid8, 0, 100 },
     { "thr_expo", VAR_UINT8, &cfg.thrExpo8, 0, 100 },
-    { "roll_pitch_rate", VAR_UINT8, &cfg.rollPitchRate, 0, 100 },
+    { "roll_rate", VAR_UINT8, &cfg.rollPitchRate[0], 0, 100 },
+    { "pitch_rate", VAR_UINT8, &cfg.rollPitchRate[1], 0, 100 },
     { "yaw_rate", VAR_UINT8, &cfg.yawRate, 0, 100 },
     { "tpa_rate", VAR_UINT8, &cfg.dynThrPID, 0, 100},
     { "tpa_breakpoint", VAR_UINT16, &cfg.tpa_breakpoint, 1000, 2000},
@@ -211,9 +214,6 @@ const clivalue_t valueTable[] = {
     { "rssi_adc_offset", VAR_INT16, &mcfg.rssi_adc_offset, 0, 4095 },
     { "yaw_direction", VAR_INT8, &cfg.yaw_direction, -1, 1 },
     { "tri_unarmed_servo", VAR_INT8, &cfg.tri_unarmed_servo, 0, 1 },
-    { "fw_roll_throw", VAR_FLOAT, &cfg.fw_roll_throw, 0, 1 },
-    { "fw_pitch_throw", VAR_FLOAT, &cfg.fw_pitch_throw, 0, 1 },
-    { "fw_vector_trust", VAR_UINT8, &cfg.fw_vector_trust, 0, 1},
     { "gimbal_flags", VAR_UINT8, &cfg.gimbal_flags, 0, 255},
     { "acc_lpf_factor", VAR_UINT8, &cfg.acc_lpf_factor, 0, 250 },
     { "accxy_deadband", VAR_UINT8, &cfg.accxy_deadband, 0, 100 },
@@ -269,7 +269,7 @@ const clivalue_t valueTable[] = {
     { "fw_idle_throttle", VAR_UINT16, &cfg.fw_idle_throttle, 1000, 2000 },
     { "fw_scaler_throttle", VAR_UINT16, &cfg.fw_scaler_throttle, 0, 15 },
     { "fw_roll_comp", VAR_FLOAT, &cfg.fw_roll_comp, 0, 2 },
-    { "fw_rth_alt", VAR_UINT8, &cfg.D8[PIDPOSR], 0, 200 },
+    { "fw_rth_alt", VAR_UINT8, &cfg.fw_rth_alt, 0, 200 },
 };
 
 #define VALUE_COUNT (sizeof(valueTable) / sizeof(clivalue_t))
@@ -404,8 +404,14 @@ static float _atof(const char *p)
 
         // Calculate scaling factor.
         // while (expon >= 50) { scale *= 1E50f; expon -= 50; }
-        while (expon >=  8) { scale *= 1E8f;  expon -=  8; }
-        while (expon >   0) { scale *= 10.0f; expon -=  1; }
+        while (expon >=  8) {
+            scale *= 1E8f;
+            expon -=  8;
+        }
+        while (expon >   0) {
+            scale *= 10.0f;
+            expon -=  1;
+        }
     }
 
     // Return signed and scaled floating point result.
@@ -588,6 +594,68 @@ static void cliCMix(char *cmdline)
     }
 }
 
+static void cliServo(char *cmdline)
+{
+    int i;
+    uint8_t len;
+    char *ptr;
+    int8_t servoRates[8] = { 30, 30, 100, 100, 100, 100, 100, 100 };
+
+    len = strlen(cmdline);
+
+    if (len == 0) {
+        printf("servo servo_number\tmin\tmiddle\tmax\trate\r\n");
+        for (i = 0; i < MAX_SERVOS; i++) {
+            printf("#%d:\t", i + 1);
+            printf("%d\t", cfg.servoConf[i].min);
+            printf("%d\t", cfg.servoConf[i].middle);
+            printf("%d\t", cfg.servoConf[i].max);
+            printf("%d\t", cfg.servoConf[i].rate);
+            printf("\r\n");
+        }
+        printf("\r\n");
+        printf("Reset servos: servo reset\r\n");
+        return;
+    } else if (strncasecmp(cmdline, "reset", 5) == 0) {
+        // erase servo config
+        for (i = 0; i < MAX_SERVOS; i++) {
+            cfg.servoConf[i].min = 1020;
+            cfg.servoConf[i].max = 2000;
+            cfg.servoConf[i].middle = 1500;
+            cfg.servoConf[i].rate = servoRates[i];
+        }
+    } else {
+        enum {SERVO = 0, MIN, MIDDLE, MAX, RATE, ARGS_COUNT};
+        int args[ARGS_COUNT], check = 0;
+
+        ptr = strtok(cmdline, " ");
+        while (ptr != NULL && check < ARGS_COUNT) {
+            args[check++] = atoi(ptr);
+            ptr = strtok(NULL, " ");
+        }
+
+        if (ptr != NULL || check != ARGS_COUNT) {
+            printf("ERR: Wrong number of arguments, needs servo_number min middle max rate\r\n");
+            return;
+        }
+
+        if (args[SERVO] >= 1 && args[SERVO] <= MAX_SERVOS &&
+            args[MIN] >= 900 && args[MIN] <= 2100 &&
+            args[MAX] >= 900 && args[MAX] <= 2100 &&
+            args[MIDDLE] >= 900 && args[MIDDLE] <= 2100 &&
+            args[RATE] >= -100 && args[RATE] <= 100 &&
+            args[MIN] <= args[MIDDLE] && args[MIDDLE] <= args[MAX]) {
+            args[SERVO]--;
+            cfg.servoConf[args[SERVO]].min = args[MIN];
+            cfg.servoConf[args[SERVO]].max = args[MAX];
+            cfg.servoConf[args[SERVO]].middle = args[MIDDLE];
+            cfg.servoConf[args[SERVO]].rate = args[RATE];
+        } else
+            printf("ERR: Wrong range for arguments, range for min, max and middle [900,2100], min <= middle <= max, range for rate [-100,100]\r\n");
+        cliServo("");
+    }
+}
+
 static void cliServoMix(char *cmdline)
 {
     int i;
@@ -645,7 +713,7 @@ static void cliServoMix(char *cmdline)
             printf("change the direction a servo reacts to a input channel: \r\nservo input -1|1\r\n");
             printf("s");
             for (channel = 0; channel < INPUT_ITEMS; channel++)
-                printf("\ti%d",channel + 1);
+                printf("\ti%d", channel + 1);
             printf("\r\n");
 
             for (servoIndex = 0; servoIndex < MAX_SERVOS; servoIndex++) {
@@ -662,12 +730,12 @@ static void cliServoMix(char *cmdline)
             args[check++] = atoi(ptr);
             ptr = strtok(NULL, " ");
         }
-        
+
         if (ptr != NULL || check != ARGS_COUNT) {
             printf("Wrong number of arguments, needs servo input direction\r\n");
             return;
         }
-        
+
         if (args[SERVO] >= 1 && args[SERVO] <= MAX_SERVOS && args[INPUT] >= 1 && args[INPUT] <= INPUT_ITEMS && (args[DIRECTION] == -1 || args[DIRECTION] == 1)) {
             args[SERVO] -= 1;
             args[INPUT] -= 1;
@@ -679,20 +747,19 @@ static void cliServoMix(char *cmdline)
             printf("ERR: Wrong range for arguments\r\n");
 
         cliServoMix("direction");
-    }
-    else {
+    } else {
         enum {RULE = 0, TARGET, INPUT, RATE, SPEED, MIN, MAX, BOX, ARGS_COUNT};
         ptr = strtok(cmdline, " ");
         while (ptr != NULL && check < ARGS_COUNT) {
             args[check++] = atoi(ptr);
             ptr = strtok(NULL, " ");
         }
-        
+
         if (ptr != NULL || check != ARGS_COUNT) {
             printf("ERR: Wrong number of arguments, needs rule target_channel input_channel rate speed min max box\r\n");
             return;
         }
-        
+
         i = args[RULE] - 1;
         if (i >= 0 && i < MAX_SERVO_RULES &&
             args[TARGET] > 0 && args[TARGET] <= MAX_SERVOS &&
@@ -702,14 +769,14 @@ static void cliServoMix(char *cmdline)
             args[MIN] >= 0 && args[MIN] <= 100 &&
             args[MAX] >= 0 && args[MAX] <= 100 && args[MIN] < args[MAX] &&
             args[BOX] >= 0 && args[BOX] <= MAX_SERVO_BOXES) {
-                mcfg.customServoMixer[i].targetChannel = args[TARGET] - 1;
-                mcfg.customServoMixer[i].fromChannel = args[INPUT] - 1;
-                mcfg.customServoMixer[i].rate = args[RATE];
-                mcfg.customServoMixer[i].speed = args[SPEED];
-                mcfg.customServoMixer[i].min = args[MIN];
-                mcfg.customServoMixer[i].max = args[MAX];
-                mcfg.customServoMixer[i].box = args[BOX];
-                cliServoMix("");
+            mcfg.customServoMixer[i].targetChannel = args[TARGET] - 1;
+            mcfg.customServoMixer[i].fromChannel = args[INPUT] - 1;
+            mcfg.customServoMixer[i].rate = args[RATE];
+            mcfg.customServoMixer[i].speed = args[SPEED];
+            mcfg.customServoMixer[i].min = args[MIN];
+            mcfg.customServoMixer[i].max = args[MAX];
+            mcfg.customServoMixer[i].box = args[BOX];
+            cliServoMix("");
         } else
             printf("ERR: Wrong range for arguments\r\n");
     }
@@ -768,7 +835,7 @@ static void cliDump(char *cmdline)
         }
         printf("cmix %d 0 0 0 0\r\n", i + 1);
     }
-    
+
     // print custom servo mixer if exists
     if (mcfg.customServoMixer[0].rate != 0) {
         for (i = 0; i < MAX_SERVO_RULES; i++) {
@@ -785,13 +852,17 @@ static void cliDump(char *cmdline)
         }
         printf("smix %d 0 0 0 0\r\n", i + 1);
     }
-    
+
     // print servo directions
-    for (i = 0; i < 8; i++)
+    for (i = 0; i < MAX_SERVOS; i++)
         for (channel = 0; channel < INPUT_ITEMS; channel++)
             if (cfg.servoConf[i].direction & (1 << channel))
-                printf("smix direction %d %d -1\r\n",i + 1 ,channel + 1);
-    
+                printf("smix direction %d %d -1\r\n", i + 1 , channel + 1);
+
+    // print servo config
+    for (i = 0; i < MAX_SERVOS; i++)
+        printf("servo %d %d %d %d %d\r\n", i + 1, cfg.servoConf[i].min, cfg.servoConf[i].middle, cfg.servoConf[i].max, cfg.servoConf[i].rate);
+
     // print enabled features
     mask = featureMask();
     for (i = 0; ; i++) { // disable all feature first
@@ -819,6 +890,14 @@ static void cliDump(char *cmdline)
         cliPrintVar(setval, 0);
         cliPrint("\r\n");
     }
+	
+	// add
+	for (i=0; i < RC_CHANS; ++i)
+	{
+		printf( "rcData[%d] = %d\n", i, rcData[i]);
+	}
+	
+	
 }
 
 static void cliExit(char *cmdline)
@@ -1198,7 +1277,7 @@ static void cliStatus(char *cmdline)
     uint32_t mask;
 
     printf("System Uptime: %d seconds, Voltage: %d * 0.1V (%dS battery)\r\n",
-        millis() / 1000, vbat, batteryCellCount);
+           millis() / 1000, vbat, batteryCellCount);
     mask = sensorsMask();
 
     printf("Hardware: %s @ %dMHz, detected sensors: ", hwNames[hw_revision], (SystemCoreClock / 1000000));
@@ -1208,11 +1287,8 @@ static void cliStatus(char *cmdline)
         if (mask & (1 << i))
             printf("%s ", sensorNames[i]);
     }
-    if (sensors(SENSOR_ACC)) {
+    if (sensors(SENSOR_ACC))
         printf("ACCHW: %s", accNames[accHardware]);
-        if (accHardware == ACC_MPU6050)
-            printf(".%c", core.mpu6050_scale ? 'o' : 'n');
-    }
     cliPrint("\r\n");
 
     printf("Cycle Time: %d, I2C Errors: %d, config size: %d\r\n", cycleTime, i2cGetErrorCounter(), sizeof(master_t));

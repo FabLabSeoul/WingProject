@@ -24,7 +24,7 @@ master_t mcfg;  // master config struct with data independent from profiles
 config_t cfg;   // profile config struct
 const char rcChannelLetters[] = "AERT1234";
 
-static const uint8_t EEPROM_CONF_VERSION = 73;
+static const uint8_t EEPROM_CONF_VERSION = 75;
 static uint32_t enabledSensors = 0;
 static void resetConf(void);
 static const uint32_t FLASH_WRITE_ADDR = 0x08000000 + (FLASH_PAGE_SIZE * (FLASH_PAGE_COUNT - (CONFIG_SIZE / 1024)));
@@ -285,7 +285,6 @@ static void resetConf(void)
     cfg.D8[PIDVEL] = 1;
     cfg.rcRate8 = 90;
     cfg.rcExpo8 = 65;
-    cfg.rollPitchRate = 0;
     cfg.yawRate = 0;
     cfg.dynThrPID = 0;
     cfg.tpa_breakpoint = 1500;
@@ -295,6 +294,7 @@ static void resetConf(void)
     //     cfg.activate[i] = 0;
     cfg.angleTrim[0] = 0;
     cfg.angleTrim[1] = 0;
+    cfg.locked_in = 0;
     cfg.mag_declination = 0;    // For example, -6deg 37min, = -637 Japan, format is [sign]dddmm (degreesminutes) default is zero.
     cfg.acc_lpf_factor = 4;
     cfg.accz_deadband = 40;
@@ -345,8 +345,6 @@ static void resetConf(void)
     cfg.nav_speed_max = 300;
     cfg.ap_mode = 40;
     // fw stuff
-    cfg.fw_roll_throw = 0.5f;
-    cfg.fw_pitch_throw = 0.5f;
     cfg.fw_gps_maxcorr = 20;
     cfg.fw_gps_rudder = 15;
     cfg.fw_gps_maxclimb = 15;

@@ -45,7 +45,7 @@ void fw_nav(void)
     int16_t GPS_Heading = GPS_ground_course;    // Store current bearing
     int16_t Current_Heading;                    // Store current bearing
     int16_t altDiff = 0;
-    int16_t RTH_Alt = cfg.D8[PIDPOSR];          // conf.pid[PIDALT].D8;
+    uint8_t RTH_Alt = cfg.fw_rth_alt;           // Min Altitude to keep during RTH. (Max 200m)
     int16_t delta[2] = { 0, 0 };                // D-Term
     static int16_t NAV_deltaSum, ALT_deltaSum, GPS_FwTarget, GPS_AltErr, NAV_Thro;
     int16_t TX_Thro = rcData[THROTTLE];         // Read and store Throttle pos.
@@ -123,7 +123,7 @@ void fw_nav(void)
 
         // Filtering of navDiff around home to stop nervous servos
         if (GPS_distanceToHome < 10)
-            navDiff *= 0.1;
+            navDiff *= 0.1f;
 
         // Wrap Heading 180
         navDiff = wrap_18000(navDiff * 100) / 100;

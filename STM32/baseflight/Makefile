@@ -82,13 +82,12 @@ NAZE_SRC	 = drv_adc.c \
 		   drv_bma280.c \
 		   drv_bmp085.c \
 		   drv_ms5611.c \
+		   drv_bmp280.c \
 		   drv_hcsr04.c \
 		   drv_hmc5883l.c \
 		   drv_ledring.c \
 		   drv_mma845x.c \
-		   drv_mpu3050.c \
-		   drv_mpu6050.c \
-		   drv_mpu6500.c \
+		   drv_mpu.c \
 		   drv_l3g4200d.c \
 		   drv_pwm.c \
 		   drv_spi.c \
@@ -98,7 +97,7 @@ NAZE_SRC	 = drv_adc.c \
 
 # Source files for the CJMCU target
 CJMCU_SRC	 = drv_adc.c \
-		   drv_mpu6050.c \
+		   drv_mpu.c \
 		   drv_hmc5883l.c \
 		   drv_pwm.c \
 		   drv_timer.c \
@@ -139,7 +138,7 @@ INCLUDE_DIRS	 = $(SRC_DIR) \
 ARCH_FLAGS	 = -mthumb -mcpu=cortex-m3
 
 ifeq ($(DEBUG),GDB)
-OPTIMIZE	 = -O0
+OPTIMIZE	 = -Og
 LTO_FLAGS	 = $(OPTIMIZE)
 else
 OPTIMIZE	 = -Os
@@ -205,19 +204,21 @@ $(TARGET_HEX): $(TARGET_ELF)
 $(TARGET_ELF):  $(TARGET_OBJS)
 	$(CC) -o $@ $^ $(LDFLAGS)
 
+MKDIR_OBJDIR = @mkdir -p $(dir $@)
+
 # Compile
 $(OBJECT_DIR)/$(TARGET)/%.o: %.c
-	@mkdir -p $(dir $@)
+	$(MKDIR_OBJDIR)
 	@echo %% $(notdir $<)
 	@$(CC) -c -o $@ $(CFLAGS) $<
 
 # Assemble
 $(OBJECT_DIR)/$(TARGET)/%.o: %.s
-	@mkdir -p $(dir $@)
+	$(MKDIR_OBJDIR)
 	@echo %% $(notdir $<)
 	@$(CC) -c -o $@ $(ASFLAGS) $< 
 $(OBJECT_DIR)/$(TARGET)/%.o): %.S
-	@mkdir -p $(dir $@)
+	$(MKDIR_OBJDIR)
 	@echo %% $(notdir $<)
 	@$(CC) -c -o $@ $(ASFLAGS) $< 
 

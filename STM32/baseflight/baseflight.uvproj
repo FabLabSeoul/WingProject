@@ -190,7 +190,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>0</AdsALst>
+            <AdsALst>1</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -503,6 +503,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\fw_nav.c</FilePath>
             </File>
+            <File>
+              <FileName>ibus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ibus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -534,11 +539,6 @@
               <FilePath>.\src\drv_i2c.c</FilePath>
             </File>
             <File>
-              <FileName>drv_mpu3050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu3050.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_pwm.c</FilePath>
@@ -557,11 +557,6 @@
               <FileName>drv_ledring.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_ledring.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu6050.c</FilePath>
             </File>
             <File>
               <FileName>drv_mma845x.c</FileName>
@@ -619,14 +614,19 @@
               <FilePath>.\src\drv_serial.c</FilePath>
             </File>
             <File>
-              <FileName>drv_mpu6500.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu6500.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_ak8975.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_ak8975.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_bmp280.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_bmp280.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_mpu.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -759,6 +759,31 @@
               <FileName>stm32f10x_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lib\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Math</GroupName>
+          <Files>
+            <File>
+              <FileName>vector.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\vector.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix44.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\matrix44.c</FilePath>
+            </File>
+            <File>
+              <FileName>quaternion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\quaternion.c</FilePath>
+            </File>
+            <File>
+              <FileName>cube.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\cube.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -948,7 +973,7 @@
             <ldmm>1</ldmm>
             <ldXref>1</ldXref>
             <BigEnd>0</BigEnd>
-            <AdsALst>1</AdsALst>
+            <AdsALst>0</AdsALst>
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
@@ -961,7 +986,7 @@
             <AdsLsun>1</AdsLsun>
             <AdsLven>1</AdsLven>
             <AdsLsxf>1</AdsLsxf>
-            <RvctClst>1</RvctClst>
+            <RvctClst>0</RvctClst>
             <GenPPlst>0</GenPPlst>
             <AdsCpuType>"Cortex-M3"</AdsCpuType>
             <RvctDeviceName></RvctDeviceName>
@@ -1261,6 +1286,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\fw_nav.c</FilePath>
             </File>
+            <File>
+              <FileName>ibus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ibus.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1292,11 +1322,6 @@
               <FilePath>.\src\drv_i2c.c</FilePath>
             </File>
             <File>
-              <FileName>drv_mpu3050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu3050.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_pwm.c</FilePath>
@@ -1315,11 +1340,6 @@
               <FileName>drv_ledring.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_ledring.c</FilePath>
-            </File>
-            <File>
-              <FileName>drv_mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu6050.c</FilePath>
             </File>
             <File>
               <FileName>drv_mma845x.c</FileName>
@@ -1377,14 +1397,19 @@
               <FilePath>.\src\drv_serial.c</FilePath>
             </File>
             <File>
-              <FileName>drv_mpu6500.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu6500.c</FilePath>
-            </File>
-            <File>
               <FileName>drv_ak8975.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_ak8975.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_bmp280.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_bmp280.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_mpu.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1460,6 +1485,31 @@
               <FileName>stm32f10x_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lib\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Math</GroupName>
+          <Files>
+            <File>
+              <FileName>vector.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\vector.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix44.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\matrix44.c</FilePath>
+            </File>
+            <File>
+              <FileName>quaternion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\quaternion.c</FilePath>
+            </File>
+            <File>
+              <FileName>cube.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\cube.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2248,6 +2298,52 @@
               <FileName>fw_nav.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\fw_nav.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>ibus.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\ibus.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2362,52 +2458,6 @@
               <FilePath>.\src\drv_i2c.c</FilePath>
             </File>
             <File>
-              <FileName>drv_mpu3050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu3050.c</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArmAds>
-                  <Cads>
-                    <interw>2</interw>
-                    <Optim>0</Optim>
-                    <oTime>2</oTime>
-                    <SplitLS>2</SplitLS>
-                    <OneElfS>2</OneElfS>
-                    <Strict>2</Strict>
-                    <EnumInt>2</EnumInt>
-                    <PlainCh>2</PlainCh>
-                    <Ropi>2</Ropi>
-                    <Rwpi>2</Rwpi>
-                    <wLevel>0</wLevel>
-                    <uThumb>2</uThumb>
-                    <uSurpInc>2</uSurpInc>
-                    <VariousControls>
-                      <MiscControls></MiscControls>
-                      <Define></Define>
-                      <Undefine></Undefine>
-                      <IncludePath></IncludePath>
-                    </VariousControls>
-                  </Cads>
-                </FileArmAds>
-              </FileOption>
-            </File>
-            <File>
               <FileName>drv_pwm.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\drv_pwm.c</FilePath>
@@ -2467,11 +2517,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>drv_mpu6050.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu6050.c</FilePath>
             </File>
             <File>
               <FileName>drv_mma845x.c</FileName>
@@ -2857,9 +2902,9 @@
               <FilePath>.\src\drv_serial.c</FilePath>
             </File>
             <File>
-              <FileName>drv_mpu6500.c</FileName>
+              <FileName>drv_ak8975.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\drv_mpu6500.c</FilePath>
+              <FilePath>.\src\drv_ak8975.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -2903,9 +2948,55 @@
               </FileOption>
             </File>
             <File>
-              <FileName>drv_ak8975.c</FileName>
+              <FileName>drv_bmp280.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\drv_ak8975.c</FilePath>
+              <FilePath>.\src\drv_bmp280.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>2</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>drv_mpu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\drv_mpu.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -3038,6 +3129,31 @@
               <FileName>stm32f10x_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lib\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Math</GroupName>
+          <Files>
+            <File>
+              <FileName>vector.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\vector.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix44.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\matrix44.c</FilePath>
+            </File>
+            <File>
+              <FileName>quaternion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\quaternion.c</FilePath>
+            </File>
+            <File>
+              <FileName>cube.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\cube.c</FilePath>
             </File>
           </Files>
         </Group>

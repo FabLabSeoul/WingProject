@@ -19,16 +19,14 @@
 
 // Serial GPS only variables
 // navigation mode
-typedef enum NavigationMode
-{
+typedef enum NavigationMode {
     NAV_MODE_NONE = 0,
     NAV_MODE_POSHOLD,
     NAV_MODE_WP
 } NavigationMode;
 
 // Syncronized with GUI. Only exception is mixer > 11, which is always returned as 11 during serialization.
-typedef enum MultiType
-{
+typedef enum MultiType {
     MULTITYPE_TRI = 1,
     MULTITYPE_QUADP = 2,
     MULTITYPE_QUADX = 3,
@@ -47,7 +45,7 @@ typedef enum MultiType
     MULTITYPE_HELI_90_DEG = 16,
     MULTITYPE_VTAIL4 = 17,
     MULTITYPE_HEX6H = 18,
-    MULTITYPE_PPM_TO_SERVO = 19,    // PPM -> servo relay 
+    MULTITYPE_PPM_TO_SERVO = 19,    // PPM -> servo relay
     MULTITYPE_DUALCOPTER = 20,
     MULTITYPE_SINGLECOPTER = 21,
     MULTITYPE_ATAIL4 = 22,
@@ -227,13 +225,14 @@ typedef struct config_t {
     uint8_t thrMid8;
     uint8_t thrExpo8;
 
-    uint8_t rollPitchRate;
+    uint8_t rollPitchRate[2];
     uint8_t yawRate;
 
     uint8_t dynThrPID;
     uint16_t tpa_breakpoint;                // Breakpoint where TPA is activated
     int16_t mag_declination;                // Get your magnetic decliniation from here : http://magnetic-declination.com/
     int16_t angleTrim[2];                   // accelerometer trim
+    uint8_t locked_in;
 
     // sensor-related stuff
     uint8_t acc_lpf_factor;                 // Set the Low Pass Filter factor for ACC. Increasing this value would reduce ACC noise (visible in GUI), but would increase ACC lag time. Zero = no filter
@@ -282,10 +281,7 @@ typedef struct config_t {
     uint16_t nav_speed_max;                 // cm/sec
     uint16_t ap_mode;                       // Temporarily Disables GPS_HOLD_MODE to be able to make it possible to adjust the Hold-position when moving the sticks, creating a deadspan for GPS
 
-    float fw_roll_throw;
-    float fw_pitch_throw;
-    uint8_t fw_vector_trust;
-    uint8_t fw_flaperons_invert;
+    // fw-related stuff
     int16_t fw_gps_maxcorr;                    // Degrees banking Allowed by GPS.
     int16_t fw_gps_rudder;                     // Maximum Rudder
     int16_t fw_gps_maxclimb;                   // Degrees climbing . To much can stall the plane.
@@ -294,7 +290,8 @@ typedef struct config_t {
     uint16_t fw_cruise_throttle;               // Throttle to set for cruisespeed.
     uint16_t fw_idle_throttle;                 // Lowest throttleValue during Descend
     uint16_t fw_scaler_throttle;               // Adjust to Match Power/Weight ratio of your model
-    float fw_roll_comp;
+    float fw_roll_comp;                        // How much Elevator compensates Roll in GPS modes
+    uint8_t fw_rth_alt;                        // Min Altitude to keep during RTH. (Max 200m)
 
 } config_t;
 
@@ -401,7 +398,6 @@ typedef struct core_t {
     serialPort_t *gpsport;
     serialPort_t *telemport;
     serialPort_t *rcvrport;
-    uint8_t mpu6050_scale;                  // es/non-es variance between MPU6050 sensors, half my boards are mpu6000ES, need this to be dynamic. automatically set by mpu6050 driver.
     uint8_t numRCChannels;                  // number of rc channels as reported by current input driver
     bool useServo;                          // feature SERVO_TILT or wing/airplane mixers will enable this
     uint8_t numServos;                      // how many total hardware servos we have. used by mixer
@@ -429,6 +425,7 @@ typedef struct flags_t {
     uint8_t FW_FAILSAFE_RTH_ENABLE;
     uint8_t CLIMBOUT_FW;
 } flags_t;
+
 
 extern int16_t gyroZero[3];
 extern int16_t gyroData[3];
@@ -486,7 +483,7 @@ extern int32_t  GPS_hold[3];
 extern uint8_t  GPS_numSat;
 extern uint16_t GPS_distanceToHome;                          // distance to home or hold point in meters
 extern int16_t  GPS_directionToHome;                         // direction to home or hol point in degrees
-extern uint16_t GPS_altitude,GPS_speed;                      // altitude in 0.1m and speed in 0.1m/s
+extern uint16_t GPS_altitude, GPS_speed;                     // altitude in 0.1m and speed in 0.1m/s
 extern uint8_t  GPS_update;                                  // it's a binary toogle to distinct a GPS position update
 extern int16_t  GPS_angle[3];                                // it's the angles that must be applied for GPS correction
 extern uint16_t GPS_ground_course;                           // degrees*10
@@ -494,11 +491,14 @@ extern int16_t  nav[2];
 extern int8_t   nav_mode;                                    // Navigation mode
 extern int16_t  nav_rated[2];                                // Adding a rate controller to the navigation to make it smoother
 extern uint8_t  GPS_numCh;                                   // Number of channels
-extern uint8_t  GPS_svinfo_chn[16];                          // Channel number
-extern uint8_t  GPS_svinfo_svid[16];                         // Satellite ID
-extern uint8_t  GPS_svinfo_quality[16];                      // Bitfield Qualtity
-extern uint8_t  GPS_svinfo_cno[16];                          // Carrier to Noise Ratio (Signal Strength)
+extern uint8_t  GPS_svinfo_chn[32];                          // Channel number
+extern uint8_t  GPS_svinfo_svid[32];                         // Satellite ID
+extern uint8_t  GPS_svinfo_quality[32];                      // Bitfield Qualtity
+extern uint8_t  GPS_svinfo_cno[32];                          // Carrier to Noise Ratio (Signal Strength)
 extern uint32_t GPS_update_rate[2];                          // GPS coordinates updating rate
+extern uint32_t GPS_svinfo_rate[2];                          // GPS svinfo updating rate
+extern uint32_t GPS_HorizontalAcc;                           // Horizontal accuracy estimate (mm)
+extern uint32_t GPS_VerticalAcc;                             // Vertical accuracy estimate (mm)
 extern core_t core;
 extern master_t mcfg;
 extern config_t cfg;
@@ -541,6 +541,7 @@ void writeServos(void);
 void writeMotors(void);
 void writeAllMotors(int16_t mc);
 void mixTable(void);
+void loadCustomServoMixer(void);
 
 // Serial
 void serialInit(uint32_t baudrate);
@@ -597,9 +598,10 @@ void gpsInit(uint8_t baudrate);
 void gpsThread(void);
 void gpsSetPIDs(void);
 int8_t gpsSetPassthrough(void);
+void gpsPollSvinfo(void);
 void GPS_reset_home_position(void);
 void GPS_reset_nav(void);
-void GPS_set_next_wp(int32_t* lat, int32_t* lon);
+void GPS_set_next_wp(int32_t *lat, int32_t *lon);
 int32_t wrap_18000(int32_t error);
 void fw_nav(void);
 

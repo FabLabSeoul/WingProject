@@ -32,29 +32,28 @@ uint8_t magHardware = MAG_DEFAULT;
 bool sensorsAutodetect(void)
 {
     int16_t deg, min;
+    mpu_params_t mpu_config;
+    bool haveMpu = false;
 #ifndef CJMCU
     drv_adxl345_config_t acc_params;
-    bool haveMpu65 = false;
 #endif
-    bool haveMpu6k = false;
 
-    // Autodetect gyro hardware. We have MPU3050 or MPU6050 or MPU6500 on SPI
-    if (mpu6050Detect(&acc, &gyro, mcfg.gyro_lpf, &core.mpu6050_scale)) {
-        // this filled up  acc.* struct with init values
-        haveMpu6k = true;
-    } else
+    // mpu driver parameters
+    mpu_config.lpf = mcfg.gyro_lpf;
+    // Autodetect Invensense acc/gyro hardware
+    haveMpu = mpuDetect(&acc, &gyro, &mpu_config);
+
+    // MPU6500 on I2C bus
+    if (hse_value == 12000000 && mpu_config.deviceType == MPU_65xx_I2C)
+        hw_revision = NAZE32_REV6;
+
 #ifndef CJMCU
-        if (hw_revision == NAZE32_SP && mpu6500Detect(&acc, &gyro, mcfg.gyro_lpf))
-            haveMpu65 = true;
-        else if (l3g4200dDetect(&gyro, mcfg.gyro_lpf)) {
-        // well, we found our gyro
-        ;
-    } else if (!mpu3050Detect(&gyro, mcfg.gyro_lpf))
-#endif
-    {
-        // if this fails, we get a beep + blink pattern. we're doomed, no gyro or i2c error.
-        return false;
+    if (!haveMpu) {
+        // Try some other gyros or bail out if fail
+        if (!l3g4200dDetect(&gyro, mcfg.gyro_lpf))
+            return false;
     }
+#endif
 
     // Accelerometer. Fuck it. Let user break shit.
 retry:
@@ -74,8 +73,7 @@ retry:
             ; // fallthrough
 #endif
         case ACC_MPU6050: // MPU6050
-            if (haveMpu6k) {
-                mpu6050Detect(&acc, &gyro, mcfg.gyro_lpf, &core.mpu6050_scale); // yes, i'm rerunning it again.  re-fill acc struct
+            if (haveMpu && mpu_config.deviceType == MPU_60x0) {
                 accHardware = ACC_MPU6050;
                 if (mcfg.acc_hardware == ACC_MPU6050)
                     break;
@@ -83,8 +81,7 @@ retry:
             ; // fallthrough
 #ifdef NAZE
         case ACC_MPU6500: // MPU6500
-            if (haveMpu65) {
-                mpu6500Detect(&acc, &gyro, mcfg.gyro_lpf); // yes, i'm rerunning it again.  re-fill acc struct
+            if (haveMpu && (mpu_config.deviceType >= MPU_65xx_I2C)) {
                 accHardware = ACC_MPU6500;
                 if (mcfg.acc_hardware == ACC_MPU6500)
                     break;
@@ -120,13 +117,15 @@ retry:
 
 #ifdef BARO
     // Detect what pressure sensors are available. baro->update() is set to sensor-specific update function
-    if (!bmp085Detect(&baro)) {
-        // ms5611 disables BMP085, and tries to initialize + check PROM crc. 
-        // moved 5611 init here because there have been some reports that calibration data in BMP180
-        // has been "passing" ms5611 PROM crc check
-        if (!ms5611Detect(&baro)) {
-            // if both failed, we don't have anything
-            sensorsClear(SENSOR_BARO);
+    if (!bmp280Detect(&baro)) {
+        if (!bmp085Detect(&baro)) {
+            // ms5611 disables BMP085, and tries to initialize + check PROM crc.
+            // moved 5611 init here because there have been some reports that calibration data in BMP180
+            // has been "passing" ms5611 PROM crc check
+            if (!ms5611Detect(&baro)) {
+                // if both failed, we don't have anything
+                sensorsClear(SENSOR_BARO);
+            }
         }
     }
 #endif
@@ -138,7 +137,7 @@ retry:
     gyro.init(mcfg.gyro_align);
 
 #ifdef MAG
-    retryMag:
+retryMag:
     switch (mcfg.mag_hardware) {
         case MAG_NONE: // disable MAG
             sensorsClear(SENSOR_MAG);
@@ -147,12 +146,12 @@ retry:
 
         case MAG_HMC5883L:
             if (hmc5883lDetect(&mag)) {
-              magHardware = MAG_HMC5883L;
-              if (mcfg.mag_hardware == MAG_HMC5883L)
-                break;
-          }
-        ; // fallthrough
-          
+                magHardware = MAG_HMC5883L;
+                if (mcfg.mag_hardware == MAG_HMC5883L)
+                    break;
+            }
+            ; // fallthrough
+
 #ifdef NAZE
         case MAG_AK8975:
             if (ak8975detect(&mag)) {
@@ -162,7 +161,7 @@ retry:
             }
 #endif
     }
-    
+
     // Found anything? Check if user fucked up or mag is really missing.
     if (magHardware == MAG_DEFAULT) {
         if (mcfg.mag_hardware > MAG_DEFAULT && mcfg.mag_hardware < MAG_NONE) {
@@ -216,11 +215,11 @@ uint16_t batteryAdcToVoltage(uint16_t src)
 int32_t currentSensorToCentiamps(uint16_t src)
 {
     int32_t millivolts;
-    
+
     millivolts = ((uint32_t)src * ADCVREF * 100) / 4095;
     millivolts -= mcfg.currentoffset;
-    
-    return (millivolts * 1000) / (int32_t)mcfg.currentscale; // current in 0.01A steps 
+
+    return (millivolts * 1000) / (int32_t)mcfg.currentscale; // current in 0.01A steps
 }
 
 void batteryInit(void)
@@ -378,8 +377,7 @@ int Baro_update(void)
 }
 #endif /* BARO */
 
-typedef struct stdev_t
-{
+typedef struct stdev_t {
     float m_oldM, m_newM, m_oldS, m_newS;
     int m_n;
 } stdev_t;

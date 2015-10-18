@@ -7,6 +7,13 @@
 
 #include "telemetry_common.h"
 
+#include "vector.h"
+#include "matrix44.h"
+#include "quaternion.h"
+#include "cube.h"
+
+
+
 core_t core;
 int hw_revision = 0;
 
@@ -43,8 +50,8 @@ int main(void)
     drv_adc_config_t adc_params;
     bool sensorsOK = false;
 #ifdef SOFTSERIAL_LOOPBACK
-    serialPort_t* loopbackPort1 = NULL;
-    serialPort_t* loopbackPort2 = NULL;
+    serialPort_t *loopbackPort1 = NULL;
+    serialPort_t *loopbackPort2 = NULL;
 #endif
 
     initEEPROM();
@@ -163,6 +170,8 @@ int main(void)
         pwm_params.idlePulse = mcfg.neutral3d;
     if (pwm_params.motorPwmRate > 500)
         pwm_params.idlePulse = 0; // brushed motors
+    pwm_params.syncPWM = feature(FEATURE_SYNCPWM);
+    pwm_params.fastPWM = feature(FEATURE_FASTPWM);
     pwm_params.servoCenterPulse = mcfg.midrc;
     pwm_params.failsafeThreshold = cfg.failsafe_detect_threshold;
     switch (mcfg.power_adc_channel) {
@@ -227,10 +236,10 @@ int main(void)
         setupSoftSerialSecondary(mcfg.softserial_2_inverted);
 
 #ifdef SOFTSERIAL_LOOPBACK
-        loopbackPort1 = (serialPort_t*)&(softSerialPorts[0]);
+        loopbackPort1 = (serialPort_t *)(&softSerialPorts[0]));
         serialPrint(loopbackPort1, "SOFTSERIAL 1 - LOOPBACK ENABLED\r\n");
 
-        loopbackPort2 = (serialPort_t*)&(softSerialPorts[1]);
+        loopbackPort2 = (serialPort_t *)(&softSerialPorts[1]));
         serialPrint(loopbackPort2, "SOFTSERIAL 2 - LOOPBACK ENABLED\r\n");
 #endif
         //core.mainport = (serialPort_t*)&(softSerialPorts[0]); // Uncomment to switch the main port to use softserial.
@@ -247,6 +256,10 @@ int main(void)
     calibratingB = CALIBRATING_BARO_CYCLES;             // 10 seconds init_delay + 200 * 25 ms = 15 seconds before ground pressure settles
     f.SMALL_ANGLE = 1;
 
+
+	CubeInit();
+	
+	
     // loopy
     while (1) {
         loop();

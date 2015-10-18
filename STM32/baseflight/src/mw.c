@@ -10,6 +10,12 @@
 
 #include "buzzer.h"
 
+#include "vector.h"
+#include "matrix44.h"
+#include "quaternion.h"
+#include "cube.h"
+
+
 flags_t f;
 int16_t debug[4];
 uint32_t currentTime = 0;
@@ -57,11 +63,14 @@ int16_t nav[2];
 int16_t nav_rated[2];               // Adding a rate controller to the navigation to make it smoother
 int8_t nav_mode = NAV_MODE_NONE;    // Navigation mode
 uint8_t GPS_numCh;                  // Number of channels
-uint8_t GPS_svinfo_chn[16];         // Channel number
-uint8_t GPS_svinfo_svid[16];        // Satellite ID
-uint8_t GPS_svinfo_quality[16];     // Bitfield Qualtity
-uint8_t GPS_svinfo_cno[16];         // Carrier to Noise Ratio (Signal Strength)
+uint8_t GPS_svinfo_chn[32];         // Channel number
+uint8_t GPS_svinfo_svid[32];        // Satellite ID
+uint8_t GPS_svinfo_quality[32];     // Bitfield Qualtity
+uint8_t GPS_svinfo_cno[32];         // Carrier to Noise Ratio (Signal Strength)
 uint32_t GPS_update_rate[2];        // GPS coordinates updating rate (column 0 = last update time, 1 = current update ms)
+uint32_t GPS_svinfo_rate[2];        // GPS svinfo updating rate (column 0 = last update time, 1 = current update ms)
+uint32_t GPS_HorizontalAcc;         // Horizontal accuracy estimate (mm)
+uint32_t GPS_VerticalAcc;           // Vertical accuracy estimate (mm)
 
 // Automatic ACC Offset Calibration
 bool AccInflightCalibrationArmed = false;
@@ -107,20 +116,29 @@ void annexCode(void)
     static int32_t vbatCycleTime = 0;
 
     // PITCH & ROLL only dynamic PID adjustemnt,  depending on throttle value
-    if (rcData[THROTTLE] < cfg.tpa_breakpoint) {
+    if (rcData[THROTTLE] < cfg.tpa_breakpoint) 
+	{
         prop2 = 100;
-    } else {
-        if (rcData[THROTTLE] < 2000) {
+    } 
+	else 
+	{
+        if (rcData[THROTTLE] < 2000) 
+		{
             prop2 = 100 - (uint16_t)cfg.dynThrPID * (rcData[THROTTLE] - cfg.tpa_breakpoint) / (2000 - cfg.tpa_breakpoint);
-        } else {
+        } 
+		else 
+		{
             prop2 = 100 - cfg.dynThrPID;
         }
     }
 
-    for (axis = 0; axis < 3; axis++) {
-        tmp = min(abs(rcData[axis] - mcfg.midrc), 500);
+    for (axis = 0; axis < 3; axis++) 
+	{
+        tmp = min(abs(rcData[axis] - mcfg.midrc), 500); // tmp = [0:500]
+		
         if (axis != 2) {        // ROLL & PITCH
-            if (cfg.deadband) {
+            if (cfg.deadband) 
+			{
                 if (tmp > cfg.deadband) {
                     tmp -= cfg.deadband;
                 } else {
@@ -128,21 +146,28 @@ void annexCode(void)
                 }
             }
 
-            tmp2 = tmp / 100;
+            tmp2 = tmp / 100; // tmp2 = [0:5]
             rcCommand[axis] = lookupPitchRollRC[tmp2] + (tmp - tmp2 * 100) * (lookupPitchRollRC[tmp2 + 1] - lookupPitchRollRC[tmp2]) / 100;
-            prop1 = 100 - (uint16_t)cfg.rollPitchRate * tmp / 500;
+            prop1 = 100 - (uint16_t)cfg.rollPitchRate[axis] * tmp / 500;
             prop1 = (uint16_t)prop1 * prop2 / 100;
-        } else {                // YAW
-            if (cfg.yawdeadband) {
+        
+		} 
+		else 
+		{
+			// YAW
+            if (cfg.yawdeadband) 
+			{
                 if (tmp > cfg.yawdeadband) {
                     tmp -= cfg.yawdeadband;
                 } else {
                     tmp = 0;
                 }
             }
-            rcCommand[axis] = tmp * -mcfg.yaw_control_direction;
+            
+			rcCommand[axis] = tmp * -mcfg.yaw_control_direction;
             prop1 = 100 - (uint16_t)cfg.yawRate * abs(tmp) / 500;
         }
+		
         dynP8[axis] = (uint16_t)cfg.P8[axis] * prop1 / 100;
         dynI8[axis] = (uint16_t)cfg.I8[axis] * prop1 / 100;
         dynD8[axis] = (uint16_t)cfg.D8[axis] * prop1 / 100;
@@ -150,13 +175,14 @@ void annexCode(void)
             rcCommand[axis] = -rcCommand[axis];
     }
 
+	// throttle
     tmp = constrain(rcData[THROTTLE], mcfg.mincheck, 2000);
     tmp = (uint32_t)(tmp - mcfg.mincheck) * 1000 / (2000 - mcfg.mincheck);       // [MINCHECK;2000] -> [0;1000]
-    tmp2 = tmp / 100;
+    tmp2 = tmp / 100; // tmp2 = [0:10]
     rcCommand[THROTTLE] = lookupThrottleRC[tmp2] + (tmp - tmp2 * 100) * (lookupThrottleRC[tmp2 + 1] - lookupThrottleRC[tmp2]) / 100;    // [0;1000] -> expo -> [MINTHROTTLE;MAXTHROTTLE]
 
     if (f.HEADFREE_MODE) {
-        float radDiff = (heading - headFreeModeHold) * M_PI / 180.0f;
+        float radDiff = (heading - headFreeModeHold) * M_PI / 180.0f; // angle to radian
         float cosDiff = cosf(radDiff);
         float sinDiff = sinf(radDiff);
         int16_t rcCommand_PITCH = rcCommand[PITCH] * cosDiff + rcCommand[ROLL] * sinDiff;
@@ -170,7 +196,7 @@ void annexCode(void)
             vbatRaw -= vbatRaw / 8;
             vbatRaw += adcGetChannel(ADC_BATTERY);
             vbat = batteryAdcToVoltage(vbatRaw / 8);
-            
+
             if (mcfg.power_adc_channel > 0) {
                 amperageRaw -= amperageRaw / 8;
                 amperageRaw += adcGetChannel(ADC_EXTERNAL_CURRENT);
@@ -179,7 +205,7 @@ void annexCode(void)
                 mAhdrawn = mAhdrawnRaw / (3600 * 100);
                 vbatCycleTime = 0;
             }
-            
+
         }
         // Buzzers for low and critical battery levels
         if (vbat <= batteryCriticalVoltage)
@@ -213,12 +239,16 @@ void annexCode(void)
     }
 #endif
 
-    if ((int32_t)(currentTime - calibratedAccTime) >= 0) {
-        if (!f.SMALL_ANGLE) {
+    if ((int32_t)(currentTime - calibratedAccTime) >= 0) 
+	{
+        if (!f.SMALL_ANGLE) 
+		{
             f.ACC_CALIBRATED = 0; // the multi uses ACC and is not calibrated or is too much inclinated
             LED0_TOGGLE;
             calibratedAccTime = currentTime + 500000;
-        } else {
+        } 
+		else 
+		{
             f.ACC_CALIBRATED = 1;
         }
     }
@@ -283,7 +313,8 @@ void computeRC(void)
 
 static void mwArm(void)
 {
-    if (calibratingG == 0 && f.ACC_CALIBRATED) {
+    if (calibratingG == 0 && f.ACC_CALIBRATED) 
+	{
         // TODO: feature(FEATURE_FAILSAFE) && failsafeCnt < 2
         // TODO: && ( !feature || ( feature && ( failsafecnt > 2) )
         if (!f.ARMED) {         // arm now!
@@ -336,8 +367,11 @@ static void pidMultiWii(void)
 
     // **** PITCH & ROLL & YAW PID ****
     prop = max(abs(rcCommand[PITCH]), abs(rcCommand[ROLL])); // range [0;500]
-    for (axis = 0; axis < 3; axis++) {
-        if ((f.ANGLE_MODE || f.HORIZON_MODE) && axis < 2) { // MODE relying on ACC
+	
+    for (axis = 0; axis < 3; axis++)
+	{
+        if ((f.ANGLE_MODE || f.HORIZON_MODE) && axis < 2)  // roll,pitch
+		{ // MODE relying on ACC
             // 50 degrees max inclination
             errorAngle = constrain(2 * rcCommand[axis] + GPS_angle[axis], -((int)mcfg.max_angle_inclination), +mcfg.max_angle_inclination) - angle[axis] + cfg.angleTrim[axis];
             PTermACC = errorAngle * cfg.P8[PIDLEVEL] / 100; // 32 bits is needed for calculation: errorAngle*P8[PIDLEVEL] could exceed 32768   16 bits is ok for result
@@ -346,7 +380,9 @@ static void pidMultiWii(void)
             errorAngleI[axis] = constrain(errorAngleI[axis] + errorAngle, -10000, +10000); // WindUp
             ITermACC = (errorAngleI[axis] * cfg.I8[PIDLEVEL]) >> 12;
         }
-        if (!f.ANGLE_MODE || f.HORIZON_MODE || axis == 2) { // MODE relying on GYRO or YAW axis
+        
+		if (!f.ANGLE_MODE || f.HORIZON_MODE || axis == 2)  // yaw
+		{ // MODE relying on GYRO or YAW axis
             error = (int32_t)rcCommand[axis] * 10 * 8 / cfg.P8[axis];
             error -= gyroData[axis];
 
@@ -357,18 +393,26 @@ static void pidMultiWii(void)
                 errorGyroI[axis] = 0;
             ITermGYRO = (errorGyroI[axis] / 125 * cfg.I8[axis]) >> 6;
         }
-        if (f.HORIZON_MODE && axis < 2) {
+        
+		if (f.HORIZON_MODE && axis < 2) // roll, pitch
+		{
             PTerm = (PTermACC * (500 - prop) + PTermGYRO * prop) / 500;
             ITerm = (ITermACC * (500 - prop) + ITermGYRO * prop) / 500;
-        } else {
-            if (f.ANGLE_MODE && axis < 2) {
+        }
+		else 
+		{
+            if (f.ANGLE_MODE && axis < 2)  // roll, pitch
+			{
                 PTerm = PTermACC;
                 ITerm = ITermACC;
-            } else {
+            } 
+			else 
+			{
                 PTerm = PTermGYRO;
                 ITerm = ITermGYRO;
             }
         }
+		
 
         PTerm -= (int32_t)gyroData[axis] * dynP8[axis] / 10 / 8; // 32 bits is needed for calculation
         delta = gyroData[axis] - lastGyro[axis];
@@ -402,7 +446,8 @@ static void pidRewrite(void)
             // calculate error and limit the angle to 50 degrees max inclination
             errorAngle = (constrain(rcCommand[axis] + GPS_angle[axis], -500, +500) - angle[axis] + cfg.angleTrim[axis]) / 10.0f; // 16 bits is ok here
             if (!f.ANGLE_MODE) { //control is GYRO based (ACRO and HORIZON - direct sticks control is applied to rate PID
-                AngleRateTmp = ((int32_t)(cfg.rollPitchRate + 27) * rcCommand[axis]) >> 4;
+                AngleRateTmp = ((int32_t)(cfg.rollPitchRate[axis] + 27) * rcCommand[axis]) >> 4;
+
                 if (f.HORIZON_MODE) {
                     // mix up angle error to desired AngleRateTmp to add a little auto-level feel
                     AngleRateTmp += (errorAngle * cfg.I8[PIDLEVEL]) >> 8;
@@ -429,7 +474,7 @@ static void pidRewrite(void)
 
         // limit maximum integrator value to prevent WindUp - accumulating extreme values when system is saturated.
         // I coefficient (I8) moved before integration to make limiting independent from PID settings
-        errorGyroI[axis] = constrain(errorGyroI[axis], (int32_t)-GYRO_I_MAX << 13, (int32_t)+GYRO_I_MAX << 13);
+        errorGyroI[axis] = constrain(errorGyroI[axis], (int32_t)(-GYRO_I_MAX) << 13, (int32_t)(+GYRO_I_MAX) << 13);
         ITerm = errorGyroI[axis] >> 13;
 
         //-----calculate D-term
@@ -480,7 +525,12 @@ void loop(void)
 #endif
     bool isThrottleLow = false;
     bool rcReady = false;
-
+//	uint32_t crc = 0;	
+//	uint16_t thro = 0;
+//	uint16_t delayTime = 2;
+//	static int16_t oldRcData4 = 1000;
+//	static int motorIdx = 0;
+	
     // calculate rc stuff from serial-based receivers (spek/sbus)
     if (feature(FEATURE_SERIALRX)) {
         switch (mcfg.serialrx_type) {
@@ -604,7 +654,7 @@ void loop(void)
                         calibratingB = 10; // calibrate baro to new ground level (10 * 25 ms = ~250 ms non blocking)
                     if (!sensors(SENSOR_MAG))
                         heading = 0; // reset heading to zero after gyro calibration
-                // Inflight ACC Calibration
+                    // Inflight ACC Calibration
                 } else if (feature(FEATURE_INFLIGHT_ACC_CAL) && (rcSticks == THR_LO + YAW_LO + PIT_HI + ROL_HI)) {
                     if (AccInflightCalibrationMeasurementDone) {        // trigger saving into eeprom after landing
                         AccInflightCalibrationMeasurementDone = false;
@@ -704,7 +754,7 @@ void loop(void)
         } else {
             f.ANGLE_MODE = 0;   // failsafe support
             f.FW_FAILSAFE_RTH_ENABLE = 0;
-          }
+        }
 
         if (rcOptions[BOXHORIZON]) {
             f.ANGLE_MODE = 0;
@@ -753,13 +803,18 @@ void loop(void)
 #endif
 
 #ifdef  MAG
-        if (sensors(SENSOR_ACC) || sensors(SENSOR_MAG)) {
-            if (rcOptions[BOXMAG]) {
-                if (!f.MAG_MODE) {
+        if (sensors(SENSOR_ACC) || sensors(SENSOR_MAG)) 
+		{
+            if (rcOptions[BOXMAG]) 
+			{
+                if (!f.MAG_MODE) 
+				{
                     f.MAG_MODE = 1;
                     magHold = heading;
                 }
-            } else {
+            } 
+			else 
+			{
                 f.MAG_MODE = 0;
             }
             if (rcOptions[BOXHEADFREE]) {
@@ -833,7 +888,7 @@ void loop(void)
             if (feature(FEATURE_FAILSAFE) && failsafeCnt > (6 * cfg.failsafe_delay)) {
                 f.PASSTHRU_MODE = 0;
                 f.ANGLE_MODE = 1;
-                for (i = 0; i < 3; i++) 
+                for (i = 0; i < 3; i++)
                     rcData[i] = mcfg.midrc;
                 rcData[THROTTLE] = cfg.failsafe_throttle;
                 // No GPS?  Force a soft left turn.
@@ -855,48 +910,50 @@ void loop(void)
             } else if (disarmTime != 0)
                 disarmTime = 0;
         }
+		
+		
     } else {                        // not in rc loop
         static int taskOrder = 0;   // never call all function in the same loop, to avoid high delay spikes
         switch (taskOrder) {
-        case 0:
-            taskOrder++;
+            case 0:
+                taskOrder++;
 #ifdef MAG
-            if (sensors(SENSOR_MAG) && Mag_getADC())
-                break;
+                if (sensors(SENSOR_MAG) && Mag_getADC())
+                    break;
 #endif
-        case 1:
-            taskOrder++;
+            case 1:
+                taskOrder++;
 #ifdef BARO
-            if (sensors(SENSOR_BARO) && Baro_update())
-                break;
+                if (sensors(SENSOR_BARO) && Baro_update())
+                    break;
 #endif
-        case 2:
-            taskOrder++;
+            case 2:
+                taskOrder++;
 #ifdef BARO
-            if (sensors(SENSOR_BARO) && getEstimatedAltitude())
-                break;
+                if (sensors(SENSOR_BARO) && getEstimatedAltitude())
+                    break;
 #endif
-        case 3:
-            // if GPS feature is enabled, gpsThread() will be called at some intervals to check for stuck
-            // hardware, wrong baud rates, init GPS if needed, etc. Don't use SENSOR_GPS here as gpsThread() can and will
-            // change this based on available hardware
-            taskOrder++;
+            case 3:
+                // if GPS feature is enabled, gpsThread() will be called at some intervals to check for stuck
+                // hardware, wrong baud rates, init GPS if needed, etc. Don't use SENSOR_GPS here as gpsThread() can and will
+                // change this based on available hardware
+                taskOrder++;
 #ifdef GPS
-            if (feature(FEATURE_GPS)) {
-                gpsThread();
-                break;
-            }
+                if (feature(FEATURE_GPS)) {
+                    gpsThread();
+                    break;
+                }
 #endif
-        case 4:
-            taskOrder = 0;
+            case 4:
+                taskOrder = 0;
 #ifdef SONAR
-            if (sensors(SENSOR_SONAR)) {
-                Sonar_update();
-            }
+                if (sensors(SENSOR_SONAR)) {
+                    Sonar_update();
+                }
 #endif
-            if (feature(FEATURE_VARIO) && f.VARIO_MODE)
-                mwVario();
-            break;
+                if (feature(FEATURE_VARIO) && f.VARIO_MODE)
+                    mwVario();
+                break;
         }
     }
 
@@ -980,7 +1037,7 @@ void loop(void)
                 float sin_yaw_y = sinf(heading * 0.0174532925f);
                 float cos_yaw_x = cosf(heading * 0.0174532925f);
                 if (!f.FIXED_WING) {
-                	if (cfg.nav_slew_rate) {
+                    if (cfg.nav_slew_rate) {
                         nav_rated[LON] += constrain(wrap_18000(nav[LON] - nav_rated[LON]), -cfg.nav_slew_rate, cfg.nav_slew_rate); // TODO check this on uint8
                         nav_rated[LAT] += constrain(wrap_18000(nav[LAT] - nav_rated[LAT]), -cfg.nav_slew_rate, cfg.nav_slew_rate);
                         GPS_angle[ROLL] = (nav_rated[LON] * cos_yaw_x - nav_rated[LAT] * sin_yaw_y) / 10;
@@ -988,12 +1045,12 @@ void loop(void)
                     } else {
                         GPS_angle[ROLL] = (nav[LON] * cos_yaw_x - nav[LAT] * sin_yaw_y) / 10;
                         GPS_angle[PITCH] = (nav[LON] * sin_yaw_y + nav[LAT] * cos_yaw_x) / 10;
-                	}
+                    }
                 } else fw_nav();
             } else {
-            	GPS_angle[ROLL] = 0;
-            	GPS_angle[PITCH] = 0;
-            	GPS_angle[YAW] = 0;
+                GPS_angle[ROLL] = 0;
+                GPS_angle[PITCH] = 0;
+                GPS_angle[YAW] = 0;
             }
         }
 #endif
@@ -1004,5 +1061,84 @@ void loop(void)
         mixTable();
         writeServos();
         writeMotors();
+		
+		
+		//serialPrint(core.mainport, "123");
+		//printf("1234");
+		//serialWrite(core.mainport, 1);
+		CubeAttitude();
+		CubeControl();
+		CubeWriteMotors();
     }
+	
+	
+	
+	
+	
+	
+/*
+		// 990 ~ 2010
+		thro = rcData[THROTTLE] - 990;
+		thro = thro / 4;
+		crc = 0;
+		const int rcD4 = (int)rcData[AUX1];
+		const int offsetRc = rcD4 - oldRcData4;
+		const bool isRcD4Neutral = (rcD4 > 1200) && (rcD4 < 1800);
+	
+		if (offsetRc < -300)
+		{
+			if (!isRcD4Neutral)
+			{
+				--motorIdx;
+				if (motorIdx < 0)
+					motorIdx = 23;
+			}
+
+			oldRcData4 = rcD4;
+		}
+		else if (offsetRc > 300)
+		{
+			if (!isRcD4Neutral)
+			{
+				motorIdx += 1;
+				if (motorIdx >= 24)
+					motorIdx = 0;
+			}
+			
+			oldRcData4 = rcD4;
+		}
+	
+		
+		// Serial Send Delay
+		if (isSerialTransmitBufferEmpty(core.mainport))
+			delay(delayTime);
+		
+		serialWrite(core.mainport, 'S');
+		for (i=0; i < 24; ++i)
+		{
+			// Serial Send Delay
+			if (isSerialTransmitBufferEmpty(core.mainport))
+				delay(delayTime);
+
+			if (motorIdx == i)
+			{
+				crc += thro;
+				serialWrite(core.mainport, thro);
+			}
+			else
+				serialWrite(core.mainport, 0);
+		}
+
+		// Serial Send Delay
+		crc = crc % 255;
+		if (isSerialTransmitBufferEmpty(core.mainport))
+			delay(delayTime);		
+		serialWrite(core.mainport, crc);
+
+		// Serial Send Delay
+		if (isSerialTransmitBufferEmpty(core.mainport))
+			delay(delayTime);
+		serialWrite(core.mainport, 'E');				
+*/	
+		
 }
