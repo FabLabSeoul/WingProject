@@ -11,6 +11,7 @@
 #include "GraphDialog.h"
 #include "stringfunc.h"
 
+#pragma comment(lib, "winmm.lib")
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -70,6 +71,7 @@ BEGIN_MESSAGE_MAP(CSerialMonitorDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_GRAPH, &CSerialMonitorDlg::OnBnClickedButtonGraph)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_RADIO_MEM, &CSerialMonitorDlg::OnBnClickedRadioMem)
+	ON_STN_CLICKED(IDC_STATIC_FAST_TEXT, &CSerialMonitorDlg::OnStnClickedStaticFastText)
 END_MESSAGE_MAP()
 
 
@@ -110,7 +112,7 @@ BOOL CSerialMonitorDlg::OnInitDialog()
 
 	m_PortCombobox.InitList();
 
-	int baudRate[] = { 9600, 14400, 19200, 38400, 56000, 57600, 115200 };
+	int baudRate[] = { 9600, 14400, 19200, 38400, 56000, 57600, 115200, 912600 };
 	for (int i = 0; i < ARRAYSIZE(baudRate); ++i)
 	{
 		TCHAR brateName[32];
@@ -514,6 +516,10 @@ void CSerialMonitorDlg::OnBnClickedRadio2()
 {
 	//m_isFastMode = true;
 	m_mode = MODE_FAST1;
+
+	CRect r;
+	m_FastReceiveText.GetWindowRect(r);
+
 }
 
 void CSerialMonitorDlg::OnBnClickedRadioMem()
@@ -646,3 +652,7 @@ void CSerialMonitorDlg::SaveConfigFile()
 }
 
 
+void CSerialMonitorDlg::OnStnClickedStaticFastText()
+{
+	// TODO: Add your control notification handler code here
+}
