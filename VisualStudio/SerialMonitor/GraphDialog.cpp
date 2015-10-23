@@ -82,16 +82,6 @@ void CGraphDialog::OnBnClickedOk()
 void CGraphDialog::OnDestroy()
 {
 	CDialogEx::OnDestroy();
-
-	for each (auto &it in m_plotWindows)
-	{
-		if (it.wnd)
-		{
-			it.wnd->DestroyWindow();
-			delete it.wnd;
-		}
-	}
-	m_plotWindows.clear();
 }
 
 
@@ -125,6 +115,16 @@ void CGraphDialog::OnClose()
 {
 	// È­¸éÀÌ ´ÝÄ¥ ¶§ È£ÃâµÈ´Ù. Caption X button click
 	g_MainDlg->ShowGraphWindow(false);
+
+	for each (auto &it in m_plotWindows)
+	{
+		if (it.wnd)
+		{
+			it.wnd->DestroyWindow();
+			delete it.wnd;
+		}
+	}
+	m_plotWindows.clear();
 
 	CDialogEx::OnClose();
 }

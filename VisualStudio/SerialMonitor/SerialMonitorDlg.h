@@ -101,6 +101,7 @@ public:
 	afx_msg void OnBnClickedButtonGraph();
 	afx_msg void OnClose();
 	afx_msg void OnBnClickedRadioMem();
+	afx_msg void OnStnClickedStaticFastText();
 };
 
 

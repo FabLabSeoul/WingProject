@@ -24,8 +24,8 @@ bool CBufferedSerial::ReadStringUntil(const char ch, OUT string &out)
 	const int curT = timeGetTime();
 	if (0 == m_lastReturnTime)
 		m_lastReturnTime = curT;
-	const int elapseTime = curT - m_lastReturnTime;
 
+	const int elapseTime = curT - m_lastReturnTime;
 	const bool isFull = (m_headIndex == (m_tailIndex + 1) % MAX_BUFFERSIZE); // is full?
 
 	int readBytes = 0;
@@ -47,15 +47,24 @@ bool CBufferedSerial::ReadStringUntil(const char ch, OUT string &out)
 	}
 	else
 	{
-		int remainBufferSize = 0;
-		if (m_tailIndex == m_headIndex)
-			remainBufferSize = MAX_BUFFERSIZE - 1;
-		else if (m_tailIndex > m_headIndex)
-			remainBufferSize = MAX_BUFFERSIZE - m_tailIndex - 1;
-		else
-			remainBufferSize = m_tailIndex - m_headIndex - 1;
+		int remainBufferSize1 = 0;
+		int remainBufferSize2 = 0;
 
-		readBytes = ReadData(&m_ringBuffer[m_tailIndex], remainBufferSize);
+		if (m_tailIndex >= m_headIndex)
+		{
+			remainBufferSize1 = MAX_BUFFERSIZE - m_tailIndex - 1;
+			remainBufferSize2 = m_headIndex - 1;
+		}
+		else
+		{
+			remainBufferSize1 = m_headIndex - m_tailIndex - 1;
+		}
+
+		if (remainBufferSize1 > 0)
+			readBytes += ReadData(&m_ringBuffer[m_tailIndex], remainBufferSize1);
+		// 요청한 버퍼크기 만큼 정보를 읽어 왔다면, 더 읽을게 있을 수 있으므로, 한번더 Read 한다.
+		if ((remainBufferSize1 == readBytes) && (remainBufferSize2 > 0))
+			readBytes += ReadData(&m_ringBuffer[0], remainBufferSize2);
 	}
 
 	if (readBytes < 0) // error !!
@@ -66,13 +75,16 @@ bool CBufferedSerial::ReadStringUntil(const char ch, OUT string &out)
 
 	// 읽은 위치부터 ch 문자가 있는지 검사한다.
 	int findChIndex = -1;
-	for (int i = m_tailIndex; i < (m_tailIndex + readBytes); ++i)
+	int i = 0; 
+	while (i < readBytes)
 	{
-		if (ch == m_ringBuffer[i])
+		const int idx = (m_tailIndex + i) % MAX_BUFFERSIZE;
+		if (ch == m_ringBuffer[idx])
 		{
-			findChIndex = i;
+			findChIndex = idx;
 			break;
 		}
+		++i;
 	}
 
 	// ch를 찾았다면, head부터 findChIndex까지 out 저장한다.
