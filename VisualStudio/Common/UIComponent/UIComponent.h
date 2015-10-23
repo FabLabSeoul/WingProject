@@ -14,6 +14,6 @@ using std::pair;
 #include "bpctrlanchormap.h"
 #include "ComPortCombo.h"
 #include "C3DView.h"
-#include "C3DPhysxView.h"
+//#include "C3DPhysxView.h"
 
 

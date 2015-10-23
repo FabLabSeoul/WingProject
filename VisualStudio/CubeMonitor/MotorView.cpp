@@ -5,7 +5,6 @@
 #include "CubeMonitor.h"
 #include "MotorView.h"
 #include "afxdialogex.h"
-#include "C3DView.h"
 
 
 // CMotorView dialog

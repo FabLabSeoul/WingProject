@@ -111,9 +111,6 @@
     <ClInclude Include="..\Common\UIComponent\C3DView.h">
       <Filter>UIComponent</Filter>
     </ClInclude>
-    <ClInclude Include="..\Common\UIComponent\C3DPhysxView.h">
-      <Filter>UIComponent</Filter>
-    </ClInclude>
     <ClInclude Include="Cube3DPane.h">
       <Filter>Pane</Filter>
     </ClInclude>
@@ -225,9 +222,6 @@
       <Filter>Pane</Filter>
     </ClCompile>
     <ClCompile Include="..\Common\UIComponent\C3DView.cpp">
-      <Filter>UIComponent</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Common\UIComponent\C3DPhysxView.cpp">
       <Filter>UIComponent</Filter>
     </ClCompile>
     <ClCompile Include="Cube3DPane.cpp">

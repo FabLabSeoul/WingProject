@@ -11,7 +11,6 @@
 #include "CubeMonitorDoc.h"
 #include "CubeMonitorView.h"
 #include <mmsystem.h>
-#include "C3DView.h"
 
 
 #ifdef _DEBUG
