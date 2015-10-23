@@ -10,6 +10,7 @@
 
 
 // C3DDialog dialog
+class cCubeFlight;
 class C3DView : public CDockablePaneChildView
 {
 public:
@@ -27,16 +28,14 @@ public:
 
 	void SetFixedFrame(const bool isFixedFrame);
 
+	cCubeFlight *m_imuModel;
+	cCubeFlight *m_cubeFlight;
+
 
 protected:
 	bool m_isInitDx = false;
 	bool m_isFixedFrame = true; // 고정 프레임모드시 true, (100 frame)
-	graphic::Box m_box;
-	graphic::cSphere m_sphere;
-	graphic::cCube m_cube;
 
-	Matrix44 m_cubeTm;
-	Matrix44 m_rotateTm;
 	bool m_LButtonDown = false;
 	bool m_RButtonDown = false;
 	bool m_MButtonDown = false;

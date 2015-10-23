@@ -55,6 +55,7 @@ BEGIN_MESSAGE_MAP(CCubeSerialView, CDockablePaneChildView)
 	ON_BN_CLICKED(IDC_CHECK_SHOWTHRUST, &CCubeSerialView::OnBnClickedCheckShowthrust)
 	ON_BN_CLICKED(IDC_CHECK_SHOWIDEALTHRUST, &CCubeSerialView::OnBnClickedCheckShowidealthrust)
 	ON_BN_CLICKED(IDC_CHECK_SHOWCUBETHRUST, &CCubeSerialView::OnBnClickedCheckShowcubethrust)
+	ON_BN_CLICKED(IDC_BUTTON_RESET_LOCALSPACE, &CCubeSerialView::OnBnClickedButtonResetLocalspace)
 END_MESSAGE_MAP()
 
 
@@ -224,7 +225,7 @@ bool CCubeSerialView::SyncIMU()
 			qy.Euler(Vector3(0, (float)yaw, 0));
 
 			Quaternion q = qy * qp * qr;
-			cController::Get()->GetCubeFlight().m_tm = q.GetMatrix();
+			g_3DView->m_imuModel->m_tm = q.GetMatrix();
 
 			CString attitudeStr;
 			attitudeStr.Format(L"%f %f %f", -roll*0.1f, pitch*0.1f, (float)yaw);
@@ -258,7 +259,7 @@ bool CCubeSerialView::SyncIMU()
 void CCubeSerialView::OnBnClickedButtonResetHeading()
 {
 	m_resetHead = true;
-	cController::Get()->GetCubeFlight().ResetHeading();
+	g_3DView->m_imuModel->ResetHeading();
 }
 
 
@@ -266,7 +267,7 @@ void CCubeSerialView::OnBnClickedCheckShowthrust()
 {
 	UpdateData();
 
-	cController::Get()->GetCubeFlight().SetRenderOption(
+	g_3DView->m_imuModel->SetRenderOption(
 		m_IsShowThrust ? true : false,
 		m_IsShowIdealThrust ? true : false,
 		m_IsShowCubeThrust? true : false);
@@ -277,18 +278,25 @@ void CCubeSerialView::OnBnClickedCheckShowidealthrust()
 {
 	UpdateData();
 
-	cController::Get()->GetCubeFlight().SetRenderOption(
+	g_3DView->m_imuModel->SetRenderOption(
 		m_IsShowThrust ? true : false,
 		m_IsShowIdealThrust ? true : false,
 		m_IsShowCubeThrust ? true : false);
 }
 
+
 void CCubeSerialView::OnBnClickedCheckShowcubethrust()
 {
 	UpdateData();
 
-	cController::Get()->GetCubeFlight().SetRenderOption(
+	g_3DView->m_imuModel->SetRenderOption(
 		m_IsShowThrust ? true : false,
 		m_IsShowIdealThrust ? true : false,
 		m_IsShowCubeThrust ? true : false);
+}
+
+
+void CCubeSerialView::OnBnClickedButtonResetLocalspace()
+{
+	g_3DView->m_imuModel->ResetLocalSpace();	
 }

@@ -5,6 +5,7 @@
 #include "CubeMonitor.h"
 #include "ReceiverView.h"
 #include "afxdialogex.h"
+#include "C3DView.h"
 
 
 
@@ -177,7 +178,7 @@ void CReceiverView::SyncReceiver()
 			const float mov_z = (float)(forward - 1500);// / (float)(2010 - 988);
 			Vector3 move(mov_x, mov_y, mov_z);
 
-			cController::Get()->GetCubeFlight().Thrust(-rotation, move);
+			g_3DView->m_imuModel->Thrust(-rotation, move);
 
 			m_syncState = 3;
 		}
@@ -219,7 +220,7 @@ void CReceiverView::SyncReceiver()
 			m_qr = qr;
 			m_qp = qp;
 			m_qy = qy;
-			cController::Get()->GetCubeFlight().m_tm = q.GetMatrix();
+			g_3DView->m_imuModel->m_tm = q.GetMatrix();
 
 			m_errorCount = 0;
 			m_syncState = 5;
@@ -245,7 +246,7 @@ void CReceiverView::SyncReceiver()
 		unsigned char buffer[24];
 		if (RecvCommand(cController::Get()->GetSerial(), MSP_CUBE_MOTOR, buffer, sizeof(buffer)) > 0)
 		{
-			cController::Get()->GetCubeFlight().CubeThrust(buffer);
+			g_3DView->m_imuModel->CubeThrust(buffer);
 			m_errorCount = 0;
 			m_syncState = 0;
 		}
@@ -276,10 +277,10 @@ void CReceiverView::SyncReceiver()
 			v.y = *(float*)&buffer[idx+=4];
 			v.z = *(float*)&buffer[idx += 4];
 
-			const Matrix44 tm = cController::Get()->GetCubeFlight().m_tm *
-				cController::Get()->GetCubeFlight().m_offset;
-			Vector3 dir = Vector3(0, 0, 1).MultiplyNormal(tm);
-			dir.Normalize();
+			const Matrix44 tm = g_3DView->m_imuModel->m_tm *
+				g_3DView->m_imuModel->m_offset;
+ 			Vector3 dir = Vector3(0, 0, 1).MultiplyNormal(tm);
+ 			dir.Normalize();
 
 			Quaternion q;
 			q.x = *(float*)&buffer[idx+=4];

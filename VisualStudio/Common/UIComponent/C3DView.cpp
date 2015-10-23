@@ -14,12 +14,15 @@ C3DView *g_3DView = NULL;
 // C3DDialog dialog
 C3DView::C3DView(CWnd* pParent /*=NULL*/)
 	: CDockablePaneChildView(C3DView::IDD, pParent)
+	, m_imuModel(NULL)
 {
 	g_3DView = this;
 }
 
 C3DView::~C3DView()
 {
+	SAFE_DELETE(m_imuModel);
+	SAFE_DELETE(m_cubeFlight);
 	graphic::ReleaseRenderer();
 }
 
@@ -77,7 +80,8 @@ BOOL C3DView::OnInitDialog()
 	graphic::cResourceManager::Get()->SetMediaDirectory("./");
 	GetMainCamera()->SetCamera(Vector3(12, 20, -10), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	GetMainCamera()->SetProjection(D3DX_PI / 4.f, (float)WINSIZE_X / (float)WINSIZE_Y, 1.f, 1000.0f);
-	GetMainCamera()->SetEyePos(Vector3(17, 20, -25));
+	GetMainCamera()->SetEyePos(Vector3(20, 30, -35));
+	GetMainCamera()->SetLookAt(Vector3(10, 0, 0));
 
 	GetDevice()->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 
@@ -90,14 +94,12 @@ BOOL C3DView::OnInitDialog()
 
 	m_isInitDx = true;
 
-	//m_box.SetBox(Vector3(0, 0, 0), Vector3(2, 2, 2));
-	m_sphere.Create(10, 10, 10);
-	m_sphere.GetMaterial().InitBlue();
-	m_sphere.GetMaterial().GetMtrl().Emissive = *(D3DCOLORVALUE*)&Vector4(1, 1, 0, 1);
+	m_imuModel = new cCubeFlight();
+	m_imuModel->Init();
 
-	//m_cube.SetCube(Vector3(0, 0, 0), Vector3(1, 1, 1));
-	
-	cController::Get()->Init();
+	m_cubeFlight = new cCubeFlight();
+	m_cubeFlight->Init();
+
 	cController::Get()->AddUpdateObserver(this);
 
 	return TRUE;  // return TRUE unless you set the focus to a control
@@ -115,19 +117,19 @@ void C3DView::Update(const float deltaSeconds)
 	if (m_IncSeconds > 0.02f) // 너무 값이 크면, 최소 값으로 설정한다.
 		m_IncSeconds = 0.02f;
 
+// 	GetMainCamera()->SetEyePos(Vector3(20, 30, -35));
+// 	GetMainCamera()->SetLookAt(Vector3(10, 0, 0));
 
 	// 상속받는 클래스에서 구현한다.
 	UpdateBefore(m_IncSeconds);
 
 
 	GetRenderer()->Update(m_IncSeconds);
-	cController::Get()->GetCubeFlight().Update(m_IncSeconds);
-
-	static float angle = 0;
-	angle += m_IncSeconds;
-	Matrix44 mat;
-	mat.SetRotationY(angle);
-	m_cubeTm = mat;
+	//cController::Get()->GetCubeFlight().Update(m_IncSeconds);
+	if (m_imuModel)
+		m_imuModel->Update(m_IncSeconds);
+	if (m_cubeFlight)
+		m_cubeFlight->Update(m_IncSeconds);
 
 	// 출력.
 	Render();
@@ -155,15 +157,18 @@ void C3DView::Render()
 		GetRenderer()->RenderGrid();
 		GetRenderer()->RenderAxis();
 
-		//m_box.Render();
-		//m_sphere.GetMaterial().Bind();
-		//m_sphere.Render(Matrix44::Identity);
-		cController::Get()->GetCubeFlight().Render();
-
+		if (m_imuModel)
+			m_imuModel->Render(Matrix44::Identity);
+		if (m_cubeFlight)
+		{
+			Matrix44 t;
+			t.SetPosition(Vector3(20, 0, 0));
+			Matrix44 tm = m_imuModel->m_localSpaceTM * m_imuModel->m_tm * m_imuModel->m_offset;
+			m_cubeFlight->Render(tm * t);
+		}
 
 		// 파생받는 클래스에서 구현한다.
 		RenderChild();
-
 
 		GetRenderer()->RenderFPS();
 
@@ -215,9 +220,6 @@ void C3DView::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		const CPoint pos = point - m_curPos;
 		m_curPos = point;
-		Quaternion q1(GetMainCamera()->GetRight(), -pos.y * 0.01f);
-		Quaternion q2(GetMainCamera()->GetUpVector(), -pos.x * 0.01f);
-		m_rotateTm *= (q2.GetMatrix() * q1.GetMatrix());
 	}
 	else if (m_RButtonDown)
 	{

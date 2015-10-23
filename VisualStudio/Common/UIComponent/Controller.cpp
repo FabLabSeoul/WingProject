@@ -7,24 +7,13 @@
 
 cController::cController()
 {
-	m_cubeFlight = new cCubeFlight();
 	m_serialComm = new cSerialCommunication();
 }
 
 
 cController::~cController()
 {
-	SAFE_DELETE(m_cubeFlight);
 	SAFE_DELETE(m_serialComm);
-}
-
-
-// 변수들을 초기화 한다.
-bool cController::Init()
-{
-	m_cubeFlight->Init();
-
-	return true;
 }
 
 

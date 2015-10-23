@@ -17,21 +17,17 @@ public:
 	cController();
 	virtual ~cController();
 
-	bool Init();
 	bool ConnectSerial(const int portNum, const int baudRate);
 	void Update(const float deltaSeconds);
 
-	cCubeFlight& GetCubeFlight();
 	cSerialCommunication& GetSerialComm();
 	CSerial& GetSerial();
 
 
 protected:
-	cCubeFlight *m_cubeFlight;
 	cSerialCommunication *m_serialComm;
 	CSerial m_serial;
 };
 
-inline cCubeFlight& cController::GetCubeFlight() { return *m_cubeFlight;  }
 inline cSerialCommunication& cController::GetSerialComm() { return *m_serialComm;  }
 inline CSerial& cController::GetSerial() { return m_serial; }

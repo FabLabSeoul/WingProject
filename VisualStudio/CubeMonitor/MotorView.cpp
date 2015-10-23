@@ -5,6 +5,7 @@
 #include "CubeMonitor.h"
 #include "MotorView.h"
 #include "afxdialogex.h"
+#include "C3DView.h"
 
 
 // CMotorView dialog
@@ -156,7 +157,7 @@ void CMotorView::SyncMotor()
 				m_Slider[i].SetPos(power);
 			}
 
-			cController::Get()->GetCubeFlight().CubeThrust(buffer);
+			g_3DView->m_imuModel->CubeThrust(buffer);
 		}
 
 		m_syncState = 0;

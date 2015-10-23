@@ -126,9 +126,10 @@ bool cCubeFlight::Init()
 
 
 // 화면에 출력한다.
-void cCubeFlight::Render()
+void cCubeFlight::Render(const Matrix44 &worldTm)
 {
-	m_model.Render(m_tm * m_offset);
+	const Matrix44 tm = m_tm * m_offset * worldTm;
+	m_model.Render(tm);
 	
 	// 꼭지점 추력벡터 출력
 	for (int i = 0; i < 8; ++i)
@@ -153,11 +154,11 @@ void cCubeFlight::Render()
 
 		// 추력벡터 출력
 		if (m_isShowThrust)
-			m_arrow.Render(s * r * t * m_tm * m_offset);
+			m_arrow.Render(s * r * t * tm);
 		if (m_isShowIdealThrust)
-			m_arrow2.Render(s * ir * t * m_tm * m_offset);
+			m_arrow2.Render(s * ir * t * tm);
 		if (m_isShowCubeThrust)
-			m_arrow3.Render(s2 * cr * t * m_tm * m_offset);
+			m_arrow3.Render(s2 * cr * t * tm);
 
 		// 3축 모터 추력 세기 출력
 		for (int k = 0; k < 3; ++k)
@@ -165,7 +166,7 @@ void cCubeFlight::Render()
 			// 모터 추력에 따라 선 길이를 조정한다.
 			const Vector3 p0 = m_thrust[i].normal * 8;
 			const Vector3 p1 = m_thrust[i].axis[k] * m_thrust[i].power[k] / 255.f * 5 + p0;
-			m_line.SetLine(p0 * m_tm * m_offset, p1 * m_tm * m_offset, 0.2f);
+			m_line.SetLine(p0 * tm, p1 * tm, 0.2f);
 			m_line.Render();
 		}
 	}
@@ -193,6 +194,12 @@ void cCubeFlight::SetEulerAngle(const float roll, const float pitch, const float
 void cCubeFlight::ResetHeading()
 {
 	m_offset = m_tm.Inverse();
+}
+
+
+void cCubeFlight::ResetLocalSpace()
+{
+	m_localSpaceTM = (m_tm * m_offset).Inverse();
 }
 
 

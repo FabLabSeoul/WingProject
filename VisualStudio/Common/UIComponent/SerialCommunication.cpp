@@ -48,7 +48,7 @@ bool cSerialCommunication::ProcessSerialCommunicatoin(const float deltaSeconds)
 		float t, roll, pitch, yaw;
 		sscanf_s(m_buff, "Radian, %f, %f, %f, %f", &t, &roll, &pitch, &yaw);
 
-		cController::Get()->GetCubeFlight().SetEulerAngle(-roll, yaw, -pitch);
+		//cController::Get()->GetCubeFlight().SetEulerAngle(-roll, yaw, -pitch);
 
 		// 시리얼통신으로 넘어온 정보를 옵져버에게 알린다.
 		NotifyObserver(m_buff);

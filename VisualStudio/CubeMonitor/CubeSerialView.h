@@ -56,4 +56,5 @@ public:
 	afx_msg void OnBnClickedCheckShowidealthrust();
 	BOOL m_IsShowCubeThrust;
 	afx_msg void OnBnClickedCheckShowcubethrust();
+	afx_msg void OnBnClickedButtonResetLocalspace();
 };

@@ -12,11 +12,12 @@ public:
 	virtual ~cCubeFlight();
 
 	bool Init();
-	void Render();
+	void Render(const Matrix44 &worldTm);
 	void Update(const float deltaSeconds);
 
 	void SetEulerAngle(const float roll, const float pitch, const float yaw);
 	void ResetHeading();
+	void ResetLocalSpace();
 	void Thrust(const Vector3 &dir, const Vector3 &mov=Vector3(0,0,0));
 	void CubeThrust(unsigned char buffer[24]);
 	void SetRenderOption(const bool showThrust, const bool showIdealThrust, const bool showCubeThrust);
@@ -24,9 +25,9 @@ public:
 
 //protected:
 	graphic::cModel m_model;
-	Vector3 m_locate;
 	Matrix44 m_tm;
 	Matrix44 m_offset;
+	Matrix44 m_localSpaceTM;
 
 	// thrust vector arrow
 	graphic::cModel m_arrow; // blue
