@@ -172,6 +172,7 @@
 #define IDC_BUTTON_RESET_HEADING        1072
 #define IDC_BUTTON_PAIRING_BLUETOOTH    1073
 #define IDC_BUTTON_RESET_LOCALSPACE     1073
+#define IDC_BUTTON1                     1074
 
 // Next default values for new objects
 // 
@@ -179,7 +180,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        319
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1073
+#define _APS_NEXT_CONTROL_VALUE         1075
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

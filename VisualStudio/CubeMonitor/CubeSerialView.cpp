@@ -12,6 +12,7 @@ CCubeSerialView::CCubeSerialView(CWnd* pParent /*=NULL*/)
 	: CDockablePaneChildView(CCubeSerialView::IDD, pParent)
 	, m_isStart(false)
 	, m_resetHead(false)
+	, m_accelCalibrate(false)
 	, m_SendText(_T(""))
 	, m_serialRcvCount(0)
 	, m_updateIncTime(0)
@@ -56,6 +57,7 @@ BEGIN_MESSAGE_MAP(CCubeSerialView, CDockablePaneChildView)
 	ON_BN_CLICKED(IDC_CHECK_SHOWIDEALTHRUST, &CCubeSerialView::OnBnClickedCheckShowidealthrust)
 	ON_BN_CLICKED(IDC_CHECK_SHOWCUBETHRUST, &CCubeSerialView::OnBnClickedCheckShowcubethrust)
 	ON_BN_CLICKED(IDC_BUTTON_RESET_LOCALSPACE, &CCubeSerialView::OnBnClickedButtonResetLocalspace)
+	ON_BN_CLICKED(IDC_BUTTON1, &CCubeSerialView::OnBnClickedButton1)
 END_MESSAGE_MAP()
 
 
@@ -100,7 +102,7 @@ void CCubeSerialView::Update(const float deltaSeconds)
 	RET(!IsWindowVisible());
 
 	m_updateIncTime += deltaSeconds;
-	RET(m_updateIncTime < 0.03f);
+	RET(m_updateIncTime < 0.02f);
 	m_updateIncTime = 0;
 
 	if (m_IsSyncIMU)
@@ -233,6 +235,8 @@ bool CCubeSerialView::SyncIMU()
 
 			if (m_resetHead)
 				m_syncIMUState = 2;
+			else if (m_accelCalibrate)
+				m_syncIMUState = 3;
 
 			m_errorCount = 0;
 			return true;
@@ -249,6 +253,12 @@ bool CCubeSerialView::SyncIMU()
 	{
 		SendCommand(cController::Get()->GetSerial(), MSP_CUBE_RESETHEAD);
 		m_resetHead = false;
+		m_syncIMUState = 0;
+	}
+	else if (m_syncIMUState == 3)
+	{
+		SendCommand(cController::Get()->GetSerial(), MSP_ACC_CALIBRATION);
+		m_accelCalibrate = false;
 		m_syncIMUState = 0;
 	}
 
@@ -299,4 +309,10 @@ void CCubeSerialView::OnBnClickedCheckShowcubethrust()
 void CCubeSerialView::OnBnClickedButtonResetLocalspace()
 {
 	g_3DView->m_imuModel->ResetLocalSpace();	
+}
+
+
+void CCubeSerialView::OnBnClickedButton1()
+{
+	m_accelCalibrate = true;
 }

@@ -31,6 +31,7 @@ protected:
 	int m_syncIMUState;
 	int m_errorCount;
 	bool m_resetHead;
+	bool m_accelCalibrate;
 
 
 	DECLARE_MESSAGE_MAP()
@@ -57,4 +58,5 @@ public:
 	BOOL m_IsShowCubeThrust;
 	afx_msg void OnBnClickedCheckShowcubethrust();
 	afx_msg void OnBnClickedButtonResetLocalspace();
+	afx_msg void OnBnClickedButton1();
 };
