@@ -7,7 +7,7 @@ void setup()
 void loop()
 {
 //send 'Hello, world!' over the serial port
-Serial.println("Hello, world!");
+Serial.print("Hello, world!");
 //wait 100 milliseconds so we don't drive ourselves crazy
 delay(300);
 }

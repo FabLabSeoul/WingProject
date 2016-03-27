@@ -6,6 +6,8 @@
 #include "board.h"
 #include "mw.h"
 #include "buzzer.h"
+#include "kalmanFilterFrontend.h"
+
 
 uint16_t calibratingA = 0;      // the calibration is done is the main loop. Calibrating decreases at each cycle down to 0, then we enter in a normal mode.
 uint16_t calibratingB = 0;      // baro calibration = get new ground pressure value
@@ -331,6 +333,13 @@ void ACC_getADC(void)
 {
     acc.read(accADC);
     ACC_Common();
+	
+    // filter the accelerometer data
+    if (!calibratingA) {
+    	// filter is active when not calibrating
+    	accelKalmanfilterStep(accADC);
+    }
+	
 }
 
 #ifdef BARO
@@ -456,6 +465,11 @@ void Gyro_getADC(void)
     // range: +/- 8192; +/- 2000 deg/sec
     gyro.read(gyroADC);
     GYRO_Common();
+
+    if (!calibratingG) {
+    	// filter is active when not calibrating
+    	gyroKalmanfilterStep(gyroADC);
+    }
 }
 
 #ifdef MAG

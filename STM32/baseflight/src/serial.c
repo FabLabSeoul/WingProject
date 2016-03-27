@@ -96,6 +96,7 @@
 #define MSP_CUBE_RESETHEAD         73 //in message
 #define MSP_CUBE_PAIRING         74 //in message cube bluetooth pairng
 #define MSP_CUBE_DEBUG         75 //out message cube direction x,y,z (uint8_t, 0~100)
+#define MSP_CUBE_BARO       76 //out message cube baroPressure , baroTemperature, baroPressureSum   (int32)
 
 
 
@@ -917,6 +918,13 @@ static void evaluateCommand(void)
 			serialize32(*(uint32_t*)&g_cube.m_tm.m[3][1]);
 			serialize32(*(uint32_t*)&g_cube.m_tm.m[3][2]);
 			serialize32(*(uint32_t*)&g_cube.m_tm.m[3][3]);
+		break;
+		
+		case MSP_CUBE_BARO:
+			headSerialReply(12);
+			serialize32(baroPressure);
+			serialize32(baroTemperature);
+			serialize32(baroPressureSum);
 		break;
 		
 		

@@ -11,7 +11,7 @@ Servo SimonKESC3;
 int servoOut1 = 0;
 int servoOut2 = 0;
 int servoOut3 = 0;
-int boardNumber = 4;
+int boardNumber = 5;
 
 void setup() 
 {

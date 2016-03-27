@@ -4,15 +4,15 @@
 ARM Macro Assembler    Page 1 
 
 
-    1 00000000         ;******************** (C) COPYRIGHT 2011 STMicroelectron
+    1 00000000         ;******************** (C) COPYRIGHT 2010 STMicroelectron
                        ics ********************
     2 00000000         ;* File Name          : startup_stm32f10x_md_vl.s
     3 00000000         ;* Author             : MCD Application Team
-    4 00000000         ;* Version            : V3.5.0
-    5 00000000         ;* Date               : 11-March-2011
+    4 00000000         ;* Version            : V3.3.0
+    5 00000000         ;* Date               : 04/16/2010
     6 00000000         ;* Description        : STM32F10x Medium Density Value L
                        ine Devices vector table  
-    7 00000000         ;*                      for MDK-ARM toolchain.  
+    7 00000000         ;*                      for RVMDK toolchain.  
     8 00000000         ;*                      This module performs:
     9 00000000         ;*                      - Set the initial SP
    10 00000000         ;*                      - Set the initial PC == Reset_Ha

@@ -78,5 +78,6 @@
 #define MSP_CUBE_RESETHEAD         73 //in message
 #define MSP_CUBE_PAIRING         74 //in message cube bluetooth pairng
 #define MSP_CUBE_DEBUG         75 //out message cube direction x,y,z (uint8_t, 0~100)
+#define MSP_CUBE_BARO       76 //out message cube baroPressure , baroTemperature, baroPressureSum   (int32)
 
 // #define INBUF_SIZE 128

@@ -508,6 +508,21 @@
               <FileType>1</FileType>
               <FilePath>.\src\ibus.c</FilePath>
             </File>
+            <File>
+              <FileName>kalman.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kalman.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalmanFilterFrontend.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kalmanFilterFrontend.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\matrix.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1290,6 +1305,21 @@
               <FileName>ibus.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ibus.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalman.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kalman.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalmanFilterFrontend.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kalmanFilterFrontend.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\matrix.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -2344,6 +2374,21 @@
               <FileName>ibus.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\ibus.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalman.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kalman.c</FilePath>
+            </File>
+            <File>
+              <FileName>kalmanFilterFrontend.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\kalmanFilterFrontend.c</FilePath>
+            </File>
+            <File>
+              <FileName>matrix.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\matrix.c</FilePath>
             </File>
           </Files>
         </Group>

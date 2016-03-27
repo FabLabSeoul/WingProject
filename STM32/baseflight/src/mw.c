@@ -1066,14 +1066,13 @@ void loop(void)
 		//serialPrint(core.mainport, "123");
 		//printf("1234");
 		//serialWrite(core.mainport, 1);
-		CubeAttitude();
-		CubeControl();
-		CubeWriteMotors();
+		
+		
+		//CubeAttitude();
+		//CubeControl();
+		//CubeWriteMotors();
     }
-	
-	
-	
-	
+		
 	
 	
 /*

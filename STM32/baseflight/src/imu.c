@@ -289,7 +289,7 @@ static void getEstimatedAttitude(void)
         rotateV(&EstM.V, deltaGyroAngle);
         for (axis = 0; axis < 3; axis++)
             EstM.A[axis] = (EstM.A[axis] * (float)mcfg.gyro_cmpfm_factor + magADC[axis]) * INV_GYR_CMPFM_FACTOR;
-        heading = calculateHeading(&EstM);
+        //heading = calculateHeading(&EstM);
     } else {
         rotateV(&EstN.V, deltaGyroAngle);
         normalizeV(&EstN.V, &EstN.V);

@@ -205,16 +205,27 @@ bool CCubeSerialView::SyncIMU()
 
 	if (m_syncIMUState == 0)
 	{
-		SendCommand(cController::Get()->GetSerial(), MSP_ATTITUDE);
+		//SendCommand(cController::Get()->GetSerial(), MSP_ATTITUDE);
+		SendCommand(cController::Get()->GetSerial(), MSP_CUBE_BARO);
 		m_syncIMUState = 1;
 	}
 	else if (m_syncIMUState == 1)
 	{
 		m_syncIMUState = 0;
 		BYTE buffer[64];
-		const int len = RecvCommand(cController::Get()->GetSerial(), MSP_ATTITUDE, buffer, sizeof(buffer));
+		//const int len = RecvCommand(cController::Get()->GetSerial(), MSP_ATTITUDE, buffer, sizeof(buffer));
+		const int len = RecvCommand(cController::Get()->GetSerial(), MSP_CUBE_BARO, buffer, sizeof(buffer));
 		if (len > 0)
 		{
+			//baro
+			const int baro1 = *(int*)&buffer[0];
+			const int baro2 = *(int*)&buffer[4];
+			const int baro3 = *(int*)&buffer[8];
+
+			CString attitudeStr;
+			attitudeStr.Format(L"%d, %d, %d", baro1, baro2, baro3);
+			m_AttitudeEdit.SetWindowTextW(attitudeStr);
+/*
 			// 자세정보 업데이트
 			int roll = *(short*)&buffer[0]; // +- 1800
 			int pitch = *(short*)&buffer[2]; // +- 860
@@ -232,6 +243,7 @@ bool CCubeSerialView::SyncIMU()
 			CString attitudeStr;
 			attitudeStr.Format(L"%f %f %f", -roll*0.1f, pitch*0.1f, (float)yaw);
 			m_AttitudeEdit.SetWindowTextW(attitudeStr);
+*/
 
 			if (m_resetHead)
 				m_syncIMUState = 2;
